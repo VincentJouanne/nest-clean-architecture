@@ -1,0 +1,30 @@
+{
+  "name": "nest-clean-architecture-fp-demo",
+  "version": "0.0.0",
+  "author": "Vincent JOUANNE",
+  "license": "MIT",
+  "scripts": {
+    "build": "nest build api-gateway",
+    "start": "nest start api-gateway"
+  },
+  "dependencies": {
+    "@nestjs/common": "^7.6.17",
+    "@nestjs/config": "^0.6.3",
+    "@nestjs/core": "^7.6.17",
+    "@nestjs/cqrs": "^7.0.1",
+    "@nestjs/platform-express": "^7.6.17",
+    "@nestjs/swagger": "^4.8.0",
+    "express-ctx": "^0.1.1",
+    "nestjs-pino": "^1.4.0",
+    "reflect-metadata": "^0.1.13",
+    "source-map-support": "^0.5.19",
+    "swagger-ui-express": "^4.1.6",
+    "ts-loader": "^9.2.3",
+    "typescript": "^4.3.2"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^7.6.0",
+    "@types/source-map-support": "^0.5.3",
+    "prettier": "^2.3.1"
+  }
+}

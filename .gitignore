@@ -1,0 +1,11 @@
+
+# compiled output
+/dist
+/node_modules
+
+# OS
+.DS_Store
+
+# IDE - VSCode
+.vscode/*
+

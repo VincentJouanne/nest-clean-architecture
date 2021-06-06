@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "allowJs": true,
+    "checkJs": true,
+    "paths": {
+      "@app/api-gateway": ["api-gateway/src"],
+      "@app/api-gateway/*": ["api-gateway/src/*"],
+      "@core/log": ["modules/core/log/src"],
+      "@core/log/*": ["modules/core/log/src/*"]
+    }
+  }
+}

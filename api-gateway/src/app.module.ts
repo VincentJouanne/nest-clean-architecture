@@ -2,8 +2,8 @@
 import { Module, Type, DynamicModule, ForwardReference } from '@nestjs/common';
 import { OnModuleInit } from '@nestjs/common';
 
-import { CoreLogger } from 'modules/core/log/src/loggers/logger.service';
-import { LoggerModule } from 'modules/core/log/src/logger.module';
+import { CoreLogger } from 'modules/core/logger/src/logger.service';
+import { LoggerModule } from 'modules/core/logger/src/logger.module';
 
 type NestModuleImport = Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference<any>;
 

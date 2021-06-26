@@ -1,12 +1,12 @@
-import { String, Static, Record } from 'runtypes';
-import { Email } from 'shared/domain/email';
-import { Password } from 'shared/domain/password';
-import { UUID } from 'shared/domain/uuid';
+import { Static, Record } from 'runtypes';
+import { Email } from '@shared/domain/email';
+import { UUID } from '@shared/domain/uuid';
+import { GeneratedTag6 } from './generatedTag6';
 
-const Customer = Record({
+export const Customer = Record({
   id: UUID.withBrand('CustomerId'),
+  tag: GeneratedTag6.withBrand('CustomerTag'),
   email: Email.withBrand('CustomerEmail'),
-  password: Password.withBrand('Password'),
 });
 
-type Customer = Static<typeof Customer>;
+export type Customer = Static<typeof Customer>;

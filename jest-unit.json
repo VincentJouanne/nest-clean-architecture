@@ -1,0 +1,36 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testRegex": "\\.spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "collectCoverageFrom": ["{apps,libs}/**/*.ts"],
+  "coverageThreshold": {
+    "**/commands/*.command.ts": {
+      "branches": 100,
+      "functions": 100,
+      "lines": 100,
+      "statements": 100
+    },
+    "**/queries/*.query.ts": {
+      "branches": 100,
+      "functions": 100,
+      "lines": 100,
+      "statements": 100
+    }
+  },
+  "coverageDirectory": "./coverage",
+  "testEnvironment": "node",
+  "roots": ["<rootDir>/api-gateway", "<rootDir>/modules", "<rootDir>/shared"],
+  "moduleNameMapper": {
+    "^@api-gateway$": "<rootDir>/api-gateway/src",
+    "^@app/api-gateway/(.*)$": "<rootDir>/api-gateway/src/$1",
+    "^@core/logger$": "<rootDir>/modules/core/logger/src",
+    "^@core/logger/(.*)$": "<rootDir>/modules/core/logger/src/$1",
+    "^@modules/customer$": "<rootDir>/modules/customer/src",
+    "^@modules/customer/(.*)$": "<rootDir>/modules/customer/src/$1",
+    "^@shared/$": "<rootDir>/shared/src",
+    "^@shared/(.*)$": "<rootDir>/shared/src/$1"
+  }
+}

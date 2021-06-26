@@ -3,9 +3,9 @@ import { PinoLogger } from 'nestjs-pino';
 
 @Injectable()
 export class CoreLogger implements LoggerService {
-  private readonly contextName: string;
+  readonly contextName: string;
 
-  constructor(private readonly logger: PinoLogger) {
+  constructor(readonly logger: PinoLogger) {
     this.contextName = 'context';
   }
 

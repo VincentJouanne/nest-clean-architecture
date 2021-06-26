@@ -17,8 +17,12 @@
     "paths": {
       "@app/api-gateway": ["api-gateway/src"],
       "@app/api-gateway/*": ["api-gateway/src/*"],
-      "@core/log": ["modules/core/logger/src"],
-      "@core/log/*": ["modules/core/logger/src/*"]
+      "@core/logger": ["modules/core/logger/src"],
+      "@core/logger/*": ["modules/core/logger/src/*"],
+      "@modules/customer": ["modules/customer/src"],
+      "@modules/customer/*": ["modules/customer/src/*"],
+      "@shared": ["shared/src"],
+      "@shared/*": ["shared/src/*"]
     }
   }
 }

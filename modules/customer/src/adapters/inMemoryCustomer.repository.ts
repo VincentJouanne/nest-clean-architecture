@@ -8,8 +8,9 @@ export class InMemoryCustomerRepository implements CustomerRepository {
   save = (customer: Customer): TaskEither<Error, void> => {
     return tryCatch(
       async () => {
-        this.customers.push(customer);
-        return;
+        const existingCustomer = this.customers.find((c) => c.email == customer.email);
+        if (existingCustomer == undefined) this.customers.push(customer);
+        else throw new Error('Email already exists.');
       },
       (error: Error) => error,
     );

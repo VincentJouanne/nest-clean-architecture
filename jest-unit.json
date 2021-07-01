@@ -28,8 +28,8 @@
     "^@app/api-gateway/(.*)$": "<rootDir>/api-gateway/src/$1",
     "^@core/logger$": "<rootDir>/modules/core/logger/src",
     "^@core/logger/(.*)$": "<rootDir>/modules/core/logger/src/$1",
-    "^@modules/customer$": "<rootDir>/modules/customer/src",
-    "^@modules/customer/(.*)$": "<rootDir>/modules/customer/src/$1",
+    "^@modules/identity-and-access$": "<rootDir>/modules/identity-and-access/src",
+    "^@modules/identity-and-access/(.*)$": "<rootDir>/modules/identity-and-access/src/$1",
     "^@shared/$": "<rootDir>/shared/src",
     "^@shared/(.*)$": "<rootDir>/shared/src/$1"
   }

@@ -12,7 +12,7 @@ export const fromUnknown = <Data>(
   validator: RuntypeBase<Data>,
   logger: LoggerService,
   dataKind: string,
-): TaskEither<Error, unknown> => {
+): TaskEither<Error, Data> => {
   return pipe(
     right(unknownValue),
     chain(validateWith(validator)),

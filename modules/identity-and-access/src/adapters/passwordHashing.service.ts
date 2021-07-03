@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 
 const saltOrRounds = 10;
 
-export class EncryptionService {
+export class PasswordHashingService {
   encrypt = (plainPassword: PlainPassword): TaskEither<Error, EncryptedPassword> => {
     return tryCatch(
       async () => {

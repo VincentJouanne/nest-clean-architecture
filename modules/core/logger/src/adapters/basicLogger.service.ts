@@ -1,6 +1,6 @@
 import { LoggerService } from '@nestjs/common';
 
-export class InMemoryLoggerService implements LoggerService {
+export class BasicLoggerService implements LoggerService {
   readonly contextName: string;
 
   constructor(readonly logger: null) {

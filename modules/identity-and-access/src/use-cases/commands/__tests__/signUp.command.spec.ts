@@ -1,34 +1,34 @@
 import { SignUp, SignUpHandler } from '@modules/identity-and-access/use-cases/commands/signUp.command';
-import { InMemoryUUIDGeneratorService } from '@shared/adapters/inMemoryUUIDGenerator.service';
 import { InMemoryTagGeneratorService } from '@modules/identity-and-access/adapters/inMemoryTagGenerator.service';
 import { InMemoryUserRepository } from '@modules/identity-and-access/adapters/inMemoryUser.repository';
-import { InMemoryLoggerService } from '@shared/adapters/inMemoryLogger.service';
+import { BasicLoggerService } from '@core/logger/adapters/basicLogger.service';
 import { executeTask } from '@shared/utils/executeTask';
 import { Test } from '@nestjs/testing';
 import { User } from '@modules/identity-and-access/domain/user';
-import { EncryptionService } from '@modules/identity-and-access/adapters/encryption.service';
+import { PasswordHashingService } from '@modules/identity-and-access/adapters/passwordHashing.service';
+import { UUIDGeneratorService } from '@modules/identity-and-access/adapters/uuidGenerator.service';
 
 describe('[Unit] Sign up with credentials', () => {
   //Adapters
-  let uuidGeneratorService: InMemoryUUIDGeneratorService;
+  let uuidGeneratorService: UUIDGeneratorService;
   let tagGeneratorService: InMemoryTagGeneratorService;
-  let encryptionService: EncryptionService;
+  let encryptionService: PasswordHashingService;
   let userRepository: InMemoryUserRepository;
-  let logger: InMemoryLoggerService;
+  let logger: BasicLoggerService;
 
   //Use-case
   let signUpHandler: SignUpHandler;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [InMemoryUUIDGeneratorService, InMemoryTagGeneratorService, EncryptionService, InMemoryUserRepository, InMemoryLoggerService],
+      providers: [UUIDGeneratorService, InMemoryTagGeneratorService, PasswordHashingService, InMemoryUserRepository, BasicLoggerService],
     }).compile();
 
-    uuidGeneratorService = moduleRef.get<InMemoryUUIDGeneratorService>(InMemoryUUIDGeneratorService);
+    uuidGeneratorService = moduleRef.get<UUIDGeneratorService>(UUIDGeneratorService);
     tagGeneratorService = moduleRef.get<InMemoryTagGeneratorService>(InMemoryTagGeneratorService);
-    encryptionService = moduleRef.get<EncryptionService>(EncryptionService);
+    encryptionService = moduleRef.get<PasswordHashingService>(PasswordHashingService);
     userRepository = moduleRef.get<InMemoryUserRepository>(InMemoryUserRepository);
-    logger = moduleRef.get<InMemoryLoggerService>(InMemoryLoggerService);
+    logger = moduleRef.get<BasicLoggerService>(BasicLoggerService);
 
     signUpHandler = new SignUpHandler(uuidGeneratorService, tagGeneratorService, encryptionService, userRepository, logger);
   });

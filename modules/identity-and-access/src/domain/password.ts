@@ -10,7 +10,7 @@ export const PlainPassword = String.withBrand('PlainPassword')
   .withConstraint((maybeValidPassword) => AtLeastOneUpperLetterRegex.test(maybeValidPassword) || 'Password should contain at least one upper letter.')
   .withConstraint((maybeValidPassword) => AtLeastOneDigitRegex.test(maybeValidPassword) || 'Password should contain at least one digit.');
 
-export const EncryptedPassword = String.withBrand('EncryptedPassword');
+export const HashedPassword = String.withBrand('HashedPassword');
 
 export type PlainPassword = Static<typeof PlainPassword>;
-export type EncryptedPassword = Static<typeof EncryptedPassword>;
+export type HashedPassword = Static<typeof HashedPassword>;

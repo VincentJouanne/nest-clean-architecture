@@ -24,7 +24,7 @@ export class SignUpHandler implements ICommandHandler {
   constructor(
     private readonly uuidGeneratorService: UUIDGeneratorService,
     private readonly tagGeneratorService: TagGeneratorService,
-    private readonly encryptionService: PasswordHashingService,
+    private readonly passwordHashingService: PasswordHashingService,
     private readonly userRepository: UserRepository,
     private readonly logger: CoreLogger,
   ) {
@@ -44,18 +44,18 @@ export class SignUpHandler implements ICommandHandler {
       //Encryption
       chain((validatedParam) =>
         sequenceT(taskEither)(
-          perform(validatedParam.plainPassword, this.encryptionService.encrypt, this.logger, 'plain password encrypted'),
+          perform(validatedParam.plainPassword, this.passwordHashingService.hash, this.logger, 'plain password hashed'),
           right(validatedParam.email),
         ),
       ),
       //Formatting
-      chain(([encryptedPassword, validatedEmail]) =>
+      chain(([hashedPassword, validatedEmail]) =>
         fromUnknown(
           {
             id: this.uuidGeneratorService.generateUUID(),
             tag: this.tagGeneratorService.generateTag6(),
             email: validatedEmail,
-            password: encryptedPassword,
+            password: hashedPassword,
           },
           User,
           this.logger,

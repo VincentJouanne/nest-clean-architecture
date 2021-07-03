@@ -15,12 +15,12 @@ import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { taskEither } from 'fp-ts/lib/TaskEither';
 import { Email } from '@modules/identity-and-access/domain/email';
 
-export class CreateUser implements ICommand {
+export class SignUp implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}
 }
 
-@CommandHandler(CreateUser)
-export class CreateUserHandler implements ICommandHandler {
+@CommandHandler(SignUp)
+export class SignUpHandler implements ICommandHandler {
   constructor(
     private readonly uuidGeneratorService: UUIDGeneratorService,
     private readonly tagGeneratorService: TagGeneratorService,
@@ -28,10 +28,10 @@ export class CreateUserHandler implements ICommandHandler {
     private readonly userRepository: UserRepository,
     private readonly logger: CoreLogger,
   ) {
-    this.logger.setContext('CreateUser');
+    this.logger.setContext('SignUp');
   }
 
-  execute(command: CreateUser): Promise<void> {
+  execute(command: SignUp): Promise<void> {
     const task = pipe(
       right(command),
       //Validation

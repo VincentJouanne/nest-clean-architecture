@@ -1,4 +1,4 @@
-import { CreateUser, CreateUserHandler } from '@modules/identity-and-access/use-cases/commands/createUser.command';
+import { SignUp, SignUpHandler } from '@modules/identity-and-access/use-cases/commands/signUp.command';
 import { InMemoryUUIDGeneratorService } from '@shared/adapters/inMemoryUUIDGenerator.service';
 import { InMemoryTagGeneratorService } from '@modules/identity-and-access/adapters/inMemoryTagGenerator.service';
 import { InMemoryUserRepository } from '@modules/identity-and-access/adapters/inMemoryUser.repository';
@@ -8,7 +8,7 @@ import { Test } from '@nestjs/testing';
 import { User } from '@modules/identity-and-access/domain/user';
 import { EncryptionService } from '@modules/identity-and-access/adapters/encryption.service';
 
-describe('[Unit] Create user with an email', () => {
+describe('[Unit] Sign up with credentials', () => {
   //Adapters
   let uuidGeneratorService: InMemoryUUIDGeneratorService;
   let tagGeneratorService: InMemoryTagGeneratorService;
@@ -17,7 +17,7 @@ describe('[Unit] Create user with an email', () => {
   let logger: InMemoryLoggerService;
 
   //Use-case
-  let createUserHandler: CreateUserHandler;
+  let signUpHandler: SignUpHandler;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -30,16 +30,16 @@ describe('[Unit] Create user with an email', () => {
     userRepository = moduleRef.get<InMemoryUserRepository>(InMemoryUserRepository);
     logger = moduleRef.get<InMemoryLoggerService>(InMemoryLoggerService);
 
-    createUserHandler = new CreateUserHandler(uuidGeneratorService, tagGeneratorService, encryptionService, userRepository, logger);
+    signUpHandler = new SignUpHandler(uuidGeneratorService, tagGeneratorService, encryptionService, userRepository, logger);
   });
 
-  it('OK - Should create a user if email is valid', async () => {
+  it('OK - Should sign up a user if email and passwords are valid', async () => {
     //Given a potentially valid email
     const email = 'dummy@gmail.com';
     const password = 'paSSw0rd!';
 
     //When we create a user
-    const result = await createUserHandler.execute(new CreateUser(email, password));
+    const result = await signUpHandler.execute(new SignUp(email, password));
 
     //Then it should have created a user
     expect(result).toEqual(undefined);
@@ -53,7 +53,21 @@ describe('[Unit] Create user with an email', () => {
     const email = 'abc123';
     const password = 'paSSw0rd!';
     //When we create a user
-    const resultPromise = createUserHandler.execute(new CreateUser(email, password));
+    const resultPromise = signUpHandler.execute(new SignUp(email, password));
+
+    //Then it should have thrown an error and not have created a user
+    await expect(resultPromise).rejects.toBeTruthy();
+
+    const users = await executeTask(userRepository.all());
+    expect(users.length).toEqual(0);
+  });
+
+  it('KO - Should not create a user if password is invalid', async () => {
+    //Given a potentially invalid email
+    const email = 'abc123';
+    const password = 'toosimple';
+    //When we create a user
+    const resultPromise = signUpHandler.execute(new SignUp(email, password));
 
     //Then it should have thrown an error and not have created a user
     await expect(resultPromise).rejects.toBeTruthy();
@@ -74,7 +88,7 @@ describe('[Unit] Create user with an email', () => {
     );
 
     //When we create a user
-    const resultPromise = createUserHandler.execute(new CreateUser(email, password));
+    const resultPromise = signUpHandler.execute(new SignUp(email, password));
 
     //Then it should have thrown an error and not have created a user
     await expect(resultPromise).rejects.toBeTruthy();

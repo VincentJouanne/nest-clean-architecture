@@ -4,16 +4,18 @@ import { OnModuleInit } from '@nestjs/common';
 
 import { CoreLogger } from '@core/logger/adapters/pinoLogger.service';
 import { LoggerModule } from 'modules/core/logger/src/logger.module';
+import { IdentityAndAccessModule } from '@modules/identity-and-access/identityAndAccess.module';
+import { IdentityAndAccessApiControllerV1 } from './api/v1/identityAndAccess.controller';
 
 type NestModuleImport = Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference<any>;
 
 // SubModule used by the server
-const appModules: NestModuleImport[] = [LoggerModule];
+const appModules: NestModuleImport[] = [LoggerModule, IdentityAndAccessModule];
 
 // Infrastructure Modules (DB, config) used by the server
 const infrastructureModules: NestModuleImport[] = [];
 
-const controllers: any[] = [];
+const controllers: any[] = [IdentityAndAccessApiControllerV1];
 
 const queues: DynamicModule[] = [];
 

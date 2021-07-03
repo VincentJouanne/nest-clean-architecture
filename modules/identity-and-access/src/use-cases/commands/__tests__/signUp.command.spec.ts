@@ -1,17 +1,18 @@
 import { SignUp, SignUpHandler } from '@modules/identity-and-access/use-cases/commands/signUp.command';
-import { InMemoryTagGeneratorService } from '@modules/identity-and-access/adapters/inMemoryTagGenerator.service';
-import { InMemoryUserRepository } from '@modules/identity-and-access/adapters/inMemoryUser.repository';
+import { InMemoryTagGeneratorService } from '@modules/identity-and-access/adapters/secondaries/inMemoryTagGenerator.service';
+import { InMemoryUserRepository } from '@modules/identity-and-access/adapters/secondaries/inMemoryUser.repository';
 import { BasicLoggerService } from '@core/logger/adapters/basicLogger.service';
 import { executeTask } from '@shared/utils/executeTask';
 import { Test } from '@nestjs/testing';
-import { User } from '@modules/identity-and-access/domain/user';
-import { PasswordHashingService } from '@modules/identity-and-access/adapters/passwordHashing.service';
-import { UUIDGeneratorService } from '@modules/identity-and-access/adapters/uuidGenerator.service';
+import { User } from '@modules/identity-and-access/domain/models/user';
+import { PasswordHashingService } from '@modules/identity-and-access/adapters/secondaries/passwordHashing.service';
+import { UUIDGeneratorService } from '@modules/identity-and-access/adapters/secondaries/uuidGenerator.service';
+import { DeterministicTagGeneratorService } from '@modules/identity-and-access/adapters/secondaries/deterministicTagGenerator.service';
 
 describe('[Unit] Sign up with credentials', () => {
   //Adapters
   let uuidGeneratorService: UUIDGeneratorService;
-  let tagGeneratorService: InMemoryTagGeneratorService;
+  let tagGeneratorService: DeterministicTagGeneratorService;
   let encryptionService: PasswordHashingService;
   let userRepository: InMemoryUserRepository;
   let logger: BasicLoggerService;
@@ -21,11 +22,11 @@ describe('[Unit] Sign up with credentials', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [UUIDGeneratorService, InMemoryTagGeneratorService, PasswordHashingService, InMemoryUserRepository, BasicLoggerService],
+      providers: [UUIDGeneratorService, DeterministicTagGeneratorService, PasswordHashingService, InMemoryUserRepository, BasicLoggerService],
     }).compile();
 
     uuidGeneratorService = moduleRef.get<UUIDGeneratorService>(UUIDGeneratorService);
-    tagGeneratorService = moduleRef.get<InMemoryTagGeneratorService>(InMemoryTagGeneratorService);
+    tagGeneratorService = moduleRef.get<DeterministicTagGeneratorService>(DeterministicTagGeneratorService);
     encryptionService = moduleRef.get<PasswordHashingService>(PasswordHashingService);
     userRepository = moduleRef.get<InMemoryUserRepository>(InMemoryUserRepository);
     logger = moduleRef.get<BasicLoggerService>(BasicLoggerService);

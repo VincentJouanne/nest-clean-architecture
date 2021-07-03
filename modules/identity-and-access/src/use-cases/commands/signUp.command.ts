@@ -5,15 +5,17 @@ import { pipe } from 'fp-ts/lib/function';
 import { executeTask } from '@shared/utils/executeTask';
 import { UserRepository } from '@modules/identity-and-access/domain/repositories/user.repository';
 import { perform } from '@shared/utils/perform';
-import { User } from '@modules/identity-and-access/domain/user';
-import { TagGeneratorService } from 'modules/identity-and-access/src/domain/services/tagGenerator.service';
+import { User } from '@modules/identity-and-access/domain/models/user';
+import { TagGeneratorService } from '@modules/identity-and-access/domain/services/tagGenerator.service';
 import { fromUnknown } from '@shared/utils/fromUnknown';
-import { PasswordHashingService } from '@modules/identity-and-access/adapters/passwordHashing.service';
-import { PlainPassword } from '@modules/identity-and-access/domain/password';
+import { PasswordHashingService } from '@modules/identity-and-access/adapters/secondaries/passwordHashing.service';
+import { PlainPassword } from '@modules/identity-and-access/domain/models/password';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { taskEither } from 'fp-ts/lib/TaskEither';
-import { Email } from '@modules/identity-and-access/domain/email';
-import { UUIDGeneratorService } from '@modules/identity-and-access/adapters/uuidGenerator.service';
+import { Email } from '@modules/identity-and-access/domain/models/email';
+import { UUIDGeneratorService } from '@modules/identity-and-access/adapters/secondaries/uuidGenerator.service';
+import { InMemoryUserRepository } from '@modules/identity-and-access/adapters/secondaries/inMemoryUser.repository';
+import { InMemoryTagGeneratorService } from '@modules/identity-and-access/adapters/secondaries/inMemoryTagGenerator.service';
 
 export class SignUp implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}
@@ -23,9 +25,9 @@ export class SignUp implements ICommand {
 export class SignUpHandler implements ICommandHandler {
   constructor(
     private readonly uuidGeneratorService: UUIDGeneratorService,
-    private readonly tagGeneratorService: TagGeneratorService,
+    private readonly tagGeneratorService: InMemoryTagGeneratorService,
     private readonly passwordHashingService: PasswordHashingService,
-    private readonly userRepository: UserRepository,
+    private readonly userRepository: InMemoryUserRepository,
     private readonly logger: CoreLogger,
   ) {
     this.logger.setContext('SignUp');

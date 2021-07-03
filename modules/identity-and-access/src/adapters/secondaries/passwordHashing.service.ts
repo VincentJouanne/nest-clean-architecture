@@ -1,9 +1,11 @@
-import { HashedPassword, PlainPassword } from '../domain/password';
+import { HashedPassword, PlainPassword } from '@modules/identity-and-access/domain/models/password';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 import * as bcrypt from 'bcrypt';
+import { Injectable } from '@nestjs/common';
 
 const saltOrRounds = 10;
 
+@Injectable()
 export class PasswordHashingService {
   hash = (plainPassword: PlainPassword): TaskEither<Error, HashedPassword> => {
     return tryCatch(

@@ -44,7 +44,7 @@ export class SignUpHandler implements ICommandHandler {
       //Encryption
       chain((validatedParam) =>
         sequenceT(taskEither)(
-          perform(validatedParam.plainPassword, this.passwordHashingService.hash, this.logger, 'plain password hashed'),
+          perform(validatedParam.plainPassword, this.passwordHashingService.hash, this.logger, 'hash plain password'),
           right(validatedParam.email),
         ),
       ),

@@ -16,19 +16,20 @@ import { ValidationError } from 'io-ts';
  * @param validator : an io-ts validator
  */
 export const validateWith =
-  <Input, Data>(validator: RuntypeBase<Data>, errorMessage = 'The data is wrongly formatted') =>
+  <Input, Data>(validator: RuntypeBase<Data>) =>
   (data: Input): TaskEither<Error, Data> => {
     return pipe(
       data,
       checkEither(validator.check),
-      mapLeft((errors) => new UnprocessableEntityException(errors)),
+      //TODO [important, not urgent] - Find a way to remove this ugly .replace()
+      mapLeft((error) => new UnprocessableEntityException(error.message.replace('Failed constraint check for string: ', ''))),
       fromEither,
     );
   };
 
 const checkEither =
   <D>(check: (value: any) => D) =>
-  (value: any): Either<ValidationError[], D> => {
+  (value: any): Either<ValidationError, D> => {
     try {
       const checkedValue = check(value);
       return right(checkedValue);

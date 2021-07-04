@@ -1,13 +1,11 @@
-import { CoreLogger } from '@core/logger/adapters/pinoLogger.service';
+import { CoreLogger } from '@common/logger/adapters/pinoLogger.service';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { chain, right, map } from 'fp-ts/lib/TaskEither';
 import { pipe } from 'fp-ts/lib/function';
-import { executeTask } from '@shared/utils/executeTask';
-import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
-import { perform } from '@shared/utils/perform';
+import { executeTask } from '@common/utils/executeTask';
+import { perform } from '@common/utils/perform';
 import { User } from '@identity-and-access/domain/models/user';
-import { TagGeneratorService } from '@identity-and-access/domain/services/tagGenerator.service';
-import { fromUnknown } from '@shared/utils/fromUnknown';
+import { fromUnknown } from '@common/utils/fromUnknown';
 import { PasswordHashingService } from '@identity-and-access/adapters/secondaries/passwordHashing.service';
 import { PlainPassword } from '@identity-and-access/domain/models/password';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';

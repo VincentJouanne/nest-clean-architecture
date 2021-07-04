@@ -10,7 +10,7 @@ import { middleware as expressCtx } from 'express-ctx';
 import { AppModule } from '@app/api-gateway/app.module';
 
 // Imports from "core"
-import { CoreLogger } from '@core/logger/adapters/pinoLogger.service';
+import { CoreLogger } from 'common/logger/src/adapters/pinoLogger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

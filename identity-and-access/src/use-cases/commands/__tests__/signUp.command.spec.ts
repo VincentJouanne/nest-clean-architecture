@@ -1,8 +1,7 @@
 import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/signUp.command';
-import { InMemoryTagGeneratorService } from '@identity-and-access/adapters/secondaries/inMemoryTagGenerator.service';
 import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/inMemoryUser.repository';
-import { BasicLoggerService } from '@core/logger/adapters/basicLogger.service';
-import { executeTask } from '@shared/utils/executeTask';
+import { BasicLoggerService } from '@common/logger/adapters/basicLogger.service';
+import { executeTask } from '@common/utils/executeTask';
 import { Test } from '@nestjs/testing';
 import { User } from '@identity-and-access/domain/models/user';
 import { PasswordHashingService } from '@identity-and-access/adapters/secondaries/passwordHashing.service';

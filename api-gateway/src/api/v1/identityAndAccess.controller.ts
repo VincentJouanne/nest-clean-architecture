@@ -1,8 +1,8 @@
-import { CoreLogger } from '@core/logger/adapters/pinoLogger.service';
-import { IdentityAndAccessController } from '@modules/identity-and-access/adapters/primaries/identityAndAccess.controller';
+import { CoreLogger } from '@common/logger/adapters/pinoLogger.service';
+import { IdentityAndAccessController } from '@identity-and-access/adapters/primaries/identityAndAccess.controller';
 import { Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { executeTask } from '@shared/utils/executeTask';
+import { executeTask } from '@common/utils/executeTask';
 
 @Controller('v1')
 @ApiTags('Identity and access')

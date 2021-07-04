@@ -17,12 +17,12 @@
     "paths": {
       "@app/api-gateway": ["api-gateway/src"],
       "@app/api-gateway/*": ["api-gateway/src/*"],
-      "@core/logger": ["modules/core/logger/src"],
-      "@core/logger/*": ["modules/core/logger/src/*"],
+      "@common/logger": ["common/logger/src"],
+      "@common/logger/*": ["common/logger/src/*"],
+      "@common/utils": ["common/utils"],
+      "@common/utils/*": ["common/utils/*"],
       "@identity-and-access": ["identity-and-access/src"],
-      "@identity-and-access/*": ["identity-and-access/src/*"],
-      "@shared": ["shared/src"],
-      "@shared/*": ["shared/src/*"]
+      "@identity-and-access/*": ["identity-and-access/src/*"]
     }
   }
 }

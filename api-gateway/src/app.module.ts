@@ -2,9 +2,9 @@
 import { Module, Type, DynamicModule, ForwardReference } from '@nestjs/common';
 import { OnModuleInit } from '@nestjs/common';
 
-import { CoreLogger } from '@core/logger/adapters/pinoLogger.service';
-import { LoggerModule } from 'modules/core/logger/src/logger.module';
-import { IdentityAndAccessModule } from '@modules/identity-and-access/identityAndAccess.module';
+import { CoreLogger } from 'common/logger/src/adapters/pinoLogger.service';
+import { LoggerModule } from 'common/logger/src/logger.module';
+import { IdentityAndAccessModule } from '@identity-and-access/identityAndAccess.module';
 import { IdentityAndAccessApiControllerV1 } from './api/v1/identityAndAccess.controller';
 
 type NestModuleImport = Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference<any>;

@@ -19,8 +19,8 @@
       "@app/api-gateway/*": ["api-gateway/src/*"],
       "@core/logger": ["modules/core/logger/src"],
       "@core/logger/*": ["modules/core/logger/src/*"],
-      "@modules/identity-and-access": ["modules/identity-and-access/src"],
-      "@modules/identity-and-access/*": ["modules/identity-and-access/src/*"],
+      "@identity-and-access": ["identity-and-access/src"],
+      "@identity-and-access/*": ["identity-and-access/src/*"],
       "@shared": ["shared/src"],
       "@shared/*": ["shared/src/*"]
     }

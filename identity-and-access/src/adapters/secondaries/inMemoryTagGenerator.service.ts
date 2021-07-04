@@ -1,4 +1,4 @@
-import { GeneratedTag6 } from '@modules/identity-and-access/domain/models/generatedTag6';
+import { GeneratedTag6 } from '@identity-and-access/domain/models/generatedTag6';
 import { Injectable } from '@nestjs/common';
 import { TagGeneratorService } from '../../domain/services/tagGenerator.service';
 

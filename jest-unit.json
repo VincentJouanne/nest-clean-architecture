@@ -22,14 +22,14 @@
   },
   "coverageDirectory": "./coverage",
   "testEnvironment": "node",
-  "roots": ["<rootDir>/api-gateway", "<rootDir>/modules", "<rootDir>/shared"],
+  "roots": ["<rootDir>/api-gateway", "<rootDir>/modules", "<rootDir>/shared", "<rootDir>/identity-and-access"],
   "moduleNameMapper": {
     "^@api-gateway$": "<rootDir>/api-gateway/src",
     "^@app/api-gateway/(.*)$": "<rootDir>/api-gateway/src/$1",
     "^@core/logger$": "<rootDir>/modules/core/logger/src",
     "^@core/logger/(.*)$": "<rootDir>/modules/core/logger/src/$1",
-    "^@modules/identity-and-access$": "<rootDir>/modules/identity-and-access/src",
-    "^@modules/identity-and-access/(.*)$": "<rootDir>/modules/identity-and-access/src/$1",
+    "^@identity-and-access$": "<rootDir>/identity-and-access/src",
+    "^@identity-and-access/(.*)$": "<rootDir>/identity-and-access/src/$1",
     "^@shared/$": "<rootDir>/shared/src",
     "^@shared/(.*)$": "<rootDir>/shared/src/$1"
   }

@@ -1,13 +1,13 @@
-import { SignUp, SignUpHandler } from '@modules/identity-and-access/use-cases/commands/signUp.command';
-import { InMemoryTagGeneratorService } from '@modules/identity-and-access/adapters/secondaries/inMemoryTagGenerator.service';
-import { InMemoryUserRepository } from '@modules/identity-and-access/adapters/secondaries/inMemoryUser.repository';
+import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/signUp.command';
+import { InMemoryTagGeneratorService } from '@identity-and-access/adapters/secondaries/inMemoryTagGenerator.service';
+import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/inMemoryUser.repository';
 import { BasicLoggerService } from '@core/logger/adapters/basicLogger.service';
 import { executeTask } from '@shared/utils/executeTask';
 import { Test } from '@nestjs/testing';
-import { User } from '@modules/identity-and-access/domain/models/user';
-import { PasswordHashingService } from '@modules/identity-and-access/adapters/secondaries/passwordHashing.service';
-import { UUIDGeneratorService } from '@modules/identity-and-access/adapters/secondaries/uuidGenerator.service';
-import { DeterministicTagGeneratorService } from '@modules/identity-and-access/adapters/secondaries/deterministicTagGenerator.service';
+import { User } from '@identity-and-access/domain/models/user';
+import { PasswordHashingService } from '@identity-and-access/adapters/secondaries/passwordHashing.service';
+import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/uuidGenerator.service';
+import { DeterministicTagGeneratorService } from '@identity-and-access/adapters/secondaries/deterministicTagGenerator.service';
 
 describe('[Unit] Sign up with credentials', () => {
   //Adapters

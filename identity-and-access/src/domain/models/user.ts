@@ -1,6 +1,6 @@
 import { Static, Record } from 'runtypes';
-import { Email } from '@modules/identity-and-access/domain/models/email';
-import { UUID } from '@modules/identity-and-access/domain/models/uuid';
+import { Email } from '@identity-and-access/domain/models/email';
+import { UUID } from '@identity-and-access/domain/models/uuid';
 import { GeneratedTag6 } from './generatedTag6';
 import { HashedPassword } from './password';
 

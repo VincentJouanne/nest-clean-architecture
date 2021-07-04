@@ -1,5 +1,5 @@
 import { CoreLogger } from '@core/logger/adapters/pinoLogger.service';
-import { SignUp } from '@modules/identity-and-access/use-cases/commands/signUp.command';
+import { SignUp } from '@identity-and-access/use-cases/commands/signUp.command';
 import { Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';

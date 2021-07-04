@@ -1,5 +1,5 @@
 import * as uuid from 'uuid';
-import { UUID } from '@modules/identity-and-access/domain/models/uuid';
+import { UUID } from '@identity-and-access/domain/models/uuid';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

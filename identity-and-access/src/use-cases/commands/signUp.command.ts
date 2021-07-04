@@ -3,19 +3,19 @@ import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { chain, right, map } from 'fp-ts/lib/TaskEither';
 import { pipe } from 'fp-ts/lib/function';
 import { executeTask } from '@shared/utils/executeTask';
-import { UserRepository } from '@modules/identity-and-access/domain/repositories/user.repository';
+import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { perform } from '@shared/utils/perform';
-import { User } from '@modules/identity-and-access/domain/models/user';
-import { TagGeneratorService } from '@modules/identity-and-access/domain/services/tagGenerator.service';
+import { User } from '@identity-and-access/domain/models/user';
+import { TagGeneratorService } from '@identity-and-access/domain/services/tagGenerator.service';
 import { fromUnknown } from '@shared/utils/fromUnknown';
-import { PasswordHashingService } from '@modules/identity-and-access/adapters/secondaries/passwordHashing.service';
-import { PlainPassword } from '@modules/identity-and-access/domain/models/password';
+import { PasswordHashingService } from '@identity-and-access/adapters/secondaries/passwordHashing.service';
+import { PlainPassword } from '@identity-and-access/domain/models/password';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { taskEither } from 'fp-ts/lib/TaskEither';
-import { Email } from '@modules/identity-and-access/domain/models/email';
-import { UUIDGeneratorService } from '@modules/identity-and-access/adapters/secondaries/uuidGenerator.service';
-import { InMemoryUserRepository } from '@modules/identity-and-access/adapters/secondaries/inMemoryUser.repository';
-import { InMemoryTagGeneratorService } from '@modules/identity-and-access/adapters/secondaries/inMemoryTagGenerator.service';
+import { Email } from '@identity-and-access/domain/models/email';
+import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/uuidGenerator.service';
+import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/inMemoryUser.repository';
+import { InMemoryTagGeneratorService } from '@identity-and-access/adapters/secondaries/inMemoryTagGenerator.service';
 
 export class SignUp implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}

@@ -1,6 +1,6 @@
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
-import { User } from '@modules/identity-and-access/domain/models/user';
-import { UserRepository } from '@modules/identity-and-access/domain/repositories/user.repository';
+import { User } from '@identity-and-access/domain/models/user';
+import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

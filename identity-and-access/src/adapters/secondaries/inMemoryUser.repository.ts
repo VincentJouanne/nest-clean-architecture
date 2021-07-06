@@ -1,7 +1,7 @@
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 import { User } from '@identity-and-access/domain/models/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class InMemoryUserRepository implements UserRepository {
@@ -12,7 +12,7 @@ export class InMemoryUserRepository implements UserRepository {
       async () => {
         const existingUser = this.users.find((c) => c.email == user.email);
         if (existingUser == undefined) this.users.push(user);
-        else throw new Error('Email already exists.');
+        else throw new ConflictException('Email already exists.');
       },
       (error: Error) => error,
     );

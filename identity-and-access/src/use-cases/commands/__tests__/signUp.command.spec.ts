@@ -63,9 +63,10 @@ describe('[Unit] Sign up with credentials', () => {
   });
 
   it('KO - Should not create a user if password is invalid', async () => {
-    //Given a potentially invalid email
-    const email = 'abc123';
+    //Given a potentially invalid password
+    const email = 'dummy1@gmail.com';
     const password = 'toosimple';
+
     //When we create a user
     const resultPromise = signUpHandler.execute(new SignUp(email, password));
 

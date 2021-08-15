@@ -1,5 +1,5 @@
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
-import { User } from '@identity-and-access/domain/models/user';
+import { User } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { ConflictException, Injectable } from '@nestjs/common';
 

@@ -1,4 +1,4 @@
-import { HashedPassword, PlainPassword } from '@identity-and-access/domain/models/password';
+import { HashedPassword, PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';

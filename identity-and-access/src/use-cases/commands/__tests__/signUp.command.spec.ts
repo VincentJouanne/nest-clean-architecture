@@ -3,7 +3,7 @@ import { InMemoryUserRepository } from '@identity-and-access/adapters/secondarie
 import { BasicLoggerService } from '@common/logger/adapters/basicLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { Test } from '@nestjs/testing';
-import { User } from '@identity-and-access/domain/models/user';
+import { User } from '@identity-and-access/domain/entities/user';
 import { PasswordHashingService } from '@identity-and-access/adapters/secondaries/passwordHashing.service';
 import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/uuidGenerator.service';
 

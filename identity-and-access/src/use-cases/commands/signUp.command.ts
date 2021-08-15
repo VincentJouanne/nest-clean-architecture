@@ -4,16 +4,16 @@ import { chain, right, map } from 'fp-ts/lib/TaskEither';
 import { pipe } from 'fp-ts/lib/function';
 import { executeTask } from '@common/utils/executeTask';
 import { perform } from '@common/utils/perform';
-import { User } from '@identity-and-access/domain/models/user';
+import { User } from '@identity-and-access/domain/entities/user';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { PasswordHashingService } from '@identity-and-access/adapters/secondaries/passwordHashing.service';
-import { PlainPassword } from '@identity-and-access/domain/models/password';
+import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { taskEither } from 'fp-ts/lib/TaskEither';
-import { Email } from '@identity-and-access/domain/models/email';
+import { Email } from '@identity-and-access/domain/value-objects/email';
 import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/uuidGenerator.service';
 import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/inMemoryUser.repository';
-import { UUID } from '@identity-and-access/domain/models/uuid';
+import { UUID } from '@identity-and-access/domain/value-objects/uuid';
 
 export class SignUp implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}

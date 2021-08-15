@@ -1,11 +1,10 @@
-
 # compiled output
 /dist
 /node_modules
+/coverage
 
 # OS
 .DS_Store
 
 # IDE - VSCode
 .vscode/*
-

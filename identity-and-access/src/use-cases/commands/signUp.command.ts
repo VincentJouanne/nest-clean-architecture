@@ -13,6 +13,7 @@ import { taskEither } from 'fp-ts/lib/TaskEither';
 import { Email } from '@identity-and-access/domain/models/email';
 import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/uuidGenerator.service';
 import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/inMemoryUser.repository';
+import { UUID } from '@identity-and-access/domain/models/uuid';
 
 export class SignUp implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}
@@ -32,26 +33,27 @@ export class SignUpHandler implements ICommandHandler {
   execute(command: SignUp): Promise<void> {
     const task = pipe(
       right(command),
-      //Validation
+      //Data validation
       chain((command) =>
         sequenceS(taskEither)({
+          id: fromUnknown(this.uuidGeneratorService.generateUUID(), UUID, this.logger, 'uuid'),
           email: fromUnknown(command.email, Email, this.logger, 'email'),
           plainPassword: fromUnknown(command.password, PlainPassword, this.logger, 'plain password'),
         }),
       ),
-      //Encryption
-      chain((validatedParam) =>
+      //Password hashing
+      chain((validatedDatas) =>
         sequenceT(taskEither)(
-          perform(validatedParam.plainPassword, this.passwordHashingService.hash, this.logger, 'hash plain password'),
-          right(validatedParam.email),
+          perform(validatedDatas.plainPassword, this.passwordHashingService.hash, this.logger, 'hash plain password'),
+          right(validatedDatas),
         ),
       ),
-      //Formatting
-      chain(([hashedPassword, validatedEmail]) =>
+      //Create domain entity
+      chain(([hashedPassword, validatedDatas]) =>
         fromUnknown(
           {
-            id: this.uuidGeneratorService.generateUUID(),
-            email: validatedEmail,
+            id: validatedDatas.id,
+            email: validatedDatas.email,
             password: hashedPassword,
           },
           User,

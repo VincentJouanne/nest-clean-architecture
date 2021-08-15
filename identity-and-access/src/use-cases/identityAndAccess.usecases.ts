@@ -1,5 +1,5 @@
+import { IdentityAndAccessAdaptersModule } from '@identity-and-access/adapters/identityAndAccess.adapters';
 import { Module } from '@nestjs/common';
-import { IdentityAndAccessAdaptersModule } from '../adapters/identityAndAccess.adapters.module';
 import { SignUpHandler } from './commands/signUp.command';
 
 const commandHandlers = [SignUpHandler];

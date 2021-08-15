@@ -76,16 +76,14 @@ describe('[Unit] Sign up with credentials', () => {
 
   it('KO - Should not create a user if email already exists', async () => {
     //Given an existing user
-    jest.spyOn(userRepository, 'save').mockImplementation(() => {
-      throw new ConflictException('Email already exists.');
-    });
     const email = 'dummy1@gmail.com';
     const password = 'paSSw0rd!';
+    await signUpHandler.execute(new SignUp(email, password));
 
-    //When we create a user
+    //When we create a user with the same email
     const resultPromise = signUpHandler.execute(new SignUp(email, password));
 
-    //Then it should have thrown an error and not have created a user if it already exists
+    //Then it should have thrown an error and not have created a user if the email already exists
     await expect(resultPromise).rejects.toBeTruthy();
   });
 });

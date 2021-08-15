@@ -3,9 +3,9 @@ import { InMemoryUserRepository } from '@identity-and-access/adapters/secondarie
 import { BasicLoggerService } from '@common/logger/adapters/basicLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { Test } from '@nestjs/testing';
-import { User } from '@identity-and-access/domain/entities/user';
 import { PasswordHashingService } from '@identity-and-access/adapters/secondaries/passwordHashing.service';
 import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/uuidGenerator.service';
+import { ConflictException } from '@nestjs/common';
 
 describe('[Unit] Sign up with credentials', () => {
   //Adapters
@@ -76,18 +76,16 @@ describe('[Unit] Sign up with credentials', () => {
 
   it('KO - Should not create a user if email already exists', async () => {
     //Given an existing user
+    jest.spyOn(userRepository, 'save').mockImplementation(() => {
+      throw new ConflictException('Email already exists.');
+    });
     const email = 'dummy1@gmail.com';
     const password = 'paSSw0rd!';
-
-    await executeTask(userRepository.save(User.check({ id: uuidGeneratorService.generateUUID(), email: email, password: password })));
 
     //When we create a user
     const resultPromise = signUpHandler.execute(new SignUp(email, password));
 
-    //Then it should have thrown an error and not have created a user
+    //Then it should have thrown an error and not have created a user if it already exists
     await expect(resultPromise).rejects.toBeTruthy();
-
-    const users = await executeTask(userRepository.all());
-    expect(users.length).toEqual(1);
   });
 });

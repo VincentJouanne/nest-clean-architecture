@@ -10,9 +10,7 @@ export class InMemoryUserRepository implements UserRepository {
   save = (user: User): TaskEither<Error, void> => {
     return tryCatch(
       async () => {
-        const existingUser = this.users.find((c) => c.email == user.email);
-        if (existingUser == undefined) this.users.push(user);
-        else throw new ConflictException('Email already exists.');
+        this.users.push(user);
       },
       (error: Error) => error,
     );

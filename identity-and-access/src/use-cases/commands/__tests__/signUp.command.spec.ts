@@ -6,12 +6,10 @@ import { Test } from '@nestjs/testing';
 import { User } from '@identity-and-access/domain/models/user';
 import { PasswordHashingService } from '@identity-and-access/adapters/secondaries/passwordHashing.service';
 import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/uuidGenerator.service';
-import { DeterministicTagGeneratorService } from '@identity-and-access/adapters/secondaries/deterministicTagGenerator.service';
 
 describe('[Unit] Sign up with credentials', () => {
   //Adapters
   let uuidGeneratorService: UUIDGeneratorService;
-  let tagGeneratorService: DeterministicTagGeneratorService;
   let encryptionService: PasswordHashingService;
   let userRepository: InMemoryUserRepository;
   let logger: BasicLoggerService;
@@ -21,16 +19,15 @@ describe('[Unit] Sign up with credentials', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [UUIDGeneratorService, DeterministicTagGeneratorService, PasswordHashingService, InMemoryUserRepository, BasicLoggerService],
+      providers: [UUIDGeneratorService, PasswordHashingService, InMemoryUserRepository, BasicLoggerService],
     }).compile();
 
     uuidGeneratorService = moduleRef.get<UUIDGeneratorService>(UUIDGeneratorService);
-    tagGeneratorService = moduleRef.get<DeterministicTagGeneratorService>(DeterministicTagGeneratorService);
     encryptionService = moduleRef.get<PasswordHashingService>(PasswordHashingService);
     userRepository = moduleRef.get<InMemoryUserRepository>(InMemoryUserRepository);
     logger = moduleRef.get<BasicLoggerService>(BasicLoggerService);
 
-    signUpHandler = new SignUpHandler(uuidGeneratorService, tagGeneratorService, encryptionService, userRepository, logger);
+    signUpHandler = new SignUpHandler(uuidGeneratorService, encryptionService, userRepository, logger);
   });
 
   it('OK - Should sign up a user if email and passwords are valid', async () => {
@@ -82,11 +79,7 @@ describe('[Unit] Sign up with credentials', () => {
     const email = 'dummy1@gmail.com';
     const password = 'paSSw0rd!';
 
-    await executeTask(
-      userRepository.save(
-        User.check({ id: uuidGeneratorService.generateUUID(), tag: tagGeneratorService.generateTag6(), email: email, password: password }),
-      ),
-    );
+    await executeTask(userRepository.save(User.check({ id: uuidGeneratorService.generateUUID(), email: email, password: password })));
 
     //When we create a user
     const resultPromise = signUpHandler.execute(new SignUp(email, password));

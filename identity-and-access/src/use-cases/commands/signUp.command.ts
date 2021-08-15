@@ -13,7 +13,6 @@ import { taskEither } from 'fp-ts/lib/TaskEither';
 import { Email } from '@identity-and-access/domain/models/email';
 import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/uuidGenerator.service';
 import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/inMemoryUser.repository';
-import { InMemoryTagGeneratorService } from '@identity-and-access/adapters/secondaries/inMemoryTagGenerator.service';
 
 export class SignUp implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}
@@ -23,7 +22,6 @@ export class SignUp implements ICommand {
 export class SignUpHandler implements ICommandHandler {
   constructor(
     private readonly uuidGeneratorService: UUIDGeneratorService,
-    private readonly tagGeneratorService: InMemoryTagGeneratorService,
     private readonly passwordHashingService: PasswordHashingService,
     private readonly userRepository: InMemoryUserRepository,
     private readonly logger: CoreLogger,
@@ -53,7 +51,6 @@ export class SignUpHandler implements ICommandHandler {
         fromUnknown(
           {
             id: this.uuidGeneratorService.generateUUID(),
-            tag: this.tagGeneratorService.generateTag6(),
             email: validatedEmail,
             password: hashedPassword,
           },

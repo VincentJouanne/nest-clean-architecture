@@ -6,7 +6,7 @@
   "scripts": {
     "build": "nest build api-gateway",
     "start": "nest start api-gateway",
-    "test:unit": "jest --config ./jest-unit.json"
+    "test:unit": "jest --config ./jest-unit.json --coverage"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.17",

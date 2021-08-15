@@ -1,7 +1,7 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
-  "testRegex": "\\.spec\\.ts$",
+  "testMatch": ["**/unit/**"],
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },

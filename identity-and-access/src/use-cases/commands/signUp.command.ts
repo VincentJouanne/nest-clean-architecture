@@ -14,6 +14,7 @@ import { Email } from '@identity-and-access/domain/value-objects/email';
 import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/uuidGenerator.service';
 import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/inMemoryUser.repository';
 import { UUID } from '@identity-and-access/domain/value-objects/uuid';
+import { UnverifiedEmail } from '@identity-and-access/domain/value-objects/emailInfos';
 
 export class SignUp implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}
@@ -37,7 +38,7 @@ export class SignUpHandler implements ICommandHandler {
       chain((command) =>
         sequenceS(taskEither)({
           id: fromUnknown(this.uuidGeneratorService.generateUUID(), UUID, this.logger, 'uuid'),
-          email: fromUnknown(command.email, Email, this.logger, 'email'),
+          email: fromUnknown(command.email, UnverifiedEmail, this.logger, 'email'),
           plainPassword: fromUnknown(command.password, PlainPassword, this.logger, 'plain password'),
         }),
       ),

@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 const saltOrRounds = 10;
 
 @Injectable()
-export class PasswordHashingService {
+export class RealSecurityService {
   hash = (plainPassword: PlainPassword): TaskEither<Error, HashedPassword> => {
     return tryCatch(
       async () => {

@@ -3,7 +3,7 @@ import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
 import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/in-memory/inMemoryUser.repository';
-import { PasswordHashingService } from '@identity-and-access/adapters/secondaries/real/passwordHashing.service';
+import { RealSecurityService } from '@identity-and-access/adapters/secondaries/real/realSecurity.service';
 import { RealAuthenticationService } from '@identity-and-access/adapters/secondaries/real/realAuthentication.service';
 import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/uuidGenerator.service';
 import { User } from '@identity-and-access/domain/entities/user';
@@ -23,7 +23,7 @@ export class SignUp implements ICommand {
 export class SignUpHandler implements ICommandHandler {
   constructor(
     private readonly uuidGeneratorService: UUIDGeneratorService,
-    private readonly passwordHashingService: PasswordHashingService,
+    private readonly passwordHashingService: RealSecurityService,
     private readonly authenticationService: RealAuthenticationService,
     private readonly userRepository: InMemoryUserRepository,
     private readonly logger: CoreLogger,

@@ -7,12 +7,14 @@ import { Email } from '@identity-and-access/domain/value-objects/email';
 @Injectable()
 export class InMemoryUserRepository implements UserRepository {
   private users: User[] = [];
-  getByEmail = (email: Email): TaskEither<null, User> => {
+  getByEmail = (email: Email): TaskEither<Error, User | null> => {
     return tryCatch(
       async () => {
-        return this.users.find((u) => u.email == email);
+        const existingUser = this.users.find((u) => u.email == email);
+        if (existingUser == undefined) return null;
+        else return existingUser;
       },
-      () => null,
+      (error: Error) => error,
     );
   };
 

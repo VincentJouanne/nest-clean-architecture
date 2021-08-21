@@ -1,15 +1,16 @@
 import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/signUp.command';
-import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/inMemoryUser.repository';
+import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/in-memory/inMemoryUser.repository';
 import { BasicLoggerService } from '@common/logger/adapters/basicLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { Test } from '@nestjs/testing';
-import { PasswordHashingService } from '@identity-and-access/adapters/secondaries/passwordHashing.service';
-import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/uuidGenerator.service';
-import { ConflictException } from '@nestjs/common';
+import { PasswordHashingService } from '@identity-and-access/adapters/secondaries/real/passwordHashing.service';
+import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/uuidGenerator.service';
+import { RealAuthenticationService } from '@identity-and-access/adapters/secondaries/real/realAuthentication.service';
 
 describe('[Unit] Sign up with credentials', () => {
   //Adapters
   let uuidGeneratorService: UUIDGeneratorService;
+  let authenticationService: RealAuthenticationService;
   let encryptionService: PasswordHashingService;
   let userRepository: InMemoryUserRepository;
   let logger: BasicLoggerService;
@@ -19,15 +20,16 @@ describe('[Unit] Sign up with credentials', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [UUIDGeneratorService, PasswordHashingService, InMemoryUserRepository, BasicLoggerService],
+      providers: [UUIDGeneratorService, RealAuthenticationService, PasswordHashingService, InMemoryUserRepository, BasicLoggerService],
     }).compile();
 
     uuidGeneratorService = moduleRef.get<UUIDGeneratorService>(UUIDGeneratorService);
+    authenticationService = moduleRef.get<RealAuthenticationService>(RealAuthenticationService);
     encryptionService = moduleRef.get<PasswordHashingService>(PasswordHashingService);
     userRepository = moduleRef.get<InMemoryUserRepository>(InMemoryUserRepository);
     logger = moduleRef.get<BasicLoggerService>(BasicLoggerService);
 
-    signUpHandler = new SignUpHandler(uuidGeneratorService, encryptionService, userRepository, logger);
+    signUpHandler = new SignUpHandler(uuidGeneratorService, encryptionService, authenticationService, userRepository, logger);
   });
 
   it('OK - Should sign up a user if email and passwords are valid', async () => {

@@ -1,4 +1,4 @@
-import { CoreLogger } from '@common/logger/adapters/pinoLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
 import { SignUp } from '@identity-and-access/use-cases/commands/signUp.command';
 import { Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -6,7 +6,7 @@ import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()
 export class IdentityAndAccessController {
-  constructor(private readonly commandBus: CommandBus, private readonly logger: CoreLogger) {}
+  constructor(private readonly commandBus: CommandBus, private readonly logger: PinoLoggerService) {}
 
   signUp = (email: string, password: string): TaskEither<Error, void> => {
     const signUpTask = tryCatch(

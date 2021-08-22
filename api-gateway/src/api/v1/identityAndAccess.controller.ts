@@ -1,4 +1,4 @@
-import { CoreLogger } from '@common/logger/adapters/pinoLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
 import { IdentityAndAccessController } from '@identity-and-access/adapters/primaries/identityAndAccess.controller';
 import { BadRequestException, Controller, HttpCode, InternalServerErrorException, Post, Body, UnprocessableEntityException } from '@nestjs/common';
 import { ApiConflictResponse, ApiOperation, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
@@ -10,7 +10,7 @@ import { pipe } from 'fp-ts/lib/function';
 @Controller('v1')
 @ApiTags('Identity and access')
 export class IdentityAndAccessApiControllerV1 {
-  constructor(private readonly identityAndAccessController: IdentityAndAccessController, private readonly logger: CoreLogger) {}
+  constructor(private readonly identityAndAccessController: IdentityAndAccessController, private readonly logger: PinoLoggerService) {}
 
   @Post('signup')
   @HttpCode(201)

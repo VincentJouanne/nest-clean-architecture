@@ -1,16 +1,20 @@
-import { BasicLoggerService } from '@common/logger/adapters/basicLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
 import { perform } from '@common/utils/perform';
 import { User } from '@identity-and-access/domain/entities/user';
 import { AuthenticationService } from '@identity-and-access/domain/services/authentication.service';
 import { Email } from '@identity-and-access/domain/value-objects/email';
+import { HashedPassword, PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { isRight } from 'fp-ts/lib/Either';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 import { InMemoryUserRepository } from '../in-memory/inMemoryUser.repository';
+import * as bcrypt from 'bcrypt';
+
+const saltOrRounds = 10;
 
 @Injectable()
-export class RealAuthenticationService implements AuthenticationService {
-  constructor(private userRepository: InMemoryUserRepository, private logger: BasicLoggerService) {
+export class DefaultAuthenticationService implements AuthenticationService {
+  constructor(private userRepository: InMemoryUserRepository, private logger: PinoLoggerService) {
     this.logger.setContext('AuthenticationService');
   }
 
@@ -22,4 +26,14 @@ export class RealAuthenticationService implements AuthenticationService {
       },
       (error: Error) => error,
     );
+
+  hashPlainPassword = (plainPassword: PlainPassword): TaskEither<Error, HashedPassword> => {
+    return tryCatch(
+      async () => {
+        const hash = await bcrypt.hash(plainPassword, saltOrRounds);
+        return HashedPassword.check(hash);
+      },
+      (error: Error) => error,
+    );
+  };
 }

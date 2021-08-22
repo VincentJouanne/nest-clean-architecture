@@ -1,11 +1,10 @@
-import { CoreLogger } from '@common/logger/adapters/pinoLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
 import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/in-memory/inMemoryUser.repository';
-import { RealSecurityService } from '@identity-and-access/adapters/secondaries/real/realSecurity.service';
-import { RealAuthenticationService } from '@identity-and-access/adapters/secondaries/real/realAuthentication.service';
-import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/uuidGenerator.service';
+import { DefaultAuthenticationService } from '@identity-and-access/adapters/secondaries/real/defaultAuthentication.service';
+import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
 import { User } from '@identity-and-access/domain/entities/user';
 import { UnverifiedEmail } from '@identity-and-access/domain/value-objects/emailInfos';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
@@ -22,11 +21,10 @@ export class SignUp implements ICommand {
 @CommandHandler(SignUp)
 export class SignUpHandler implements ICommandHandler {
   constructor(
-    private readonly uuidGeneratorService: UUIDGeneratorService,
-    private readonly passwordHashingService: RealSecurityService,
-    private readonly authenticationService: RealAuthenticationService,
+    private readonly uuidGeneratorService: DefaultUUIDGeneratorService,
+    private readonly authenticationService: DefaultAuthenticationService,
     private readonly userRepository: InMemoryUserRepository,
-    private readonly logger: CoreLogger,
+    private readonly logger: PinoLoggerService,
   ) {
     this.logger.setContext('SignUp');
   }
@@ -44,7 +42,7 @@ export class SignUpHandler implements ICommandHandler {
       chain((validatedDatas) =>
         pipe(
           perform(validatedDatas.email, this.authenticationService.assertEmailUnicity, this.logger, 'assert email unicity'),
-          chain(() => perform(validatedDatas.plainPassword, this.passwordHashingService.hash, this.logger, 'hash plain password')),
+          chain(() => perform(validatedDatas.plainPassword, this.authenticationService.hashPlainPassword, this.logger, 'hash plain password')),
           chain((hashedPassword) =>
             fromUnknown(
               {

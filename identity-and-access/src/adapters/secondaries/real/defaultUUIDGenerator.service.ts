@@ -3,6 +3,6 @@ import { UUID } from '@identity-and-access/domain/value-objects/uuid';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class UUIDGeneratorService {
+export class DefaultUUIDGeneratorService {
   generateUUID = () => UUID.check(uuid.v4());
 }

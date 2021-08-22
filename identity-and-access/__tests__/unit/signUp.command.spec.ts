@@ -1,17 +1,16 @@
-import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/signUp.command';
-import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/in-memory/inMemoryUser.repository';
 import { BasicLoggerService } from '@common/logger/adapters/basicLogger.service';
+import { LoggerModule } from '@common/logger/logger.module';
 import { executeTask } from '@common/utils/executeTask';
+import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/in-memory/inMemoryUser.repository';
+import { DefaultAuthenticationService } from '@identity-and-access/adapters/secondaries/real/defaultAuthentication.service';
+import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
+import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/signUp.command';
 import { Test } from '@nestjs/testing';
-import { RealSecurityService } from '@identity-and-access/adapters/secondaries/real/realSecurity.service';
-import { UUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/uuidGenerator.service';
-import { RealAuthenticationService } from '@identity-and-access/adapters/secondaries/real/realAuthentication.service';
 
 describe('[Unit] Sign up with credentials', () => {
   //Adapters
-  let uuidGeneratorService: UUIDGeneratorService;
-  let authenticationService: RealAuthenticationService;
-  let securityService: RealSecurityService;
+  let uuidGeneratorService: DefaultUUIDGeneratorService;
+  let authenticationService: DefaultAuthenticationService;
   let userRepository: InMemoryUserRepository;
   let logger: BasicLoggerService;
 
@@ -20,16 +19,16 @@ describe('[Unit] Sign up with credentials', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [UUIDGeneratorService, RealAuthenticationService, RealSecurityService, InMemoryUserRepository, BasicLoggerService],
+      imports: [LoggerModule],
+      providers: [DefaultUUIDGeneratorService, DefaultAuthenticationService, InMemoryUserRepository, BasicLoggerService],
     }).compile();
 
-    uuidGeneratorService = moduleRef.get<UUIDGeneratorService>(UUIDGeneratorService);
-    authenticationService = moduleRef.get<RealAuthenticationService>(RealAuthenticationService);
-    securityService = moduleRef.get<RealSecurityService>(RealSecurityService);
+    uuidGeneratorService = moduleRef.get<DefaultUUIDGeneratorService>(DefaultUUIDGeneratorService);
+    authenticationService = moduleRef.get<DefaultAuthenticationService>(DefaultAuthenticationService);
     userRepository = moduleRef.get<InMemoryUserRepository>(InMemoryUserRepository);
     logger = moduleRef.get<BasicLoggerService>(BasicLoggerService);
 
-    signUpHandler = new SignUpHandler(uuidGeneratorService, securityService, authenticationService, userRepository, logger);
+    signUpHandler = new SignUpHandler(uuidGeneratorService, authenticationService, userRepository, logger);
   });
 
   it('OK - Should sign up a user if email and passwords are valid', async () => {

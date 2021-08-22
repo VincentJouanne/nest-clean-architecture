@@ -2,7 +2,7 @@
 import { Module, Type, DynamicModule, ForwardReference } from '@nestjs/common';
 import { OnModuleInit } from '@nestjs/common';
 
-import { CoreLogger } from 'common/logger/src/adapters/pinoLogger.service';
+import { PinoLoggerService } from 'common/logger/src/adapters/pinoLogger.service';
 import { LoggerModule } from 'common/logger/src/logger.module';
 import { IdentityAndAccessModule } from '@identity-and-access/identityAndAccess.module';
 import { IdentityAndAccessApiControllerV1 } from './api/v1/identityAndAccess.controller';
@@ -24,7 +24,7 @@ const queues: DynamicModule[] = [];
   controllers: [...controllers],
 })
 export class AppModule implements OnModuleInit {
-  constructor(private readonly logger: CoreLogger) {}
+  constructor(private readonly logger: PinoLoggerService) {}
 
   onModuleInit(): void {
     this.logger.setContext('AppModule');

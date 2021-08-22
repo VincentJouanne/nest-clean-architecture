@@ -2,7 +2,7 @@ import { Injectable, LoggerService } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 
 @Injectable()
-export class CoreLogger implements LoggerService {
+export class PinoLoggerService implements LoggerService {
   readonly contextName: string;
 
   constructor(readonly logger: PinoLogger) {

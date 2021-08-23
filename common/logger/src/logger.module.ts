@@ -13,11 +13,6 @@ declare module 'http' {
   }
 }
 
-const configLogger = {
-  provide: ConfigService,
-  useClass: process.env.NODE_ENV === 'test' ? BasicLoggerService : PinoLoggerService,
-};
-
 @Global()
 @Module({
   imports: [
@@ -32,7 +27,7 @@ const configLogger = {
       },
     }),
   ],
-  providers: [configLogger, PinoLoggerService],
+  providers: [BasicLoggerService, PinoLoggerService],
   exports: [PinoLoggerService],
 })
 export class LoggerModule {}

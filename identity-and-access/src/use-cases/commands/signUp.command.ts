@@ -1,3 +1,4 @@
+import { DomainEventPublisher } from '@common/domain-event-publisher/adapters/domainEventPublisher';
 import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
@@ -24,6 +25,7 @@ export class SignUpHandler implements ICommandHandler {
     private readonly uuidGeneratorService: DefaultUUIDGeneratorService,
     private readonly authenticationService: DefaultAuthenticationService,
     private readonly userRepository: InMemoryUserRepository,
+    private readonly domainEventPublisher: DomainEventPublisher,
     private readonly logger: PinoLoggerService,
   ) {
     this.logger.setContext('SignUp');
@@ -39,6 +41,7 @@ export class SignUpHandler implements ICommandHandler {
         email: fromUnknown(email, UnverifiedEmail, this.logger, 'email'),
         plainPassword: fromUnknown(password, PlainPassword, this.logger, 'plain password'),
       }),
+      //Use-case process
       chain((validatedDatas) =>
         pipe(
           perform(validatedDatas.email, this.authenticationService.assertEmailUnicity, this.logger, 'assert email unicity'),
@@ -59,6 +62,8 @@ export class SignUpHandler implements ICommandHandler {
       ),
       //Storage
       chain((user) => perform(user, this.userRepository.save, this.logger, 'save user in storage system.')),
+      //Emit domain event
+      chain(() => perform('user.created', this.domainEventPublisher.publishEvent, this.logger, 'save user in storage system.')),
       map(noop),
     );
     return executeTask(task);

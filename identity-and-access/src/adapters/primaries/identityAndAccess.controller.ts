@@ -1,7 +1,7 @@
 import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
 import { SignUp } from '@identity-and-access/use-cases/commands/signUp.command';
 import { Injectable } from '@nestjs/common';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { CommandBus } from '@nestjs/cqrs';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()

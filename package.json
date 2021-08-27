@@ -13,6 +13,7 @@
     "@nestjs/config": "^0.6.3",
     "@nestjs/core": "^7.6.17",
     "@nestjs/cqrs": "^7.0.1",
+    "@nestjs/event-emitter": "^1.0.0",
     "@nestjs/platform-express": "^7.6.17",
     "@nestjs/swagger": "^4.8.0",
     "@types/bcrypt": "^5.0.0",

@@ -1,4 +1,4 @@
-import { Contract, Static, String, Unknown } from 'runtypes';
+import { Static, String } from 'runtypes';
 
 const AtLeastOneLowerLetterRegex = /(?=.*[a-z])/;
 const AtLeastOneUpperLetterRegex = /(?=.*[A-Z])/;

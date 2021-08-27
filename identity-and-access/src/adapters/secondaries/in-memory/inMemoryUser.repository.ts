@@ -1,8 +1,8 @@
-import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 import { User } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
-import { ConflictException, Injectable } from '@nestjs/common';
 import { Email } from '@identity-and-access/domain/value-objects/email';
+import { Injectable } from '@nestjs/common';
+import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()
 export class InMemoryUserRepository implements UserRepository {

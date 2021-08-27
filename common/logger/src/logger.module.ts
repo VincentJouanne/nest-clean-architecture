@@ -1,11 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
 import { stdTimeFunctions } from 'pino';
-
 import { PinoLoggerService } from './adapters/pinoLogger.service';
+import { MockLoggerService } from './adapters/basicLogger.service';
 import * as uuid from 'uuid';
-import { ConfigService } from '@nestjs/config';
-import { BasicLoggerService } from './adapters/basicLogger.service';
 
 declare module 'http' {
   interface IncomingMessage {
@@ -27,7 +25,7 @@ declare module 'http' {
       },
     }),
   ],
-  providers: [BasicLoggerService, PinoLoggerService],
+  providers: [MockLoggerService, PinoLoggerService],
   exports: [PinoLoggerService],
 })
 export class LoggerModule {}

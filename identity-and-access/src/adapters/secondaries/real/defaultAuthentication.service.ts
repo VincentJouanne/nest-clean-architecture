@@ -5,10 +5,10 @@ import { AuthenticationService } from '@identity-and-access/domain/services/auth
 import { Email } from '@identity-and-access/domain/value-objects/email';
 import { HashedPassword, PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { ConflictException, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { isRight } from 'fp-ts/lib/Either';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 import { InMemoryUserRepository } from '../in-memory/inMemoryUser.repository';
-import * as bcrypt from 'bcrypt';
 
 const saltOrRounds = 10;
 

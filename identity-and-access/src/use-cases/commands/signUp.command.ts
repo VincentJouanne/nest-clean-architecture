@@ -14,6 +14,7 @@ import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
 import { chain, map, taskEither } from 'fp-ts/lib/TaskEither';
+import { USER_CREATED } from '../listeners/userEvent.listener';
 
 export class SignUp implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}
@@ -63,7 +64,15 @@ export class SignUpHandler implements ICommandHandler {
       //Storage
       chain((user) => perform(user, this.userRepository.save, this.logger, 'save user in storage system.')),
       //Emit domain event
-      chain(() => perform('user.created', this.domainEventPublisher.publishEvent, this.logger, 'save user in storage system.')),
+      chain(() =>
+        perform(
+          //TODO: Refactor: email should be the one from validated datas. Prepare domain event before storing user, then emit event.
+          { eventKey: USER_CREATED, payload: { email: email } },
+          this.domainEventPublisher.publishEvent,
+          this.logger,
+          'emit user created event.',
+        ),
+      ),
       map(noop),
     );
     return executeTask(task);

@@ -1,5 +1,8 @@
+import { Record, Static } from 'runtypes';
 import { Email } from '../value-objects/email';
 
-export class UserCreatedEvent {
-  email: Email;
-}
+export const UserCreatedEvent = Record({
+  email: Email,
+});
+
+export type UserCreatedEvent = Static<typeof UserCreatedEvent>;

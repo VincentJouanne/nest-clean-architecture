@@ -3,13 +3,14 @@ import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
-import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/in-memory/inMemoryUser.repository';
 import { DefaultAuthenticationService } from '@identity-and-access/adapters/secondaries/real/defaultAuthentication.service';
 import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
 import { User } from '@identity-and-access/domain/entities/user';
+import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { UnverifiedEmail } from '@identity-and-access/domain/value-objects/emailInfos';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { UUID } from '@identity-and-access/domain/value-objects/uuid';
+import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
@@ -24,7 +25,7 @@ export class SignUpHandler implements ICommandHandler {
   constructor(
     private readonly uuidGeneratorService: DefaultUUIDGeneratorService,
     private readonly authenticationService: DefaultAuthenticationService,
-    private readonly userRepository: InMemoryUserRepository,
+    @Inject('UserRepository') private readonly userRepository: UserRepository,
     private readonly domainEventPublisher: DomainEventPublisher,
     private readonly logger: PinoLoggerService,
   ) {

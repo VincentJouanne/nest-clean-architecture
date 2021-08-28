@@ -3,10 +3,18 @@ import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secon
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { DefaultAuthenticationService } from './secondaries/real/defaultAuthentication.service';
+import { RealUserRepository } from './secondaries/real/realUser.repository';
 
 @Module({
   imports: [CqrsModule],
-  providers: [DefaultUUIDGeneratorService, InMemoryUserRepository, DefaultAuthenticationService],
+  providers: [
+    DefaultUUIDGeneratorService,
+    {
+      provide: 'UserRepository',
+      useClass: RealUserRepository,
+    },
+    DefaultAuthenticationService,
+  ],
   exports: [CqrsModule, DefaultUUIDGeneratorService, InMemoryUserRepository, DefaultAuthenticationService],
 })
 export class IdentityAndAccessAdaptersModule {}

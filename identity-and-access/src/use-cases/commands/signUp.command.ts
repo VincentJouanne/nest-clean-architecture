@@ -3,10 +3,10 @@ import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
-import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/in-memory/inMemoryUser.repository';
 import { DefaultAuthenticationService } from '@identity-and-access/adapters/secondaries/real/defaultAuthentication.service';
 import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
 import { User } from '@identity-and-access/domain/entities/user';
+import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { UnverifiedEmail } from '@identity-and-access/domain/value-objects/emailInfos';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { UUID } from '@identity-and-access/domain/value-objects/uuid';
@@ -14,6 +14,7 @@ import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
 import { chain, map, taskEither } from 'fp-ts/lib/TaskEither';
+import { USER_CREATED } from '../listeners/userEvent.listener';
 
 export class SignUp implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}
@@ -24,7 +25,7 @@ export class SignUpHandler implements ICommandHandler {
   constructor(
     private readonly uuidGeneratorService: DefaultUUIDGeneratorService,
     private readonly authenticationService: DefaultAuthenticationService,
-    private readonly userRepository: InMemoryUserRepository,
+    private readonly userRepository: UserRepository,
     private readonly domainEventPublisher: DomainEventPublisher,
     private readonly logger: PinoLoggerService,
   ) {
@@ -63,7 +64,15 @@ export class SignUpHandler implements ICommandHandler {
       //Storage
       chain((user) => perform(user, this.userRepository.save, this.logger, 'save user in storage system.')),
       //Emit domain event
-      chain(() => perform('user.created', this.domainEventPublisher.publishEvent, this.logger, 'save user in storage system.')),
+      chain(() =>
+        perform(
+          //TODO: Refactor: email should be the one from validated datas. Prepare domain event before storing user, then emit event.
+          { eventKey: USER_CREATED, payload: { email: email } },
+          this.domainEventPublisher.publishEvent,
+          this.logger,
+          'emit user created event.',
+        ),
+      ),
       map(noop),
     );
     return executeTask(task);

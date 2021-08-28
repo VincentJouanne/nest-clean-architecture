@@ -10,7 +10,6 @@ import { UserRepository } from '@identity-and-access/domain/repositories/user.re
 import { UnverifiedEmail } from '@identity-and-access/domain/value-objects/emailInfos';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { UUID } from '@identity-and-access/domain/value-objects/uuid';
-import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
@@ -25,7 +24,7 @@ export class SignUpHandler implements ICommandHandler {
   constructor(
     private readonly uuidGeneratorService: DefaultUUIDGeneratorService,
     private readonly authenticationService: DefaultAuthenticationService,
-    @Inject('UserRepository') private readonly userRepository: UserRepository,
+    private readonly userRepository: UserRepository,
     private readonly domainEventPublisher: DomainEventPublisher,
     private readonly logger: PinoLoggerService,
   ) {

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { IdentityAndAccessAdaptersModule } from './adapters/identityAndAccess.adapters';
+import { CqrsModule } from '@nestjs/cqrs';
 import { IdentityAndAccessController } from './adapters/primaries/identityAndAccess.controller';
 import { IdentityAndAccessUseCasesModule } from './use-cases/identityAndAccess.usecases';
 
 @Module({
-  imports: [IdentityAndAccessAdaptersModule, IdentityAndAccessUseCasesModule],
+  imports: [CqrsModule, IdentityAndAccessUseCasesModule],
   providers: [IdentityAndAccessController],
   exports: [IdentityAndAccessController],
 })

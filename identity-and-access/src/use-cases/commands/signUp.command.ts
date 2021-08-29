@@ -3,7 +3,7 @@ import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
-import { DefaultAuthenticationService } from '@identity-and-access/adapters/secondaries/real/defaultAuthentication.service';
+import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
 import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
 import { User } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
@@ -25,7 +25,7 @@ export class SignUp implements ICommand {
 export class SignUpHandler implements ICommandHandler {
   constructor(
     private readonly uuidGeneratorService: DefaultUUIDGeneratorService,
-    private readonly authenticationService: DefaultAuthenticationService,
+    private readonly hashingService: DefaultHashingService,
     private readonly userRepository: UserRepository,
     private readonly domainEventPublisher: DomainEventPublisher,
     private readonly logger: PinoLoggerService,
@@ -56,7 +56,7 @@ export class SignUpHandler implements ICommandHandler {
       //Use-case process
       chain((validatedDatas) =>
         sequenceT(taskEither)(
-          perform(validatedDatas.plainPassword, this.authenticationService.hashPlainPassword, this.logger, 'hash plain password'),
+          perform(validatedDatas.plainPassword, this.hashingService.hashPlainPassword, this.logger, 'hash plain password'),
           right(validatedDatas),
         ),
       ),

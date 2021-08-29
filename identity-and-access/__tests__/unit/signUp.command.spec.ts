@@ -3,7 +3,7 @@ import { MockedLoggerService } from '@common/logger/adapters/mockedLogger.servic
 import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/in-memory/inMemoryUser.repository';
-import { DefaultAuthenticationService } from '@identity-and-access/adapters/secondaries/real/defaultAuthentication.service';
+import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
 import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/signUp.command';
@@ -21,7 +21,7 @@ describe('[Unit] Sign up with credentials', () => {
       providers: [
         SignUpHandler,
         DefaultUUIDGeneratorService,
-        DefaultAuthenticationService,
+        DefaultHashingService,
         { provide: UserRepository, useClass: InMemoryUserRepository },
         { provide: PinoLoggerService, useClass: MockedLoggerService },
       ],

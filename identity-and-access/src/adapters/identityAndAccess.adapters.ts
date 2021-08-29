@@ -2,6 +2,7 @@ import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secon
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { Module } from '@nestjs/common';
 import { DefaultAuthenticationService } from './secondaries/real/defaultAuthentication.service';
+import { DefaultHashingService } from './secondaries/real/defaultHashing.service';
 import { RealUserRepository } from './secondaries/real/realUser.repository';
 
 @Module({
@@ -12,7 +13,8 @@ import { RealUserRepository } from './secondaries/real/realUser.repository';
       useClass: RealUserRepository,
     },
     DefaultAuthenticationService,
+    DefaultHashingService,
   ],
-  exports: [DefaultUUIDGeneratorService, UserRepository, DefaultAuthenticationService],
+  exports: [DefaultUUIDGeneratorService, UserRepository, DefaultAuthenticationService, DefaultHashingService],
 })
 export class IdentityAndAccessAdaptersModule {}

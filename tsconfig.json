@@ -23,6 +23,8 @@
       "@common/mail/*": ["common/mail/src/*"],
       "@common/domain-event-publisher": ["common/domain-event-publisher/src"],
       "@common/domain-event-publisher/*": ["common/domain-event-publisher/src/*"],
+      "@common/prisma": ["common/prisma/src"],
+      "@common/prisma/*": ["common/prisma/src/*"],
       "@common/utils": ["common/utils"],
       "@common/utils/*": ["common/utils/*"],
       "@identity-and-access": ["identity-and-access/src"],

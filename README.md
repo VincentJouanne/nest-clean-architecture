@@ -18,3 +18,19 @@ Functionnal Programming may look intimidating, if you are new to it, you should 
 ## Project Overview
 
 ![Nest Clean Architecture](./docs/assets/nest-clean-architecture.png)
+
+## Unit testing
+
+One of the most controversial subject in Software development is unit testing. What and how should we test ?
+
+Unit test should **focus on the business value** of your application: the use-cases.
+
+They have to be really fast (< x0 ms) in order to iterate quickly on the algorithm we are working on.
+
+In the outside world, we distinguish two approaches for unit testing: [the Classicist vs the Mockist](https://martinfowler.com/articles/mocksArentStubs.html).
+
+This project uses the classicist approach in order to focus on the result of the behavior of the use-cases and not on how the behavior has been implemented: this leads to more meaningful tests, with a lighter syntax.
+
+So, use-cases are black-boxed tested with fake secondaries adapters injected at the beginning of the test suite.
+
+![Classicist unit testing](./docs/assets/unit-test.png)

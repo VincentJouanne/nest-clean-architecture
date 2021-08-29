@@ -1,5 +1,5 @@
+import { Email } from '@common/mail/domain/value-objects/email';
 import { Static, Union } from 'runtypes';
-import { Email } from './email';
 
 export const UnverifiedEmail = Email.withBrand('UnverifiedEmail');
 export type UnverifiedEmail = Static<typeof UnverifiedEmail>;

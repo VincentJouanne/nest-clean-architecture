@@ -5,11 +5,10 @@ import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
 import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
 import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
-import { User } from '@identity-and-access/domain/entities/user';
+import { User, UserId } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
-import { UnverifiedEmail } from '@identity-and-access/domain/value-objects/emailInfos';
+import { EmailInfos } from '@identity-and-access/domain/value-objects/emailInfos';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
-import { UUID } from '@identity-and-access/domain/value-objects/uuid';
 import { ConflictException } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
@@ -39,8 +38,8 @@ export class SignUpHandler implements ICommandHandler {
     const task = pipe(
       //Data validation
       sequenceS(taskEither)({
-        id: fromUnknown(this.uuidGeneratorService.generateUUID(), UUID, this.logger, 'uuid'),
-        email: fromUnknown(email, UnverifiedEmail, this.logger, 'email'),
+        id: fromUnknown(this.uuidGeneratorService.generateUUID(), UserId, this.logger, 'uuid'),
+        email: fromUnknown(email, EmailInfos, this.logger, 'email'),
         plainPassword: fromUnknown(password, PlainPassword, this.logger, 'plain password'),
       }),
       chain((validatedDatas) =>

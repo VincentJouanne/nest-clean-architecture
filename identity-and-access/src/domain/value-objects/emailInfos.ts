@@ -8,3 +8,4 @@ export const VerifiedEmail = Email.withBrand('VerifiedEmail');
 export type VerifiedEmail = Static<typeof VerifiedEmail>;
 
 export const EmailInfos = Union(UnverifiedEmail, VerifiedEmail);
+export type EmailInfos = Static<typeof EmailInfos>;

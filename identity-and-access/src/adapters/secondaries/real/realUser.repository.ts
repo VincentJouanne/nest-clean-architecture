@@ -54,13 +54,4 @@ export class RealUserRepository implements UserRepository {
       (error: Error) => error,
     );
   };
-
-  all = (): TaskEither<Error, User[]> => {
-    return tryCatch(
-      async () => {
-        return [];
-      },
-      (error: Error) => error,
-    );
-  };
 }

@@ -10,7 +10,7 @@ import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/s
 import { Test } from '@nestjs/testing';
 
 //Adapters
-let userRepository: UserRepository;
+let userRepository: InMemoryUserRepository;
 
 describe('[Unit] Sign up with credentials', () => {
   let signUpHandler: SignUpHandler;
@@ -27,7 +27,7 @@ describe('[Unit] Sign up with credentials', () => {
       ],
     }).compile();
 
-    userRepository = moduleRef.get<UserRepository>(UserRepository);
+    userRepository = moduleRef.get<UserRepository>(UserRepository) as InMemoryUserRepository;
     signUpHandler = moduleRef.get<SignUpHandler>(SignUpHandler);
   });
 

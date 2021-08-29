@@ -33,4 +33,4 @@ This project uses the classicist approach in order to focus on the result of the
 
 So, use-cases are black-boxed tested with fake secondaries adapters injected at the beginning of the test suite.
 
-![Classicist unit testing](./docs/assets/unit-test.png)
+![Classicist unit testing](./docs/assets/unit-testing.png)

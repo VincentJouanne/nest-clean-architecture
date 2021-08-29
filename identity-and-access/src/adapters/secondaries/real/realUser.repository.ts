@@ -1,4 +1,5 @@
 import { Email } from '@common/mail/domain/value-objects/email';
+import { PrismaService } from '@common/prisma/adapters/prisma.service';
 import { User } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { Injectable } from '@nestjs/common';
@@ -6,11 +7,22 @@ import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()
 export class RealUserRepository implements UserRepository {
+  constructor(private prisma: PrismaService) {}
+
   getByEmail = (email: Email): TaskEither<Error, User | null> => {
     return tryCatch(
       async () => {
-        //TODO: Add real implementation
-        return null;
+        const prismaUser = await this.prisma.user.findFirst({ where: { email: email } });
+        if (prismaUser === null) {
+          return null;
+        }
+        //TODO: Create a util to convert Persistence to Domain
+        else
+          return User.check({
+            id: prismaUser.id,
+            email: prismaUser.email,
+            password: prismaUser.password,
+          });
       },
       (error: Error) => error,
     );
@@ -19,7 +31,22 @@ export class RealUserRepository implements UserRepository {
   save = (user: User): TaskEither<Error, void> => {
     return tryCatch(
       async () => {
-        //TODO: Add real implementation
+        await this.prisma.user.upsert({
+          where: {
+            id: user.id,
+          },
+          update: {
+            email: user.email,
+            password: user.password,
+          },
+          create: {
+            id: user.id,
+            email: user.email,
+            //TODO: Fix me, email should be typed in order to determine whereas the email is verified or not.
+            is_verified_email: false,
+            password: user.password,
+          },
+        });
         return;
       },
       (error: Error) => error,

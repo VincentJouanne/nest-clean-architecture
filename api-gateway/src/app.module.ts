@@ -1,5 +1,6 @@
 // Nest imports
 import { DomainEventPublisherModule } from '@common/domain-event-publisher/domainEventPublisher.module';
+import { PrismaModule } from '@common/prisma/prisma.module';
 import { IdentityAndAccessModule } from '@identity-and-access/identityAndAccess.module';
 import { DynamicModule, ForwardReference, Module, OnModuleInit, Type } from '@nestjs/common';
 import { PinoLoggerService } from 'common/logger/src/adapters/pinoLogger.service';
@@ -10,7 +11,7 @@ import { IdentityAndAccessApiControllerV1 } from './api/v1/identityAndAccess.con
 type NestModuleImport = Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference<any>;
 
 // SubModule used by the server
-const appModules: NestModuleImport[] = [LoggerModule, DomainEventPublisherModule, MailModule, IdentityAndAccessModule];
+const appModules: NestModuleImport[] = [LoggerModule, DomainEventPublisherModule, MailModule, PrismaModule, IdentityAndAccessModule];
 
 // Infrastructure Modules (DB, config) used by the server
 const infrastructureModules: NestModuleImport[] = [];

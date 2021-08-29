@@ -13,7 +13,6 @@ export class RealUserRepository implements UserRepository {
     return tryCatch(
       async () => {
         const prismaUser = await this.prisma.user.findFirst({ where: { email: email } });
-        console.log('PRISMA USER', prismaUser);
         if (prismaUser === null) {
           return null;
         }

@@ -46,6 +46,19 @@ describe('[Unit] Sign up with credentials', () => {
     expect(users.length).toEqual(1);
   });
 
+  it('OK - Should have set the user as unverified if he successfully signed up', async () => {
+    //Given a potentially valid email
+    const email = 'dummy1@gmail.com';
+    const password = 'paSSw0rd!';
+
+    //When we create a user
+    const result = await signUpHandler.execute(new SignUp(email, password));
+
+    //Then the user should not be verified
+    const users = await executeTask(userRepository.all());
+    expect(users[0].isVerified).toEqual(false);
+  });
+
   //TODO: Check if the domain event is effectively emitted.
 
   it('KO - Should not create a user if email is invalid', async () => {

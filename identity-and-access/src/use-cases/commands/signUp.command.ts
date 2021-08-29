@@ -10,10 +10,11 @@ import { UserRepository } from '@identity-and-access/domain/repositories/user.re
 import { UnverifiedEmail } from '@identity-and-access/domain/value-objects/emailInfos';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { UUID } from '@identity-and-access/domain/value-objects/uuid';
+import { ConflictException } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
-import { sequenceS } from 'fp-ts/lib/Apply';
+import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
-import { chain, map, taskEither } from 'fp-ts/lib/TaskEither';
+import { chain, left, map, right, taskEither } from 'fp-ts/lib/TaskEither';
 import { USER_CREATED } from '../listeners/userEvent.listener';
 
 export class SignUp implements ICommand {
@@ -42,27 +43,38 @@ export class SignUpHandler implements ICommandHandler {
         email: fromUnknown(email, UnverifiedEmail, this.logger, 'email'),
         plainPassword: fromUnknown(password, PlainPassword, this.logger, 'plain password'),
       }),
+      chain((validatedDatas) =>
+        sequenceT(taskEither)(perform(validatedDatas.email, this.userRepository.getByEmail, this.logger, 'get user by email'), right(validatedDatas)),
+      ),
+      //Check email unicity
+      chain(([existingUser, validatedDatas]) => {
+        if (existingUser == null) {
+          return right(validatedDatas);
+        }
+        return left(new ConflictException('Email already exists.'));
+      }),
       //Use-case process
       chain((validatedDatas) =>
-        pipe(
-          perform(validatedDatas.email, this.authenticationService.assertEmailUnicity, this.logger, 'assert email unicity'),
-          chain(() => perform(validatedDatas.plainPassword, this.authenticationService.hashPlainPassword, this.logger, 'hash plain password')),
-          chain((hashedPassword) =>
-            fromUnknown(
-              {
-                id: validatedDatas.id,
-                email: validatedDatas.email,
-                password: hashedPassword,
-              },
-              User,
-              this.logger,
-              'user',
-            ),
-          ),
+        sequenceT(taskEither)(
+          perform(validatedDatas.plainPassword, this.authenticationService.hashPlainPassword, this.logger, 'hash plain password'),
+          right(validatedDatas),
         ),
       ),
-      //Storage
-      chain((user) => perform(user, this.userRepository.save, this.logger, 'save user in storage system.')),
+      //Create Domain entity
+      chain(([hashedPassword, validatedDatas]) =>
+        fromUnknown(
+          {
+            id: validatedDatas.id,
+            email: validatedDatas.email,
+            password: hashedPassword,
+          },
+          User,
+          this.logger,
+          'user',
+        ),
+      ),
+      //Store entity
+      chain((user) => sequenceT(taskEither)(perform(user, this.userRepository.save, this.logger, 'save user in storage system.'), right(user))),
       //Emit domain event
       chain(() =>
         perform(

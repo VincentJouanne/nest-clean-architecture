@@ -13,6 +13,7 @@ export class RealUserRepository implements UserRepository {
     return tryCatch(
       async () => {
         const prismaUser = await this.prisma.user.findFirst({ where: { email: email } });
+        console.log('PRISMA USER', prismaUser);
         if (prismaUser === null) {
           return null;
         }
@@ -21,6 +22,7 @@ export class RealUserRepository implements UserRepository {
           return User.check({
             id: prismaUser.id,
             email: prismaUser.email,
+            isVerified: prismaUser.is_verified_email,
             password: prismaUser.password,
           });
       },
@@ -37,13 +39,13 @@ export class RealUserRepository implements UserRepository {
           },
           update: {
             email: user.email,
+            is_verified_email: user.isVerified,
             password: user.password,
           },
           create: {
             id: user.id,
             email: user.email,
-            //TODO: Fix me, email should be typed in order to determine whereas the email is verified or not.
-            is_verified_email: false,
+            is_verified_email: user.isVerified,
             password: user.password,
           },
         });

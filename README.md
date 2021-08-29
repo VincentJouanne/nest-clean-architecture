@@ -15,11 +15,17 @@ This project uses OOP to handle modularity (modules instances) and on the other 
 
 Functionnal Programming may look intimidating, if you are new to it, you should [read the most adequate guide](https://mostly-adequate.gitbook.io/mostly-adequate-guide/) to learn more about it.
 
-## Project Overview
+# Project Overview
 
 ![Nest Clean Architecture](./docs/assets/nest-clean-architecture.png)
 
-## Unit testing
+Clients interacts with the system through the [api-gateway](./api-gateway): the endpoints. The concerned module, executes the corresponding use-case which orchestrate the domain and perform I/O using its injected adapters.
+
+The **contexts modules** are tightly **concerned by the overall goal of the application**, while the **common modules** are **business-agostic** and only serves as support to decouple logic and responsabilities in the entire system.
+
+# Tests
+
+## Unit tests
 
 One of the most controversial subject in Software development is unit testing. What and how should we test ?
 

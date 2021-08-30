@@ -1,16 +1,13 @@
 // Must be first
-import 'source-map-support/register';
-
-// Imports from "nest"
-import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { middleware as expressCtx } from 'express-ctx';
-
 // Imports from "api-gateway"
 import { AppModule } from '@app/api-gateway/app.module';
-
 // Imports from "core"
-import { PinoLoggerService } from 'common/logger/src/adapters/pinoLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
+// Imports from "nest"
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { middleware as expressCtx } from 'express-ctx';
+import 'source-map-support/register';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

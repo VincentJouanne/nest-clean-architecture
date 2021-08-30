@@ -1,6 +1,6 @@
 import { DomainEventPublisherModule } from '@common/domain-event-publisher/domainEventPublisher.module';
-import { MockedLoggerService } from '@common/logger/adapters/mockedLogger.service';
-import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
+import { FakeLoggerService } from '@common/logger/adapters/fake/mockedLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { FakeUserRepository } from '@identity-and-access/adapters/secondaries/fake/fakeUser.repository';
 import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
@@ -23,7 +23,7 @@ describe('[Unit] Sign up with credentials', () => {
         DefaultUUIDGeneratorService,
         DefaultHashingService,
         { provide: UserRepository, useClass: FakeUserRepository },
-        { provide: PinoLoggerService, useClass: MockedLoggerService },
+        { provide: PinoLoggerService, useClass: FakeLoggerService },
       ],
     }).compile();
 

@@ -1,5 +1,5 @@
 import { DomainEventPublisher } from '@common/domain-event-publisher/adapters/domainEventPublisher';
-import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { Email } from '@common/mail/domain/value-objects/email';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';

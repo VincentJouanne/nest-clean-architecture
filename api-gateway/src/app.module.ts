@@ -1,6 +1,6 @@
 // Nest imports
 import { DomainEventPublisherModule } from '@common/domain-event-publisher/domainEventPublisher.module';
-import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { LoggerModule } from '@common/logger/logger.module';
 import { MailModule } from '@common/mail/mail.module';
 import { PrismaModule } from '@common/prisma/prisma.module';

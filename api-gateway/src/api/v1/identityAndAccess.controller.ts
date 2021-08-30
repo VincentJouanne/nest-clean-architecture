@@ -1,11 +1,11 @@
-import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
-import { IdentityAndAccessController } from '@identity-and-access/adapters/primaries/identityAndAccess.controller';
-import { BadRequestException, Controller, HttpCode, InternalServerErrorException, Post, Body, UnprocessableEntityException } from '@nestjs/common';
-import { ApiConflictResponse, ApiOperation, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
-import { executeTask } from '@common/utils/executeTask';
-import { SignUpDto } from '../dtos/signUp.dto';
+import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { convertToHttpErrorToPreventLeak } from '@common/utils/convertToHttpErrorToPreventLeak';
+import { executeTask } from '@common/utils/executeTask';
+import { IdentityAndAccessController } from '@identity-and-access/adapters/primaries/identityAndAccess.controller';
+import { Body, Controller, HttpCode, InternalServerErrorException, Post } from '@nestjs/common';
+import { ApiConflictResponse, ApiOperation, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { pipe } from 'fp-ts/lib/function';
+import { SignUpDto } from '../dtos/signUp.dto';
 
 @Controller('v1')
 @ApiTags('Identity and access')

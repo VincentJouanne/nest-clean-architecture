@@ -6,7 +6,11 @@
   "scripts": {
     "build": "nest build api-gateway",
     "start": "nest start api-gateway",
-    "test:unit": "jest --config ./jest-unit.json --coverage"
+    "test:unit": "jest --config ./jest-unit.json --coverage",
+    "test:inte": "jest --config ./jest-integration.json --coverage --runInBand",
+    "test:e2e": "jest --config ./jest-e2e.json --coverage --runInBand",
+    "test:prepare_db": "./start_postgres_test_db.sh",
+    "db:migrate": "prisma migrate dev"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.17",
@@ -38,11 +42,13 @@
     "@nestjs/testing": "^7.6.18",
     "@types/jest": "^26.0.23",
     "@types/source-map-support": "^0.5.3",
+    "@types/supertest": "^2.0.11",
     "@types/uuid": "^8.3.0",
     "cz-conventional-changelog": "3.3.0",
     "jest": "^27.0.4",
     "prettier": "^2.3.1",
     "prisma": "2.30.0",
+    "supertest": "^6.1.6",
     "ts-jest": "^27.0.3"
   },
   "config": {

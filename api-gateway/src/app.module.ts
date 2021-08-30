@@ -1,11 +1,11 @@
 // Nest imports
 import { DomainEventPublisherModule } from '@common/domain-event-publisher/domainEventPublisher.module';
+import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
+import { LoggerModule } from '@common/logger/logger.module';
+import { MailModule } from '@common/mail/mail.module';
 import { PrismaModule } from '@common/prisma/prisma.module';
 import { IdentityAndAccessModule } from '@identity-and-access/identityAndAccess.module';
 import { DynamicModule, ForwardReference, Module, OnModuleInit, Type } from '@nestjs/common';
-import { PinoLoggerService } from 'common/logger/src/adapters/pinoLogger.service';
-import { LoggerModule } from 'common/logger/src/logger.module';
-import { MailModule } from 'common/mail/src/mail.module';
 import { IdentityAndAccessApiControllerV1 } from './api/v1/identityAndAccess.controller';
 
 type NestModuleImport = Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference<any>;

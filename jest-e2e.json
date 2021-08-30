@@ -1,0 +1,36 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testMatch": ["**/e2e/**"],
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "collectCoverageFrom": ["**/adapters/primaries/**.ts"],
+  "coverageThreshold": {
+    "**/adapters/primaries/**.ts": {
+      "branches": 100,
+      "functions": 100,
+      "lines": 100,
+      "statements": 100
+    }
+  },
+  "coverageDirectory": "./coverage",
+  "testEnvironment": "node",
+  "roots": ["<rootDir>/api-gateway", "<rootDir>/common", "<rootDir>/identity-and-access"],
+  "moduleNameMapper": {
+    "^@api-gateway$": "<rootDir>/api-gateway/src",
+    "^@app/api-gateway/(.*)$": "<rootDir>/api-gateway/src/$1",
+    "^@common/logger$": "<rootDir>/common/logger/src",
+    "^@common/logger/(.*)$": "<rootDir>/common/logger/src/$1",
+    "^@common/mail$": "<rootDir>/common/mail/src",
+    "^@common/mail/(.*)$": "<rootDir>/common/mail/src/$1",
+    "^@common/domain-event-publisher$": "<rootDir>/common/domain-event-publisher/src",
+    "^@common/domain-event-publisher/(.*)$": "<rootDir>/common/domain-event-publisher/src/$1",
+    "^@common/prisma$": "<rootDir>/common/prisma/src",
+    "^@common/prisma/(.*)$": "<rootDir>/common/prisma/src/$1",
+    "^@common/utils$": "<rootDir>/common/utils/",
+    "^@common/utils/(.*)$": "<rootDir>/common/utils/$1",
+    "^@identity-and-access$": "<rootDir>/identity-and-access/src",
+    "^@identity-and-access/(.*)$": "<rootDir>/identity-and-access/src/$1"
+  }
+}

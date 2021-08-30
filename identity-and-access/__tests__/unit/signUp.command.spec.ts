@@ -2,7 +2,7 @@ import { DomainEventPublisherModule } from '@common/domain-event-publisher/domai
 import { MockedLoggerService } from '@common/logger/adapters/mockedLogger.service';
 import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
-import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/in-memory/inMemoryUser.repository';
+import { FakeUserRepository } from '@identity-and-access/adapters/secondaries/fake/fakeUser.repository';
 import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
 import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
@@ -10,7 +10,7 @@ import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/s
 import { Test } from '@nestjs/testing';
 
 //Adapters
-let userRepository: InMemoryUserRepository;
+let userRepository: FakeUserRepository;
 
 describe('[Unit] Sign up with credentials', () => {
   let signUpHandler: SignUpHandler;
@@ -22,12 +22,12 @@ describe('[Unit] Sign up with credentials', () => {
         SignUpHandler,
         DefaultUUIDGeneratorService,
         DefaultHashingService,
-        { provide: UserRepository, useClass: InMemoryUserRepository },
+        { provide: UserRepository, useClass: FakeUserRepository },
         { provide: PinoLoggerService, useClass: MockedLoggerService },
       ],
     }).compile();
 
-    userRepository = moduleRef.get<UserRepository>(UserRepository) as InMemoryUserRepository;
+    userRepository = moduleRef.get<UserRepository>(UserRepository) as FakeUserRepository;
     signUpHandler = moduleRef.get<SignUpHandler>(SignUpHandler);
   });
 

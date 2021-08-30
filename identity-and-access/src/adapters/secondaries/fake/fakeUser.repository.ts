@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()
-export class InMemoryUserRepository implements UserRepository {
+export class FakeUserRepository implements UserRepository {
   private users: User[] = [];
   getByEmail = (email: Email): TaskEither<Error, User | null> => {
     return tryCatch(

@@ -5,9 +5,9 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "collectCoverageFrom": ["**/adapters/secondaries/**.ts"],
+  "collectCoverageFrom": ["**/adapters/secondaries/real/**.ts"],
   "coverageThreshold": {
-    "**/adapters/secondaries/**.ts": {
+    "**/adapters/secondaries/real/**.ts": {
       "branches": 100,
       "functions": 100,
       "lines": 100,

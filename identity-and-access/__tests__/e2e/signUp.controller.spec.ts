@@ -19,6 +19,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await app.close();
+  await prismaService.$disconnect();
 });
 
 beforeEach(async () => {

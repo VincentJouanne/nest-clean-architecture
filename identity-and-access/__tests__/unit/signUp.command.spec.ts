@@ -1,5 +1,5 @@
 import { DomainEventPublisherModule } from '@common/domain-event-publisher/domainEventPublisher.module';
-import { FakeLoggerService } from '@common/logger/adapters/fake/mockedLogger.service';
+import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.service';
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { FakeUserRepository } from '@identity-and-access/adapters/secondaries/fake/fakeUser.repository';

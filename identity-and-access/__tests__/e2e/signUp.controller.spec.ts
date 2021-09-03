@@ -1,5 +1,5 @@
 import { AppModule } from '@app/api-gateway/app.module';
-import { FakeLoggerService } from '@common/logger/adapters/fake/mockedLogger.service';
+import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.service';
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { PrismaService } from '@common/prisma/adapters/prisma.service';
 import { INestApplication } from '@nestjs/common';

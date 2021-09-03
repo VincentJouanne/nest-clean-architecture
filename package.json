@@ -7,10 +7,14 @@
     "build": "nest build api-gateway",
     "start": "nest start api-gateway",
     "test:unit": "jest --config ./jest-unit.json --coverage",
-    "test:inte": "jest --config ./jest-integration.json --coverage --runInBand",
-    "test:e2e": "jest --config ./jest-e2e.json --coverage --runInBand",
-    "test:prepare_db": "./start_postgres_test_db.sh",
-    "db:migrate": "prisma migrate dev"
+    "test:inte": "jest --config ./jest-integration.json --runInBand",
+    "test:inte:p": "yarn prepare:test && jest --config ./jest-integration.json --runInBand",
+    "test:e2e": "jest --config ./jest-e2e.json --runInBand --detectOpenHandles --forceExit",
+    "test:e2e:p": "yarn prepare:test && jest --config ./jest-e2e.json --runInBand --forceExit",
+    "prepare:test": "yarn docker:up && yarn migrate:init",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "migrate:init": "npx prisma migrate dev --name init"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.17",
@@ -45,6 +49,7 @@
     "@types/supertest": "^2.0.11",
     "@types/uuid": "^8.3.0",
     "cz-conventional-changelog": "3.3.0",
+    "leaked-handles": "^5.2.0",
     "jest": "^27.0.4",
     "prettier": "^2.3.1",
     "prisma": "2.30.0",

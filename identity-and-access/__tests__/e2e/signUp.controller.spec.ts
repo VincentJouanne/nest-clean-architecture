@@ -1,19 +1,24 @@
 import { AppModule } from '@app/api-gateway/app.module';
+import { FakeLoggerService } from '@common/logger/adapters/fake/mockedLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { PrismaService } from '@common/prisma/adapters/prisma.service';
 import { INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-
 let app: INestApplication;
+let testingModule: TestingModule;
 let prismaService: PrismaService;
 
 beforeAll(async () => {
-  const module = await Test.createTestingModule({
+  testingModule = await Test.createTestingModule({
     imports: [AppModule],
-  }).compile();
+  })
+    .overrideProvider(PinoLoggerService)
+    .useClass(FakeLoggerService)
+    .compile();
 
-  prismaService = module.get<PrismaService>(PrismaService);
-  app = module.createNestApplication();
+  prismaService = testingModule.get<PrismaService>(PrismaService);
+  app = testingModule.createNestApplication();
   await app.init();
 });
 

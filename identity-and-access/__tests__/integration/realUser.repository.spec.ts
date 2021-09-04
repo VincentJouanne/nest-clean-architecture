@@ -30,7 +30,7 @@ afterEach(async () => {
 });
 
 describe('[Integration] User repository', () => {
-  it('OK - Successfully get user by email', async () => {
+  it('Successfully get user by email', async () => {
     //Given an existing user in database
     const email = Email.check('myemail@gmail.com');
 
@@ -57,7 +57,7 @@ describe('[Integration] User repository', () => {
     return expect(savedUser).toEqual(user);
   });
 
-  it('KO - Fails to get user by email', async () => {
+  it('Fails to get user by email', async () => {
     //Given an existing user in database
     const email = Email.check('myemail@gmail.com');
 
@@ -68,7 +68,7 @@ describe('[Integration] User repository', () => {
     return expect(savedUser).toBe(null);
   });
 
-  it('OK - Successfully save user', async () => {
+  it('Successfully save user', async () => {
     //Given an inexisting user in database
     const user = User.check({
       id: 'c017f4a9-c458-4ea7-829c-021c6a608534',

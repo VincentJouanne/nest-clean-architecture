@@ -36,7 +36,7 @@ afterEach(async () => {
 });
 
 describe('[e2e] POST /v1/signup', () => {
-  it('OK - Should respond 201 created for a valid email and password', async () => {
+  it('Should respond 201 created for a valid email and password', async () => {
     const response = await request(app.getHttpServer()).post('/v1/signup').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
     const userCreated = await prismaService.user.findFirst({
       where: {
@@ -47,7 +47,7 @@ describe('[e2e] POST /v1/signup', () => {
     expect(userCreated).toBeDefined();
   });
 
-  it('KO - Should respond 422 for invalid email', async () => {
+  it('Should respond 422 for invalid email', async () => {
     const response = await request(app.getHttpServer()).post('/v1/signup').send({ email: 'myemail', password: 'Passw0rd!' });
     const userCreated = await prismaService.user.findFirst({
       where: {
@@ -58,7 +58,7 @@ describe('[e2e] POST /v1/signup', () => {
     expect(userCreated).toBe(null);
   });
 
-  it('KO - Should respond 422 for invalid password', async () => {
+  it('Should respond 422 for invalid password', async () => {
     const response = await request(app.getHttpServer()).post('/v1/signup').send({ email: 'myemail', password: 'toosimple' });
     const userCreated = await prismaService.user.findFirst({
       where: {
@@ -69,7 +69,7 @@ describe('[e2e] POST /v1/signup', () => {
     expect(userCreated).toBe(null);
   });
 
-  it('KO - Should respond 409 for two users with same email', async () => {
+  it('Should respond 409 for two users with same email', async () => {
     await request(app.getHttpServer()).post('/v1/signup').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
     const response = await request(app.getHttpServer()).post('/v1/signup').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
     const userCreated = await prismaService.user.findFirst({

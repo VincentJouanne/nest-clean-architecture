@@ -31,7 +31,7 @@ describe('[Unit] Sign up with credentials', () => {
     signUpHandler = moduleRef.get<SignUpHandler>(SignUpHandler);
   });
 
-  it('OK - Should sign up a user if email and passwords are valid', async () => {
+  it('Should sign up a user if email and passwords are valid', async () => {
     //Given a potentially valid email
     const email = 'dummy1@gmail.com';
     const password = 'paSSw0rd!';
@@ -46,7 +46,7 @@ describe('[Unit] Sign up with credentials', () => {
     expect(users.length).toEqual(1);
   });
 
-  it('OK - Should have set the user as unverified if he successfully signed up', async () => {
+  it('Should have set the user as unverified if he successfully signed up', async () => {
     //Given a potentially valid email
     const email = 'dummy1@gmail.com';
     const password = 'paSSw0rd!';
@@ -61,7 +61,7 @@ describe('[Unit] Sign up with credentials', () => {
 
   //TODO: Check if the domain event is effectively emitted.
 
-  it('KO - Should not create a user if email is invalid', async () => {
+  it('Should not create a user if email is invalid', async () => {
     //Given a potentially invalid email
     const email = 'abc123';
     const password = 'paSSw0rd!';
@@ -75,7 +75,7 @@ describe('[Unit] Sign up with credentials', () => {
     expect(users.length).toEqual(0);
   });
 
-  it('KO - Should not create a user if password is invalid', async () => {
+  it('Should not create a user if password is invalid', async () => {
     //Given a potentially invalid password
     const email = 'dummy1@gmail.com';
     const password = 'toosimple';
@@ -90,7 +90,7 @@ describe('[Unit] Sign up with credentials', () => {
     expect(users.length).toEqual(0);
   });
 
-  it('KO - Should not create a user if email already exists', async () => {
+  it('Should not create a user if email already exists', async () => {
     //Given an existing user
     const email = 'dummy1@gmail.com';
     const password = 'paSSw0rd!';

@@ -1,8 +1,8 @@
 import { DomainEventPublisherModule } from '@common/domain-event-publisher/domainEventPublisher.module';
-import { MockedLoggerService } from '@common/logger/adapters/mockedLogger.service';
-import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
+import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
-import { InMemoryUserRepository } from '@identity-and-access/adapters/secondaries/in-memory/inMemoryUser.repository';
+import { FakeUserRepository } from '@identity-and-access/adapters/secondaries/fake/fakeUser.repository';
 import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
 import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
@@ -10,7 +10,7 @@ import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/s
 import { Test } from '@nestjs/testing';
 
 //Adapters
-let userRepository: UserRepository;
+let userRepository: FakeUserRepository;
 
 describe('[Unit] Sign up with credentials', () => {
   let signUpHandler: SignUpHandler;
@@ -22,16 +22,16 @@ describe('[Unit] Sign up with credentials', () => {
         SignUpHandler,
         DefaultUUIDGeneratorService,
         DefaultHashingService,
-        { provide: UserRepository, useClass: InMemoryUserRepository },
-        { provide: PinoLoggerService, useClass: MockedLoggerService },
+        { provide: UserRepository, useClass: FakeUserRepository },
+        { provide: PinoLoggerService, useClass: FakeLoggerService },
       ],
     }).compile();
 
-    userRepository = moduleRef.get<UserRepository>(UserRepository);
+    userRepository = moduleRef.get<UserRepository>(UserRepository) as FakeUserRepository;
     signUpHandler = moduleRef.get<SignUpHandler>(SignUpHandler);
   });
 
-  it('OK - Should sign up a user if email and passwords are valid', async () => {
+  it('Should sign up a user if email and passwords are valid', async () => {
     //Given a potentially valid email
     const email = 'dummy1@gmail.com';
     const password = 'paSSw0rd!';
@@ -46,9 +46,22 @@ describe('[Unit] Sign up with credentials', () => {
     expect(users.length).toEqual(1);
   });
 
+  it('Should have set the user as unverified if he successfully signed up', async () => {
+    //Given a potentially valid email
+    const email = 'dummy1@gmail.com';
+    const password = 'paSSw0rd!';
+
+    //When we create a user
+    const result = await signUpHandler.execute(new SignUp(email, password));
+
+    //Then the user should not be verified
+    const users = await executeTask(userRepository.all());
+    expect(users[0].isVerified).toEqual(false);
+  });
+
   //TODO: Check if the domain event is effectively emitted.
 
-  it('KO - Should not create a user if email is invalid', async () => {
+  it('Should not create a user if email is invalid', async () => {
     //Given a potentially invalid email
     const email = 'abc123';
     const password = 'paSSw0rd!';
@@ -62,7 +75,7 @@ describe('[Unit] Sign up with credentials', () => {
     expect(users.length).toEqual(0);
   });
 
-  it('KO - Should not create a user if password is invalid', async () => {
+  it('Should not create a user if password is invalid', async () => {
     //Given a potentially invalid password
     const email = 'dummy1@gmail.com';
     const password = 'toosimple';
@@ -77,7 +90,7 @@ describe('[Unit] Sign up with credentials', () => {
     expect(users.length).toEqual(0);
   });
 
-  it('KO - Should not create a user if email already exists', async () => {
+  it('Should not create a user if email already exists', async () => {
     //Given an existing user
     const email = 'dummy1@gmail.com';
     const password = 'paSSw0rd!';

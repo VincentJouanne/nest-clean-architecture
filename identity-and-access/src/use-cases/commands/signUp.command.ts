@@ -1,15 +1,14 @@
 import { DomainEventPublisher } from '@common/domain-event-publisher/adapters/domainEventPublisher';
-import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
+import { Email } from '@common/mail/domain/value-objects/email';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
 import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
 import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
-import { User } from '@identity-and-access/domain/entities/user';
+import { User, UserId } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
-import { UnverifiedEmail } from '@identity-and-access/domain/value-objects/emailInfos';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
-import { UUID } from '@identity-and-access/domain/value-objects/uuid';
 import { ConflictException } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
@@ -39,8 +38,8 @@ export class SignUpHandler implements ICommandHandler {
     const task = pipe(
       //Data validation
       sequenceS(taskEither)({
-        id: fromUnknown(this.uuidGeneratorService.generateUUID(), UUID, this.logger, 'uuid'),
-        email: fromUnknown(email, UnverifiedEmail, this.logger, 'email'),
+        id: fromUnknown(this.uuidGeneratorService.generateUUID(), UserId, this.logger, 'uuid'),
+        email: fromUnknown(email, Email, this.logger, 'email'),
         plainPassword: fromUnknown(password, PlainPassword, this.logger, 'plain password'),
       }),
       chain((validatedDatas) =>
@@ -66,6 +65,7 @@ export class SignUpHandler implements ICommandHandler {
           {
             id: validatedDatas.id,
             email: validatedDatas.email,
+            isVerified: false,
             password: hashedPassword,
           },
           User,

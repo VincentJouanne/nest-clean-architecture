@@ -1,4 +1,4 @@
-import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { HashingService } from '@identity-and-access/domain/services/hashing.service';
 import { HashedPassword, PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { Injectable } from '@nestjs/common';

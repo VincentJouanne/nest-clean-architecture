@@ -21,7 +21,7 @@ Functionnal Programming may look intimidating, if you are new to it, you should 
 
 Clients interacts with the system through the [api-gateway](./api-gateway): the endpoints. The concerned module, executes the corresponding use-case which orchestrate the domain and perform I/O using its injected adapters.
 
-The **contexts modules** are tightly **concerned by the overall goal of the application**, while the **common modules** are **business-agostic** and only serves as support to decouple logic and responsabilities in the entire system.
+The **contexts modules** are tightly **concerned by the overall goal of the application**, while the **common modules** are **business-agnostic** and only serves as support to decouple logic and responsabilities in the entire system.
 
 # Tests
 
@@ -41,4 +41,40 @@ This project uses the classicist approach in order to **focus on the result of t
 
 So, use-cases are black-boxed tested with fake secondaries adapters injected at the beginning of the test suite.
 
+I/O: A use-case.
+
 ![Classicist unit testing](./docs/assets/unit-testing.png)
+
+## Integration tests
+
+Integration tests focuses on **testing if tier services are well integrated** with our system.
+
+To have relevant integration test, we want to create a testing environment as close as possible to a production one.
+
+For example, to test a repository, we will have a local database and make access to it as we would do in production.
+
+This kind of environment can be easily setup thanks to [docker containers](https://docs.docker.com/get-started/#what-is-a-container).
+
+They are slower than unit tests since they need an heavier environement. They usually **takes up to (< x00 ms)**.
+
+I/O: A real secondaries adapters.
+
+![Integration testing](./docs/assets/integration-testing.png)
+
+## End-to-end tests
+
+End-to-end tests focuses on testing a whole flow: one endpoint.
+
+They use our use-cases and real adapters in order to check if the flow under test behave as expected.
+
+They usually **takes up to (< x00 ms to < x000 ms)**.
+
+It allows us to check if our endpoints are accessible from the outside world and what are their responses.
+
+Those tests also wants to reproduce as possible a production enviroment, so they use the real implementations.
+
+The services that are too weird to keep in the test (mailing for example) will be doubled by a fake implementation.
+
+I/O: An endpoint.
+
+![E2E testing](./docs/assets/end-to-end-testing.png)

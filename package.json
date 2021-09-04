@@ -6,7 +6,15 @@
   "scripts": {
     "build": "nest build api-gateway",
     "start": "nest start api-gateway",
-    "test:unit": "jest --config ./jest-unit.json --coverage"
+    "test:unit": "jest --config ./jest-unit.json --coverage",
+    "test:inte": "jest --config ./jest-integration.json --runInBand",
+    "test:inte:p": "yarn prepare:test && jest --config ./jest-integration.json --runInBand",
+    "test:e2e": "jest --config ./jest-e2e.json --runInBand --detectOpenHandles --forceExit",
+    "test:e2e:p": "yarn prepare:test && jest --config ./jest-e2e.json --runInBand --forceExit",
+    "prepare:test": "yarn docker:up && yarn migrate:init",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "migrate:init": "npx prisma migrate dev --name init"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.17",
@@ -16,6 +24,7 @@
     "@nestjs/event-emitter": "^1.0.0",
     "@nestjs/platform-express": "^7.6.17",
     "@nestjs/swagger": "^4.8.0",
+    "@prisma/client": "2.30.0",
     "@types/bcrypt": "^5.0.0",
     "bcrypt": "^5.0.1",
     "commitizen": "^4.2.4",
@@ -37,10 +46,14 @@
     "@nestjs/testing": "^7.6.18",
     "@types/jest": "^26.0.23",
     "@types/source-map-support": "^0.5.3",
+    "@types/supertest": "^2.0.11",
     "@types/uuid": "^8.3.0",
     "cz-conventional-changelog": "3.3.0",
+    "leaked-handles": "^5.2.0",
     "jest": "^27.0.4",
     "prettier": "^2.3.1",
+    "prisma": "2.30.0",
+    "supertest": "^6.1.6",
     "ts-jest": "^27.0.3"
   },
   "config": {

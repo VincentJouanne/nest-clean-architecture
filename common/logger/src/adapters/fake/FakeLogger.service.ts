@@ -1,6 +1,6 @@
 import { LoggerService } from '@nestjs/common';
 
-export class MockedLoggerService implements LoggerService {
+export class FakeLoggerService implements LoggerService {
   readonly contextName: string;
 
   constructor(readonly logger: null) {

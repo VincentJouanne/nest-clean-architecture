@@ -8,3 +8,5 @@
 
 # IDE - VSCode
 .vscode/*
+# Keep environment variables out of version control
+.env

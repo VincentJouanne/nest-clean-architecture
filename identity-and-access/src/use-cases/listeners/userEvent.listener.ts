@@ -1,4 +1,4 @@
-import { PinoLoggerService } from '@common/logger/adapters/pinoLogger.service';
+import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { InMemoryMailService } from '@common/mail/adapters/inMemoryMail.service';
 import { executeTask } from '@common/utils/executeTask';
 import { noop } from '@common/utils/noop';

@@ -1,13 +1,13 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
-  "testMatch": ["**/unit/**"],
+  "testMatch": ["**/e2e/**"],
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "collectCoverageFrom": ["**/use-cases/commands/**.ts"],
+  "collectCoverageFrom": ["**/adapters/primaries/**.ts"],
   "coverageThreshold": {
-    "**/commands/*.command.ts": {
+    "**/adapters/primaries/**.ts": {
       "branches": 100,
       "functions": 100,
       "lines": 100,

@@ -23,6 +23,48 @@ Clients interacts with the system through the [api-gateway](./api-gateway): the 
 
 The **contexts modules** are tightly **concerned by the overall goal of the application**, while the **common modules** are **business-agnostic** and only serves as support to decouple logic and responsabilities in the entire system.
 
+# Getting started (1 min)
+
+Make sure to have docker installed, otherwise [install it here](https://docs.docker.com/get-docker/).
+
+1. Clone the project
+
+```
+git clone https://github.com/VincentJouanne/nest-clean-architecture-ddd-example.git
+```
+
+2. Fetch dependencies
+
+```
+cd nest-clean-architecture-ddd-example && yarn install
+```
+
+3. Start the server
+
+```
+yarn start
+```
+
+4. Go to http://localhost:3000/api
+
+5. Run unit tests
+
+```
+yarn test:unit
+```
+
+6. Run integration tests
+
+```
+yarn test:inte:p
+```
+
+7. Run e2e tests
+
+```
+yarn test:e2e:p
+```
+
 # Tests
 
 ## Unit tests

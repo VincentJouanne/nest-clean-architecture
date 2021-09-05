@@ -15,13 +15,12 @@ import { RuntypeBase } from 'runtypes/lib/runtype';
  * @param validator : an io-ts validator
  */
 export const validateWith =
-  <Input, Data>(validator: RuntypeBase<Data>) =>
+  <Input, Data>(validator: RuntypeBase<Data>, dataKind: string) =>
   (data: Input): TaskEither<Error, Data> => {
     return pipe(
       data,
       checkEither(validator.check),
-      //TODO [important, not urgent] - Find a way to remove this ugly .replace()
-      mapLeft((error) => new UnprocessableEntityException(error.message?.replace('Failed constraint check for string: ', ''))),
+      mapLeft(() => new UnprocessableEntityException(`The data ${dataKind} is invalid`, `invalid-${dataKind}`)),
       fromEither,
     );
   };

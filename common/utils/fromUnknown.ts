@@ -1,11 +1,11 @@
 // Import from "nest"
 import { LoggerService } from '@nestjs/common';
-
 import { pipe } from 'fp-ts/lib/function';
-import { right, chain, TaskEither } from 'fp-ts/lib/TaskEither';
+import { chain, right, TaskEither } from 'fp-ts/lib/TaskEither';
 import { RuntypeBase } from 'runtypes/lib/runtype';
-import { validateWith } from './validateWith';
 import { handleLog } from './handleLog';
+import { validateWith } from './validateWith';
+
 
 export const fromUnknown = <Data>(
   unknownValue: unknown,
@@ -15,7 +15,7 @@ export const fromUnknown = <Data>(
 ): TaskEither<Error, Data> => {
   return pipe(
     right(unknownValue),
-    chain(validateWith(validator)),
+    chain(validateWith(validator, dataKind)),
     handleLog(logger, `${dataKind} parsed successfully.`, `${dataKind} corrupted or outdated`),
   );
 };

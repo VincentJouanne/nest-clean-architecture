@@ -97,7 +97,7 @@ For example, to test a repository, we will have a local database and make access
 
 This kind of environment can be easily setup thanks to [docker containers](https://docs.docker.com/get-started/#what-is-a-container).
 
-They are slower than unit tests since they need an heavier environement. They usually **takes up to (< x00 ms)**.
+They are slower than unit tests since they need an heavier environement. They usually **takes up to < x00 ms**.
 
 I/O: A real secondaries adapters.
 
@@ -109,7 +109,7 @@ End-to-end tests focuses on testing a whole flow: one endpoint.
 
 They use our use-cases and real adapters in order to check if the flow under test behave as expected.
 
-They usually **takes up to (< x00 ms to < x000 ms)**.
+They usually **takes up from < x00 ms to < x000 ms**.
 
 It allows us to check if our endpoints are accessible from the outside world and what are their responses.
 

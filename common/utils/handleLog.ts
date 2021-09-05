@@ -1,9 +1,7 @@
 import { LoggerService } from '@nestjs/common';
-
 import { pipe } from 'fp-ts/lib/function';
 import { map, mapLeft, TaskEither } from 'fp-ts/lib/TaskEither';
 
-// TODO: use flow, as in decodeWith
 /**
  * Given a logger, and success and failure message, return a combination of .map and mapLeft to log both success and error case
  *
@@ -16,12 +14,12 @@ export const handleLog =
       mapLeft((error: ErrorLike) => {
         logger.warn(warningMessage);
         logger.warn(error.constructor.name);
-        logger.debug(error);
+        logger.debug ? logger.debug(error) : logger.error(error);
         return error;
       }),
       map((data: DataLike) => {
-        logger.debug(successMessage);
-        logger.verbose(data);
+        logger.debug ? logger.debug(successMessage) : logger.log(successMessage);
+        logger.verbose ? logger.verbose(data) : logger.log(data);;
         return data;
       }),
     );

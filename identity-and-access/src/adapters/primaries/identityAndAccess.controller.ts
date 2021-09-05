@@ -14,7 +14,7 @@ export class IdentityAndAccessController {
         const command = new SignUp(email, password);
         return await this.commandBus.execute<SignUp>(command);
       },
-      (error: Error) => error,
+      (reason: unknown) => reason as Error,
     );
 
     return signUpTask;

@@ -1,7 +1,7 @@
 import { Email } from '@common/mail/domain/value-objects/email';
 import { User } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class FakeUserRepository implements UserRepository {
         if (existingUser == undefined) return null;
         else return existingUser;
       },
-      (error: Error) => error,
+      (reason: unknown) => new InternalServerErrorException(),
     );
   };
 
@@ -23,8 +23,7 @@ export class FakeUserRepository implements UserRepository {
       async () => {
         this.users.push(user);
       },
-      (error: Error) => error,
-    );
+      (reason: unknown) => new InternalServerErrorException())
   };
 
   all = (): TaskEither<Error, User[]> => {
@@ -32,7 +31,7 @@ export class FakeUserRepository implements UserRepository {
       async () => {
         return this.users;
       },
-      (error: Error) => error,
+      (reason: unknown) => new InternalServerErrorException(),
     );
   };
 }

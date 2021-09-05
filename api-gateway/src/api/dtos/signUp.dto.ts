@@ -6,11 +6,11 @@ export class SignUpDto {
     example: 'myemail@gmail.com',
     required: true,
   })
-  email: string;
+  email!: string;
   @ApiProperty({
     description: 'A valid password',
     example: 'paSSw0rd!',
     required: true,
   })
-  password: string;
+  password!: string;
 }

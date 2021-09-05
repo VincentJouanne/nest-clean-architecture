@@ -1,7 +1,7 @@
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { HashingService } from '@identity-and-access/domain/services/hashing.service';
 import { HashedPassword, PlainPassword } from '@identity-and-access/domain/value-objects/password';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
@@ -19,7 +19,7 @@ export class DefaultHashingService implements HashingService {
         const hash = await bcrypt.hash(plainPassword, saltOrRounds);
         return HashedPassword.check(hash);
       },
-      (error: Error) => error,
+      (reason: unknown) => new InternalServerErrorException(),
     );
   };
 }

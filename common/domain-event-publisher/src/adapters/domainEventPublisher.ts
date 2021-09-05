@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 import { DomainEvent } from '../domain/domainEvent';
@@ -12,7 +12,7 @@ export class DomainEventPublisher {
       async () => {
         this.eventEmitter.emit(domainEvent.eventKey, domainEvent.payload);
       },
-      (error: Error) => error,
+      (reason: unknown) => new InternalServerErrorException(),
     );
   };
 }

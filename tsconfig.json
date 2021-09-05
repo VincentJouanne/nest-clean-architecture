@@ -14,6 +14,7 @@
     "incremental": true,
     "allowJs": true,
     "checkJs": true,
+    "strict": true,
     "paths": {
       "@app/api-gateway": ["api-gateway/src"],
       "@app/api-gateway/*": ["api-gateway/src/*"],

@@ -2,7 +2,7 @@ import { Email } from '@common/mail/domain/value-objects/email';
 import { PrismaService } from '@common/prisma/adapters/prisma.service';
 import { User } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class RealUserRepository implements UserRepository {
             password: prismaUser.password,
           });
       },
-      (error: Error) => error,
+      (reason: unknown) => new InternalServerErrorException(),
     );
   };
 
@@ -50,7 +50,7 @@ export class RealUserRepository implements UserRepository {
         });
         return;
       },
-      (error: Error) => error,
+      (reason: unknown) => new InternalServerErrorException(),
     );
   };
 }

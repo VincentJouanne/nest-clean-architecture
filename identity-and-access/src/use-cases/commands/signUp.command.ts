@@ -76,10 +76,9 @@ export class SignUpHandler implements ICommandHandler {
       //Store entity
       chain((user) => sequenceT(taskEither)(perform(user, this.userRepository.save, this.logger, 'save user in storage system.'), right(user))),
       //Emit domain event
-      chain(() =>
+      chain(([nothing, user]) =>
         perform(
-          //TODO: Refactor: email should be the one from validated datas. Prepare domain event before storing user, then emit event.
-          { eventKey: USER_CREATED, payload: { email: email } },
+          { eventKey: USER_CREATED, payload: { email: user.email } },
           this.domainEventPublisher.publishEvent,
           this.logger,
           'emit user created event.',

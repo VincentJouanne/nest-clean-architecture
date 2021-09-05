@@ -40,7 +40,7 @@ export class SignUpHandler implements ICommandHandler {
       sequenceS(taskEither)({
         id: fromUnknown(this.uuidGeneratorService.generateUUID(), UserId, this.logger, 'uuid'),
         email: fromUnknown(email, Email, this.logger, 'email'),
-        plainPassword: fromUnknown(password, PlainPassword, this.logger, 'plain password'),
+        plainPassword: fromUnknown(password, PlainPassword, this.logger, 'password'),
       }),
       chain((validatedDatas) =>
         sequenceT(taskEither)(perform(validatedDatas.email, this.userRepository.getByEmail, this.logger, 'get user by email'), right(validatedDatas)),

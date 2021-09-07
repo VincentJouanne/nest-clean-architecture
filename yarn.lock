@@ -740,13 +740,13 @@
     lodash "4.17.21"
     path-to-regexp "3.2.0"
 
-"@nestjs/testing@^7.6.18":
-  version "7.6.18"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-7.6.18.tgz#b4c137b5b6c2fb18c51602d33a083cd97c648283"
-  integrity sha512-1AVk9vWZlPpx4CmzY6z9z0DHFgGCadfr01QdisGFAN740JwKqZWEqz12cVd+nsXDlYQPFRkp2ICBIS/6k1qZGQ==
+"@nestjs/testing@^8.0.6":
+  version "8.0.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-8.0.6.tgz#c6f160ce9ced24f00c653d5a284dc35dd5162dd8"
+  integrity sha512-HRXGM5RlGa+o+kxWI9DQCALndSvL3Remjg1cZVFp2w2s5eXRPpiFMo9puXtu9DSc4tz78xYcQGmEaeYNTB7gvg==
   dependencies:
     optional "0.1.4"
-    tslib "2.2.0"
+    tslib "2.3.0"
 
 "@nuxtjs/opencollective@0.3.2":
   version "0.3.2"

@@ -35,7 +35,7 @@ export class IdentityAndAccessApiControllerV1 {
   }
 
   @Post('signin')
-  @HttpCode(201)
+  @HttpCode(200)
   @ApiOperation({
     summary: 'Sign in a user by validating its credentials and return him a JWT.',
     description: `Given a valid email and a password of an existing user, it returns a JWT.`,

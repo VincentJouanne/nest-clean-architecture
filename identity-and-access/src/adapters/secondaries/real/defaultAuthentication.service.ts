@@ -15,9 +15,7 @@ export class DefaultAuthenticationService implements AuthenticationService {
     return tryCatch(
       async () => {
         const payload = { id: user.id, email: user.email };
-        const jwt = JWT.check(this.jwtService.sign(payload));
-        console.log(jwt);
-        return jwt;
+        return JWT.check(this.jwtService.sign(payload));
       },
       (reason: unknown) => new InternalServerErrorException(),
     );

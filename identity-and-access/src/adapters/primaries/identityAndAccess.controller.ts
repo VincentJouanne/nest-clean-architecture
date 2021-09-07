@@ -1,4 +1,6 @@
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
+import { JWT } from '@identity-and-access/domain/value-objects/jwt';
+import { SignIn } from '@identity-and-access/use-cases/commands/signIn.command';
 import { SignUp } from '@identity-and-access/use-cases/commands/signUp.command';
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
@@ -18,5 +20,17 @@ export class IdentityAndAccessController {
     );
 
     return signUpTask;
+  };
+
+  signIn = (email: string, password: string): TaskEither<Error, JWT> => {
+    const signInTask = tryCatch(
+      async () => {
+        const command = new SignIn(email, password);
+        return await this.commandBus.execute<SignUp>(command);
+      },
+      (reason: unknown) => reason as Error,
+    );
+
+    return signInTask;
   };
 }

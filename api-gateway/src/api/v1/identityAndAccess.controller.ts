@@ -3,7 +3,14 @@ import { convertToHttpErrorToPreventLeak } from '@common/utils/convertToHttpErro
 import { executeTask } from '@common/utils/executeTask';
 import { IdentityAndAccessController } from '@identity-and-access/adapters/primaries/identityAndAccess.controller';
 import { Body, Controller, HttpCode, InternalServerErrorException, Post } from '@nestjs/common';
-import { ApiConflictResponse, ApiNotFoundResponse, ApiOperation, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
+import {
+  ApiConflictResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger';
 import { pipe } from 'fp-ts/lib/function';
 import { map } from 'fp-ts/lib/TaskEither';
 import { SignInRequestDto, SignInResponseDto } from '../dtos/signIn.dto';
@@ -41,6 +48,7 @@ export class IdentityAndAccessApiControllerV1 {
     description: `Given a valid email and a password of an existing user, it returns a JWT.`,
   })
   @ApiUnprocessableEntityResponse({ description: 'Email or password invalid.' })
+  @ApiForbiddenResponse({ description: 'Wrong password provided or User did not verified its email address.' })
   @ApiNotFoundResponse({ description: 'No user associated to the given email.' })
   async signIn(@Body() signInRequestDto: SignInRequestDto): Promise<SignInResponseDto> {
     const errorMap = {

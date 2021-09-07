@@ -14,6 +14,6 @@ generator client {
 model User { 
   id String @unique
   email String
-  is_verified_email Boolean @default(false)
+  is_verified Boolean @default(false)
   password String
 }

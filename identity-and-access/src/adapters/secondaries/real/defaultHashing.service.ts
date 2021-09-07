@@ -22,7 +22,7 @@ export class DefaultHashingService implements HashingService {
       (reason: unknown) => new InternalServerErrorException(),
     );
   };
-  assertSameHashes = ({
+  assertSamePasswords = ({
     plainPassword,
     hashedPassword,
   }: {

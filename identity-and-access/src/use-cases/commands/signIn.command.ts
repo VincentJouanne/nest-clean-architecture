@@ -55,9 +55,9 @@ export class SignInHandler implements ICommandHandler {
       chain((passwords) =>
         perform(
           { plainPassword: passwords.plainPassword, hashedPassword: passwords.hashedPassword },
-          this.hashingService.assertSameHashes,
+          this.hashingService.assertSamePasswords,
           this.logger,
-          'assert same hashes',
+          'assert same passwords',
         ),
       ),
       chain((isCorrectPassword) => {

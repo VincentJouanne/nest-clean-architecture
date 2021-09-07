@@ -2,17 +2,18 @@ import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.servi
 import { Email } from '@common/mail/domain/value-objects/email';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
-import { noop } from '@common/utils/noop';
 import { perform } from '@common/utils/perform';
+import { DefaultAuthenticationService } from '@identity-and-access/adapters/secondaries/real/defaultAuthentication.service';
 import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
 import { User } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
+import { JWT } from '@identity-and-access/domain/value-objects/jwt';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
-import { chain, left, map, right, taskEither } from 'fp-ts/lib/TaskEither';
+import { chain, left, right, taskEither } from 'fp-ts/lib/TaskEither';
 
 export class SignIn implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}
@@ -23,12 +24,13 @@ export class SignInHandler implements ICommandHandler {
   constructor(
     private readonly hashingService: DefaultHashingService,
     private readonly userRepository: UserRepository,
+    private readonly authenticationService: DefaultAuthenticationService,
     private readonly logger: PinoLoggerService,
   ) {
     this.logger.setContext('SignIn');
   }
 
-  execute(command: SignIn): Promise<void> {
+  execute(command: SignIn): Promise<JWT> {
     const { email, password } = command;
     let user: User;
 
@@ -63,8 +65,7 @@ export class SignInHandler implements ICommandHandler {
           return right(null);
         } else return left(new ForbiddenException('Password is incorrect'));
       }),
-      //TODO: create and issue a JWT
-      map(noop),
+      chain(() => perform(user, this.authenticationService.createJWT, this.logger, 'create jwt for user')),
     );
 
     return executeTask(task);

@@ -1,9 +1,10 @@
-import { LoggerService } from '@nestjs/common';
+import { ConsoleLogger } from '@nestjs/common';
 
-export class FakeLoggerService implements LoggerService {
+export class FakeLoggerService extends ConsoleLogger {
   readonly contextName: string;
 
   constructor(readonly logger: null) {
+    super();
     this.contextName = 'context';
   }
 

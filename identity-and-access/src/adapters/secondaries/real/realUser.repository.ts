@@ -21,7 +21,7 @@ export class RealUserRepository implements UserRepository {
           return User.check({
             id: prismaUser.id,
             email: prismaUser.email,
-            isVerified: prismaUser.is_verified_email,
+            isVerified: prismaUser.is_verified,
             password: prismaUser.password,
           });
       },
@@ -38,13 +38,13 @@ export class RealUserRepository implements UserRepository {
           },
           update: {
             email: user.email,
-            is_verified_email: user.isVerified,
+            is_verified: user.isVerified,
             password: user.password,
           },
           create: {
             id: user.id,
             email: user.email,
-            is_verified_email: user.isVerified,
+            is_verified: user.isVerified,
             password: user.password,
           },
         });

@@ -1,11 +1,12 @@
-import { Injectable, LoggerService } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 
 @Injectable()
-export class PinoLoggerService implements LoggerService {
+export class PinoLoggerService extends ConsoleLogger {
   readonly contextName: string;
 
   constructor(readonly logger: PinoLogger) {
+    super();
     this.contextName = 'context';
   }
 

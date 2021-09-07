@@ -22,4 +22,18 @@ export class DefaultHashingService implements HashingService {
       (reason: unknown) => new InternalServerErrorException(),
     );
   };
+  assertSamePasswords = ({
+    plainPassword,
+    hashedPassword,
+  }: {
+    plainPassword: PlainPassword;
+    hashedPassword: HashedPassword;
+  }): TaskEither<Error, Boolean> => {
+    return tryCatch(
+      async () => {
+        return await bcrypt.compare(plainPassword, hashedPassword);
+      },
+      (reason: unknown) => new InternalServerErrorException(),
+    );
+  };
 }

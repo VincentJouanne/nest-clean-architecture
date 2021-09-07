@@ -45,7 +45,7 @@ describe('[Integration] User repository', () => {
       data: {
         id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
         email: email,
-        is_verified_email: true,
+        is_verified: true,
         password: 'Passw0rd!',
       },
     });
@@ -90,7 +90,7 @@ describe('[Integration] User repository', () => {
     return expect(savedUser).toEqual({
       id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
       email: 'myemail@gmail.com',
-      is_verified_email: true,
+      is_verified: true,
       password: 'Passw0rd!',
     });
   });

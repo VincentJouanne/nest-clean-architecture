@@ -7,6 +7,7 @@ import { DefaultHashingService } from '@identity-and-access/adapters/secondaries
 import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/signUp.command';
+import { ConflictException, UnprocessableEntityException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
 //Adapters
@@ -69,7 +70,7 @@ describe('[Unit] Sign up with credentials', () => {
     const resultPromise = signUpHandler.execute(new SignUp(email, password));
 
     //Then it should have thrown an error and not have created a user
-    await expect(resultPromise).rejects.toBeTruthy();
+    await expect(resultPromise).rejects.toBeInstanceOf(UnprocessableEntityException);
 
     const users = await executeTask(userRepository.all());
     expect(users.length).toEqual(0);
@@ -84,7 +85,7 @@ describe('[Unit] Sign up with credentials', () => {
     const resultPromise = signUpHandler.execute(new SignUp(email, password));
 
     //Then it should have thrown an error and not have created a user
-    await expect(resultPromise).rejects.toBeTruthy();
+    await expect(resultPromise).rejects.toBeInstanceOf(UnprocessableEntityException);
 
     const users = await executeTask(userRepository.all());
     expect(users.length).toEqual(0);
@@ -99,6 +100,6 @@ describe('[Unit] Sign up with credentials', () => {
     await signUpHandler.execute(new SignUp(email, password));
     const resultPromise = signUpHandler.execute(new SignUp(email, password));
 
-    await expect(resultPromise).rejects.toBeTruthy();
+    await expect(resultPromise).rejects.toBeInstanceOf(ConflictException);
   });
 });

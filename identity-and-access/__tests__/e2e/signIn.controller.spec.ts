@@ -35,10 +35,12 @@ afterAll(async () => {
 
 beforeEach(async () => {
   await prismaService.user.deleteMany();
+  await prismaService.contactInformations.deleteMany();
 });
 
 afterEach(async () => {
   await prismaService.user.deleteMany();
+  await prismaService.contactInformations.deleteMany();
 });
 
 describe('[e2e] POST /v1/signin', () => {
@@ -61,9 +63,14 @@ describe('[e2e] POST /v1/signin', () => {
     await prismaService.user.create({
       data: {
         id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-        email: 'myemail@gmail.com',
-        is_verified: true,
         password: 'Passw0rd!',
+        contactInformations: {
+          create: {
+            email: 'myemail@gmail.com',
+            verificationCode: '123456',
+            isVerified: true,
+          },
+        },
       },
     });
 
@@ -77,9 +84,14 @@ describe('[e2e] POST /v1/signin', () => {
     await prismaService.user.create({
       data: {
         id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-        email: 'myemail@gmail.com',
-        is_verified: true,
         password: hashedPassword,
+        contactInformations: {
+          create: {
+            email: 'myemail@gmail.com',
+            verificationCode: '123456',
+            isVerified: true,
+          },
+        },
       },
     });
 

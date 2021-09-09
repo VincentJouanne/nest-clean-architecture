@@ -29,10 +29,12 @@ afterAll(async () => {
 
 beforeEach(async () => {
   await prismaService.user.deleteMany();
+  await prismaService.contactInformations.deleteMany();
 });
 
 afterEach(async () => {
   await prismaService.user.deleteMany();
+  await prismaService.contactInformations.deleteMany();
 });
 
 describe('[e2e] POST /v1/signup', () => {

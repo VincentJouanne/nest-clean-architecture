@@ -58,7 +58,7 @@ describe('[Unit] Sign up with credentials', () => {
 
     //Then the user should not be verified
     const users = await executeTask(userRepository.all());
-    expect(users[0].isVerified).toEqual(false);
+    expect(users[0].contactInformations.isVerified).toEqual(false);
   });
 
   //TODO: Check if the domain event is effectively emitted.

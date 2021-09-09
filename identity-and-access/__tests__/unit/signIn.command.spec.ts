@@ -4,6 +4,7 @@ import { executeTask } from '@common/utils/executeTask';
 import { FakeUserRepository } from '@identity-and-access/adapters/secondaries/fake/fakeUser.repository';
 import { DefaultAuthenticationService } from '@identity-and-access/adapters/secondaries/real/defaultAuthentication.service';
 import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
+import { ContactInformations } from '@identity-and-access/domain/entities/contactInformations';
 import { User } from '@identity-and-access/domain/entities/user';
 import { IncorrectPasswordException } from '@identity-and-access/domain/exceptions/incorrectPassword.exception';
 import { UserNotFoundException } from '@identity-and-access/domain/exceptions/userNotFound.exception';
@@ -86,7 +87,17 @@ describe('[Unit] Sign in with credentials', () => {
     const wrongPassword = 'paSSw0rd?';
     const hashedPassword = await executeTask(hashingService.hashPlainPassword(PlainPassword.check(wrongPassword)));
     await executeTask(
-      userRepository.save(User.check({ id: 'c017f4a9-c458-4ea7-829c-021c6a608534', email: email, isVerified: true, password: hashedPassword })),
+      userRepository.save(
+        User.check({
+          id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
+          password: hashedPassword,
+          contactInformations: ContactInformations.check({
+            email: email,
+            verificationCode: '123456',
+            isVerified: true,
+          }),
+        }),
+      ),
     );
 
     //When we sign in a user
@@ -103,7 +114,17 @@ describe('[Unit] Sign in with credentials', () => {
     const hashedPassword = await executeTask(hashingService.hashPlainPassword(PlainPassword.check(password)));
 
     await executeTask(
-      userRepository.save(User.check({ id: 'c017f4a9-c458-4ea7-829c-021c6a608534', email: email, isVerified: true, password: hashedPassword })),
+      userRepository.save(
+        User.check({
+          id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
+          password: hashedPassword,
+          contactInformations: ContactInformations.check({
+            email: email,
+            verificationCode: '123456',
+            isVerified: true,
+          }),
+        }),
+      ),
     );
 
     //When we sign in a user

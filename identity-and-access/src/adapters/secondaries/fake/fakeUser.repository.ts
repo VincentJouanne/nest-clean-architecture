@@ -10,7 +10,7 @@ export class FakeUserRepository implements UserRepository {
   getByEmail = (email: Email): TaskEither<Error, User | null> => {
     return tryCatch(
       async () => {
-        const existingUser = this.users.find((u) => u.email == email);
+        const existingUser = this.users.find((u) => u.contactInformations.email == email);
         if (existingUser == undefined) return null;
         else return existingUser;
       },
@@ -23,7 +23,8 @@ export class FakeUserRepository implements UserRepository {
       async () => {
         this.users.push(user);
       },
-      (reason: unknown) => new InternalServerErrorException())
+      (reason: unknown) => new InternalServerErrorException(),
+    );
   };
 
   all = (): TaskEither<Error, User[]> => {

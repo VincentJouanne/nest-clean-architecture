@@ -77,22 +77,7 @@ describe('[Unit] Sign in with credentials', () => {
     await expect(resultPromise).rejects.toBeInstanceOf(NotFoundException);
   });
 
-  it('Should throw ForbiddenException if the user exists but has not verified its email address', async () => {
-    //Given valid credentials
-    const email = 'myemail@gmail.com';
-    const password = 'paSSw0rd!';
-    await executeTask(
-      userRepository.save(User.check({ id: 'c017f4a9-c458-4ea7-829c-021c6a608534', email: email, isVerified: false, password: password })),
-    );
-
-    //When we sign in a user
-    const resultPromise = signInHandler.execute(new SignIn(email, password));
-
-    //Then it should have thrown an error
-    await expect(resultPromise).rejects.toBeInstanceOf(ForbiddenException);
-  });
-
-  it('Should throw ForbiddenException if the user exists, is verified but has provided the wrong password', async () => {
+  it('Should throw ForbiddenException if the user exists but has provided the wrong password', async () => {
     //Given valid credentials
     const email = 'myemail@gmail.com';
     const password = 'paSSw0rd!';
@@ -109,7 +94,7 @@ describe('[Unit] Sign in with credentials', () => {
     await expect(resultPromise).rejects.toBeInstanceOf(ForbiddenException);
   });
 
-  it('Should issue a JWT if the user exists, is verified and has provided the correct credentials', async () => {
+  it('Should issue a JWT if the user exists and has provided the correct credentials', async () => {
     //Given valid credentials
     const email = 'myemail@gmail.com';
     const password = 'paSSw0rd!';

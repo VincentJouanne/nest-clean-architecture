@@ -46,8 +46,6 @@ export class SignInHandler implements ICommandHandler {
       chain(([existingUser, validatedDatas]) => {
         if (existingUser == null) {
           return left(new NotFoundException('This user does not exist.'));
-        } else if (!existingUser.isVerified) {
-          return left(new ForbiddenException('This user has not verified its email address.'));
         }
         user = existingUser;
         return right({ plainPassword: validatedDatas.plainPassword, hashedPassword: existingUser.password });

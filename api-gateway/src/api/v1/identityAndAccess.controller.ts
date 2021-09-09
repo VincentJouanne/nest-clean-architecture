@@ -48,7 +48,7 @@ export class IdentityAndAccessApiControllerV1 {
     description: `Given a valid email and a password of an existing user, it returns a JWT.`,
   })
   @ApiUnprocessableEntityResponse({ description: 'Email or password invalid.' })
-  @ApiForbiddenResponse({ description: 'Wrong password provided or User did not verified its email address.' })
+  @ApiForbiddenResponse({ description: 'Wrong password provided.' })
   @ApiNotFoundResponse({ description: 'No user associated to the given email.' })
   async signIn(@Body() signInRequestDto: SignInRequestDto): Promise<SignInResponseDto> {
     const errorMap = {

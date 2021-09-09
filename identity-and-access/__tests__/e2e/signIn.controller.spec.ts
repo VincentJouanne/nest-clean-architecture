@@ -57,21 +57,7 @@ describe('[e2e] POST /v1/signin', () => {
     expect(response.status).toBe(404);
   });
 
-  it('Should respond 403 for existing user but unverified email', async () => {
-    await prismaService.user.create({
-      data: {
-        id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-        email: 'myemail@gmail.com',
-        is_verified: false,
-        password: 'Passw0rd!',
-      },
-    });
-
-    const response = await request(app.getHttpServer()).post('/v1/signin').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
-    expect(response.status).toBe(403);
-  });
-
-  it('Should respond 403 for existing user, verified email but wrong password', async () => {
+  it('Should respond 403 for existing user, but wrong password', async () => {
     await prismaService.user.create({
       data: {
         id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
@@ -85,7 +71,7 @@ describe('[e2e] POST /v1/signin', () => {
     expect(response.status).toBe(403);
   });
 
-  it('Should respond 200 for existing user, verified email but wrong password', async () => {
+  it('Should respond 200 for existing user and correct password', async () => {
     const hashedPassword = await executeTask(hashingService.hashPlainPassword(PlainPassword.check('Passw0rd!')));
 
     await prismaService.user.create({

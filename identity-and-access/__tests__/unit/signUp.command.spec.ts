@@ -5,9 +5,10 @@ import { executeTask } from '@common/utils/executeTask';
 import { FakeUserRepository } from '@identity-and-access/adapters/secondaries/fake/fakeUser.repository';
 import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
 import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
+import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/signUp.command';
-import { ConflictException, UnprocessableEntityException } from '@nestjs/common';
+import { UnprocessableEntityException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
 //Adapters
@@ -100,6 +101,6 @@ describe('[Unit] Sign up with credentials', () => {
     await signUpHandler.execute(new SignUp(email, password));
     const resultPromise = signUpHandler.execute(new SignUp(email, password));
 
-    await expect(resultPromise).rejects.toBeInstanceOf(ConflictException);
+    await expect(resultPromise).rejects.toBeInstanceOf(EmailAlreadyExistsException);
   });
 });

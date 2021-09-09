@@ -5,11 +5,13 @@ import { FakeUserRepository } from '@identity-and-access/adapters/secondaries/fa
 import { DefaultAuthenticationService } from '@identity-and-access/adapters/secondaries/real/defaultAuthentication.service';
 import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
 import { User } from '@identity-and-access/domain/entities/user';
+import { IncorrectPasswordException } from '@identity-and-access/domain/exceptions/incorrectPassword.exception';
+import { UserNotFoundException } from '@identity-and-access/domain/exceptions/userNotFound.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { jwtConstants } from '@identity-and-access/domain/value-objects/constants';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { SignIn, SignInHandler } from '@identity-and-access/use-cases/commands/signIn.command';
-import { ForbiddenException, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import { UnprocessableEntityException } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 
@@ -74,7 +76,7 @@ describe('[Unit] Sign in with credentials', () => {
     const resultPromise = signInHandler.execute(new SignIn(email, password));
 
     //Then it should have thrown an error
-    await expect(resultPromise).rejects.toBeInstanceOf(NotFoundException);
+    await expect(resultPromise).rejects.toBeInstanceOf(UserNotFoundException);
   });
 
   it('Should throw ForbiddenException if the user exists but has provided the wrong password', async () => {
@@ -91,7 +93,7 @@ describe('[Unit] Sign in with credentials', () => {
     const resultPromise = signInHandler.execute(new SignIn(email, password));
 
     //Then it should have thrown an error
-    await expect(resultPromise).rejects.toBeInstanceOf(ForbiddenException);
+    await expect(resultPromise).rejects.toBeInstanceOf(IncorrectPasswordException);
   });
 
   it('Should issue a JWT if the user exists and has provided the correct credentials', async () => {

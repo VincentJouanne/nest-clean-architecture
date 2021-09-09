@@ -7,9 +7,9 @@ import { perform } from '@common/utils/perform';
 import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
 import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
 import { User, UserId } from '@identity-and-access/domain/entities/user';
+import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
-import { ConflictException } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
@@ -50,7 +50,7 @@ export class SignUpHandler implements ICommandHandler {
         if (existingUser == null) {
           return right(validatedDatas);
         }
-        return left(new ConflictException('Email already exists.'));
+        return left(new EmailAlreadyExistsException('Email already exists.'));
       }),
       //Use-case process
       chain((validatedDatas) =>

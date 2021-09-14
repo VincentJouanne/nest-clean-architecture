@@ -7,15 +7,12 @@
     "build": "nest build api-gateway",
     "start": "nest start api-gateway",
     "test:unit": "jest --config ./jest-unit.json --coverage",
-    "test:inte": "jest --config ./jest-integration.json --runInBand",
-    "test:inte:p": "yarn prepare:test && jest --config ./jest-integration.json --runInBand",
-    "test:e2e": "jest --config ./jest-e2e.json --runInBand --detectOpenHandles --forceExit",
-    "test:e2e:p": "yarn prepare:test && jest --config ./jest-e2e.json --runInBand --forceExit",
-    "prepare:test": "yarn docker:up && yarn migrate:init",
-    "docker:up": "docker compose up -d",
-    "docker:down": "docker compose down",
+    "test:inte": "yarn prisma:migrate && jest --config ./jest-integration.json --runInBand",
+    "test:e2e": "yarn prisma:migrate && jest --config ./jest-e2e.json --runInBand --forceExit",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
     "prisma:client": "npx prisma generate",
-    "migrate:init": "npx prisma migrate dev --name init"
+    "prisma:migrate": "npx prisma migrate dev --name init"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.6",

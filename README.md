@@ -53,16 +53,22 @@ yarn start
 yarn test:unit
 ```
 
-6. Run integration tests
+6. Mount docker container
 
 ```
-yarn test:inte:p
+yarn docker:up
 ```
 
-7. Run e2e tests
+7. Run integration tests
 
 ```
-yarn test:e2e:p
+yarn test:inte
+```
+
+8. Run e2e tests
+
+```
+yarn test:e2e
 ```
 
 # Tests

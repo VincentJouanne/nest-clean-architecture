@@ -42,7 +42,7 @@ describe('[Integration] User repository', () => {
       password: 'Passw0rd!',
       contactInformations: ContactInformations.check({
         email: email,
-        verificationCode: '123456',
+        verificationCode: '1234',
         isVerified: true,
       }),
     });
@@ -54,7 +54,7 @@ describe('[Integration] User repository', () => {
         contactInformations: {
           create: {
             email: email,
-            verificationCode: '123456',
+            verificationCode: '1234',
             isVerified: true,
           },
         },
@@ -86,7 +86,7 @@ describe('[Integration] User repository', () => {
       password: 'Passw0rd!',
       contactInformations: ContactInformations.check({
         email: 'myemail@gmail.com',
-        verificationCode: '123456',
+        verificationCode: '1234',
         isVerified: true,
       }),
     });
@@ -111,7 +111,7 @@ describe('[Integration] User repository', () => {
       contactInformations: {
         email: 'myemail@gmail.com',
         isVerified: true,
-        verificationCode: '123456',
+        verificationCode: '1234',
       },
     });
   });

@@ -68,7 +68,7 @@ export class SignUpHandler implements ICommandHandler {
             contactInformations: {
               email: validatedDatas.email,
               //TODO: Generate it from a service
-              verificationCode: '123456',
+              verificationCode: '1234',
               isVerified: false,
             },
           },

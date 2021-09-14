@@ -93,7 +93,7 @@ describe('[Unit] Sign in with credentials', () => {
           password: hashedPassword,
           contactInformations: ContactInformations.check({
             email: email,
-            verificationCode: '123456',
+            verificationCode: '1234',
             isVerified: true,
           }),
         }),
@@ -120,7 +120,7 @@ describe('[Unit] Sign in with credentials', () => {
           password: hashedPassword,
           contactInformations: ContactInformations.check({
             email: email,
-            verificationCode: '123456',
+            verificationCode: '1234',
             isVerified: true,
           }),
         }),

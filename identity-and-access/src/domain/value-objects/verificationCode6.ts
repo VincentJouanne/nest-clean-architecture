@@ -1,7 +1,7 @@
 import { Static, String } from 'runtypes';
 
 const OnlyNumbersRegex = /^\d+$/;
-export const VerificationCode6 = String.withBrand('VerificationCode6')
-  .withConstraint((maybeVerificationCode6) => maybeVerificationCode6.length == 6)
-  .withConstraint((maybeVerificationCode6) => OnlyNumbersRegex.test(maybeVerificationCode6));
-export type VerificationCode6 = Static<typeof VerificationCode6>;
+export const VerificationCode4 = String.withBrand('VerificationCode4')
+  .withConstraint((maybeVerificationCode4) => maybeVerificationCode4.length == 4)
+  .withConstraint((maybeVerificationCode4) => OnlyNumbersRegex.test(maybeVerificationCode4));
+export type VerificationCode6 = Static<typeof VerificationCode4>;

@@ -67,7 +67,7 @@ describe('[e2e] POST /v1/signin', () => {
         contactInformations: {
           create: {
             email: 'myemail@gmail.com',
-            verificationCode: '123456',
+            verificationCode: '1234',
             isVerified: true,
           },
         },
@@ -88,7 +88,7 @@ describe('[e2e] POST /v1/signin', () => {
         contactInformations: {
           create: {
             email: 'myemail@gmail.com',
-            verificationCode: '123456',
+            verificationCode: '1234',
             isVerified: true,
           },
         },

@@ -14,6 +14,7 @@
     "prepare:test": "yarn docker:up && yarn migrate:init",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
+    "prisma:client": "npx prisma generate",
     "migrate:init": "npx prisma migrate dev --name init"
   },
   "dependencies": {

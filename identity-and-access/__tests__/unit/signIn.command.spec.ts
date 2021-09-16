@@ -15,6 +15,7 @@ import { SignIn, SignInHandler } from '@identity-and-access/use-cases/commands/s
 import { UnprocessableEntityException } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
+import { RealRandomNumberGenerator } from '@identity-and-access/adapters/secondaries/real/realRandomNumberGenerator';
 
 //Adapters
 let userRepository: FakeUserRepository;
@@ -33,6 +34,7 @@ describe('[Unit] Sign in with credentials', () => {
       ],
       providers: [
         SignInHandler,
+        RealRandomNumberGenerator,
         RealHashingService,
         RealAuthenticationService,
         { provide: UserRepository, useClass: FakeUserRepository },

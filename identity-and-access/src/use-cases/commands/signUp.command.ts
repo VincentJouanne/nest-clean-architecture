@@ -15,6 +15,7 @@ import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
 import { chain, left, map, right, taskEither } from 'fp-ts/lib/TaskEither';
 import { USER_CREATED } from '../listeners/userEvent.listener';
+import { RealRandomNumberGenerator } from '@identity-and-access/adapters/secondaries/real/realRandomNumberGenerator';
 
 export class SignUp implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}
@@ -24,6 +25,7 @@ export class SignUp implements ICommand {
 export class SignUpHandler implements ICommandHandler {
   constructor(
     private readonly uuidGeneratorService: RealUUIDGeneratorService,
+    private readonly randomNumberGenerator: RealRandomNumberGenerator, 
     private readonly hashingService: RealHashingService,
     private readonly userRepository: UserRepository,
     private readonly domainEventPublisher: DomainEventPublisher,
@@ -56,19 +58,19 @@ export class SignUpHandler implements ICommandHandler {
       chain((validatedDatas) =>
         sequenceT(taskEither)(
           perform(validatedDatas.plainPassword, this.hashingService.hashPlainPassword, this.logger, 'hash plain password'),
+          perform({}, this.randomNumberGenerator.generateRandomVerificationCode, this.logger, 'generate random verfication code'),
           right(validatedDatas),
         ),
       ),
       //Create Domain entity
-      chain(([hashedPassword, validatedDatas]) =>
+      chain(([hashedPassword, verificationCode, validatedDatas]) =>
         fromUnknown(
           {
             id: validatedDatas.id,
             password: hashedPassword,
             contactInformations: {
               email: validatedDatas.email,
-              //TODO: Generate it from a service
-              verificationCode: '1234',
+              verificationCode: verificationCode,
               isVerified: false,
             },
           },

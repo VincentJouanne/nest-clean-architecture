@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { RealAuthenticationService } from './secondaries/real/realAuthentication.service';
 import { RealHashingService } from './secondaries/real/realHashing.service';
 import { RealUserRepository } from './secondaries/real/realUser.repository';
+import { RealRandomNumberGenerator } from './secondaries/real/realRandomNumberGenerator';
 
 @Module({
   imports: [
@@ -21,8 +22,9 @@ import { RealUserRepository } from './secondaries/real/realUser.repository';
       useClass: RealUserRepository,
     },
     RealAuthenticationService,
+    RealRandomNumberGenerator,
     RealHashingService,
   ],
-  exports: [RealUUIDGeneratorService, UserRepository, RealAuthenticationService, RealHashingService],
+  exports: [RealUUIDGeneratorService, UserRepository, RealAuthenticationService, RealRandomNumberGenerator, RealHashingService],
 })
 export class IdentityAndAccessAdaptersModule {}

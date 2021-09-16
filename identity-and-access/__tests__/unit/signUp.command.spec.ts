@@ -10,6 +10,7 @@ import { UserRepository } from '@identity-and-access/domain/repositories/user.re
 import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/signUp.command';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { RealRandomNumberGenerator } from '@identity-and-access/adapters/secondaries/real/realRandomNumberGenerator';
 
 //Adapters
 let userRepository: FakeUserRepository;
@@ -23,6 +24,7 @@ describe('[Unit] Sign up with credentials', () => {
       providers: [
         SignUpHandler,
         RealUUIDGeneratorService,
+        RealRandomNumberGenerator,
         RealHashingService,
         { provide: UserRepository, useClass: FakeUserRepository },
         { provide: PinoLoggerService, useClass: FakeLoggerService },

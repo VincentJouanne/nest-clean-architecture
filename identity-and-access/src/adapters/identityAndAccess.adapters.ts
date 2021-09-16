@@ -1,10 +1,10 @@
-import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
+import { RealUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/realUUIDGenerator.service';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { jwtConstants } from '@identity-and-access/domain/value-objects/constants';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { DefaultAuthenticationService } from './secondaries/real/defaultAuthentication.service';
-import { DefaultHashingService } from './secondaries/real/defaultHashing.service';
+import { RealAuthenticationService } from './secondaries/real/realAuthentication.service';
+import { RealHashingService } from './secondaries/real/realHashing.service';
 import { RealUserRepository } from './secondaries/real/realUser.repository';
 
 @Module({
@@ -15,14 +15,14 @@ import { RealUserRepository } from './secondaries/real/realUser.repository';
     }),
   ],
   providers: [
-    DefaultUUIDGeneratorService,
+    RealUUIDGeneratorService,
     {
       provide: UserRepository,
       useClass: RealUserRepository,
     },
-    DefaultAuthenticationService,
-    DefaultHashingService,
+    RealAuthenticationService,
+    RealHashingService,
   ],
-  exports: [DefaultUUIDGeneratorService, UserRepository, DefaultAuthenticationService, DefaultHashingService],
+  exports: [RealUUIDGeneratorService, UserRepository, RealAuthenticationService, RealHashingService],
 })
 export class IdentityAndAccessAdaptersModule {}

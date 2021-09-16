@@ -3,7 +3,7 @@ import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.servi
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { PrismaService } from '@common/prisma/adapters/prisma.service';
 import { executeTask } from '@common/utils/executeTask';
-import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
+import { RealHashingService } from '@identity-and-access/adapters/secondaries/real/realHashing.service';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -11,7 +11,7 @@ import * as request from 'supertest';
 let app: INestApplication;
 let testingModule: TestingModule;
 let prismaService: PrismaService;
-let hashingService: DefaultHashingService;
+let hashingService: RealHashingService;
 
 beforeAll(async () => {
   testingModule = await Test.createTestingModule({
@@ -22,7 +22,7 @@ beforeAll(async () => {
     .compile();
 
   prismaService = testingModule.get<PrismaService>(PrismaService);
-  hashingService = testingModule.get<DefaultHashingService>(DefaultHashingService);
+  hashingService = testingModule.get<RealHashingService>(RealHashingService);
 
   app = testingModule.createNestApplication();
   await app.init();

@@ -3,8 +3,8 @@ import { Email } from '@common/mail/domain/value-objects/email';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
-import { DefaultAuthenticationService } from '@identity-and-access/adapters/secondaries/real/defaultAuthentication.service';
-import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
+import { RealAuthenticationService } from '@identity-and-access/adapters/secondaries/real/realAuthentication.service';
+import { RealHashingService } from '@identity-and-access/adapters/secondaries/real/realHashing.service';
 import { User } from '@identity-and-access/domain/entities/user';
 import { IncorrectPasswordException } from '@identity-and-access/domain/exceptions/incorrectPassword.exception';
 import { UserNotFoundException } from '@identity-and-access/domain/exceptions/userNotFound.exception';
@@ -23,9 +23,9 @@ export class SignIn implements ICommand {
 @CommandHandler(SignIn)
 export class SignInHandler implements ICommandHandler {
   constructor(
-    private readonly hashingService: DefaultHashingService,
+    private readonly hashingService: RealHashingService,
     private readonly userRepository: UserRepository,
-    private readonly authenticationService: DefaultAuthenticationService,
+    private readonly authenticationService: RealAuthenticationService,
     private readonly logger: PinoLoggerService,
   ) {
     this.logger.setContext('SignIn');

@@ -3,8 +3,8 @@ import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.servi
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { FakeUserRepository } from '@identity-and-access/adapters/secondaries/fake/fakeUser.repository';
-import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
-import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
+import { RealHashingService } from '@identity-and-access/adapters/secondaries/real/realHashing.service';
+import { RealUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/realUUIDGenerator.service';
 import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/signUp.command';
@@ -22,8 +22,8 @@ describe('[Unit] Sign up with credentials', () => {
       imports: [DomainEventPublisherModule],
       providers: [
         SignUpHandler,
-        DefaultUUIDGeneratorService,
-        DefaultHashingService,
+        RealUUIDGeneratorService,
+        RealHashingService,
         { provide: UserRepository, useClass: FakeUserRepository },
         { provide: PinoLoggerService, useClass: FakeLoggerService },
       ],

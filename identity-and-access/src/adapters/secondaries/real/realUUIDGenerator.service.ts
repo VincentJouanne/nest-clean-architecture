@@ -3,6 +3,6 @@ import { Injectable } from '@nestjs/common';
 import * as uuid from 'uuid';
 
 @Injectable()
-export class DefaultUUIDGeneratorService {
+export class RealUUIDGeneratorService {
   generateUUID = () => UUID.check(uuid.v4());
 }

@@ -4,8 +4,8 @@ import { Email } from '@common/mail/domain/value-objects/email';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
-import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
-import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
+import { RealHashingService } from '@identity-and-access/adapters/secondaries/real/realHashing.service';
+import { RealUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/realUUIDGenerator.service';
 import { User, UserId } from '@identity-and-access/domain/entities/user';
 import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
@@ -23,8 +23,8 @@ export class SignUp implements ICommand {
 @CommandHandler(SignUp)
 export class SignUpHandler implements ICommandHandler {
   constructor(
-    private readonly uuidGeneratorService: DefaultUUIDGeneratorService,
-    private readonly hashingService: DefaultHashingService,
+    private readonly uuidGeneratorService: RealUUIDGeneratorService,
+    private readonly hashingService: RealHashingService,
     private readonly userRepository: UserRepository,
     private readonly domainEventPublisher: DomainEventPublisher,
     private readonly logger: PinoLoggerService,

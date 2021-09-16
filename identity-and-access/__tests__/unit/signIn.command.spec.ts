@@ -2,8 +2,8 @@ import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.servi
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { FakeUserRepository } from '@identity-and-access/adapters/secondaries/fake/fakeUser.repository';
-import { DefaultAuthenticationService } from '@identity-and-access/adapters/secondaries/real/defaultAuthentication.service';
-import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
+import { RealAuthenticationService } from '@identity-and-access/adapters/secondaries/real/realAuthentication.service';
+import { RealHashingService } from '@identity-and-access/adapters/secondaries/real/realHashing.service';
 import { ContactInformations } from '@identity-and-access/domain/entities/contactInformations';
 import { User } from '@identity-and-access/domain/entities/user';
 import { IncorrectPasswordException } from '@identity-and-access/domain/exceptions/incorrectPassword.exception';
@@ -18,7 +18,7 @@ import { Test } from '@nestjs/testing';
 
 //Adapters
 let userRepository: FakeUserRepository;
-let hashingService: DefaultHashingService;
+let hashingService: RealHashingService;
 
 describe('[Unit] Sign in with credentials', () => {
   let signInHandler: SignInHandler;
@@ -33,15 +33,15 @@ describe('[Unit] Sign in with credentials', () => {
       ],
       providers: [
         SignInHandler,
-        DefaultHashingService,
-        DefaultAuthenticationService,
+        RealHashingService,
+        RealAuthenticationService,
         { provide: UserRepository, useClass: FakeUserRepository },
         { provide: PinoLoggerService, useClass: FakeLoggerService },
       ],
     }).compile();
 
     userRepository = moduleRef.get<UserRepository>(UserRepository) as FakeUserRepository;
-    hashingService = moduleRef.get<DefaultHashingService>(DefaultHashingService);
+    hashingService = moduleRef.get<RealHashingService>(RealHashingService);
     signInHandler = moduleRef.get<SignInHandler>(SignInHandler);
   });
   it('Should throw UnprocessableEntityException if email is invalid', async () => {

@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()
-export class DefaultAuthenticationService implements AuthenticationService {
+export class RealAuthenticationService implements AuthenticationService {
   constructor(private logger: PinoLoggerService, private jwtService: JwtService) {
     this.logger.setContext('AuthenticationService');
   }

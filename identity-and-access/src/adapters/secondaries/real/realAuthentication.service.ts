@@ -14,7 +14,7 @@ export class RealAuthenticationService implements AuthenticationService {
   createJWT = (user: User): TaskEither<Error, JWT> => {
     return tryCatch(
       async () => {
-        const payload = { id: user.id, email: user.contactInformations.email };
+        const payload = { id: user.id, email: user.contactInformations.email, isVerified: user.contactInformations.isVerified };
         return JWT.check(this.jwtService.sign(payload));
       },
       (reason: unknown) => new InternalServerErrorException(),

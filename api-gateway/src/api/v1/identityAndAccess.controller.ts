@@ -2,7 +2,7 @@ import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.servi
 import { convertToHttpErrorToPreventLeak } from '@common/utils/convertToHttpErrorToPreventLeak';
 import { executeTask } from '@common/utils/executeTask';
 import { IdentityAndAccessController } from '@identity-and-access/adapters/primaries/identityAndAccess.controller';
-import { Body, Controller, HttpCode, InternalServerErrorException, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, InternalServerErrorException, Post, Param, Patch } from '@nestjs/common';
 import {
   ApiConflictResponse,
   ApiForbiddenResponse,
@@ -10,16 +10,20 @@ import {
   ApiOperation,
   ApiTags,
   ApiUnprocessableEntityResponse,
+  ApiParam,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { pipe } from 'fp-ts/lib/function';
 import { map } from 'fp-ts/lib/TaskEither';
 import { SignInRequestDto, SignInResponseDto } from '../dtos/signIn.dto';
 import { SignUpDto } from '../dtos/signUp.dto';
+import { VerifyEmail } from '@identity-and-access/use-cases/commands/verifyEmail';
+import { VerifyEmailRequestDto } from '../dtos/verifyEmail.dto';
 
 @Controller('v1')
 @ApiTags('Identity and access')
 export class IdentityAndAccessApiControllerV1 {
-  constructor(private readonly identityAndAccessController: IdentityAndAccessController, private readonly logger: PinoLoggerService) {}
+  constructor(private readonly identityAndAccessController: IdentityAndAccessController, private readonly logger: PinoLoggerService) { }
 
   @Post('signup')
   @HttpCode(201)
@@ -64,5 +68,26 @@ export class IdentityAndAccessApiControllerV1 {
     );
 
     return await executeTask(task);
+  }
+
+  @Patch('users/:userId/verify')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Verify user email with a verification code sent by email.',
+    description: `Once a user signed up, he receives a verification code which he should provide to verify its email.`,
+  })
+  @ApiUnprocessableEntityResponse({ description: 'UserId or verification code are in an invalid fromat.' })
+  @ApiNotFoundResponse({ description: 'The user do no exist.'})
+  @ApiUnauthorizedResponse({ description: 'The verification code do not match the one sent to user.' })
+  @ApiParam({ name: 'userId', type: 'string', description: 'The id of the user', example: '00000000-0000-0000-0000-000000000000' })
+  async verifyEmail(@Param('userId') userId: string, @Body() verifyEmailRequestDto: VerifyEmailRequestDto): Promise<void> {
+    const errorMap = {
+      default: new InternalServerErrorException('Something wrong happened'),
+    };
+
+    const task = pipe(this.identityAndAccessController.verifyEmail(userId, verifyEmailRequestDto.verification_code),
+      convertToHttpErrorToPreventLeak(errorMap, this.logger))
+
+    return await executeTask(task)
   }
 }

@@ -6,9 +6,9 @@ import { Module } from '@nestjs/common';
 import { SignInHandler } from './commands/signIn.command';
 import { SignUpHandler } from './commands/signUp.command';
 import { UserEventListener } from './listeners/userEvent.listener';
-import { VerifyEmail } from './commands/verifyEmail';
+import { VerifyEmailHandler } from './commands/verifyEmail';
 
-const commandHandlers = [SignUpHandler, SignInHandler, VerifyEmail];
+const commandHandlers = [SignUpHandler, SignInHandler, VerifyEmailHandler];
 const eventListeners = [UserEventListener];
 @Module({
   imports: [IdentityAndAccessAdaptersModule, DomainEventPublisherModule, LoggerModule, MailModule],

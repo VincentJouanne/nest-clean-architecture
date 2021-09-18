@@ -5,6 +5,7 @@ import { SignUp } from '@identity-and-access/use-cases/commands/signUp.command';
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
+import { VerifyEmail } from '@identity-and-access/use-cases/commands/verifyEmail';
 
 @Injectable()
 export class IdentityAndAccessController {
@@ -26,11 +27,23 @@ export class IdentityAndAccessController {
     const signInTask = tryCatch(
       async () => {
         const command = new SignIn(email, password);
-        return await this.commandBus.execute<SignUp>(command);
+        return await this.commandBus.execute<SignIn>(command);
       },
       (reason: unknown) => reason as Error,
     );
 
     return signInTask;
   };
+
+  verifyEmail = (userId: string, verificationCode: string): TaskEither<Error, void> => {
+    const verifyEmailTask = tryCatch(
+      async () => {
+        const command = new VerifyEmail(userId, verificationCode);
+        return await this.commandBus.execute<VerifyEmail>(command);
+      },
+      (reason: unknown) => reason as Error,
+    )
+
+    return verifyEmailTask
+  }
 }

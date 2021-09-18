@@ -93,7 +93,7 @@ describe('[Unit] Verify email with verification code', () => {
         await expect(resultPromise).rejects.toBeInstanceOf(IncorrectVerificationCodeException);
     })
 
-    it('Should throw IncorrectVerificationCodeException if verification code does not match', async () => {
+    it('Should succeed if verification code match', async () => {
         //Given an existing user
         await executeTask(
             userRepository.save(

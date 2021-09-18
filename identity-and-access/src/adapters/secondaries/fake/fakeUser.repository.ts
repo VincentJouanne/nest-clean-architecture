@@ -1,5 +1,5 @@
 import { Email } from '@common/mail/domain/value-objects/email';
-import { User } from '@identity-and-access/domain/entities/user';
+import { User, UserId } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
@@ -10,7 +10,7 @@ import { executeTask } from '@common/utils/executeTask';
 export class FakeUserRepository implements UserRepository {
   private users: User[] = [];
 
-  getById = (userId: UUID): TaskEither<Error, User | null> => {
+  getById = (userId: UserId): TaskEither<Error, User | null> => {
     return tryCatch(
       async () => {
         const existingUser = this.users.find((u) => u.id == userId);

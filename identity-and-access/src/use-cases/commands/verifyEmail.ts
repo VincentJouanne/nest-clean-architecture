@@ -5,11 +5,13 @@ import { UserRepository } from "@identity-and-access/domain/repositories/user.re
 import { PinoLoggerService } from "@common/logger/adapters/real/pinoLogger.service";
 import { perform } from "@common/utils/perform";
 import { noop } from "@common/utils/noop";
-import { map, chain, left, right } from "fp-ts/lib/TaskEither";
+import { map, chain, left, right, taskEither } from "fp-ts/lib/TaskEither";
 import { UserNotFoundException } from "@identity-and-access/domain/exceptions/userNotFound.exception";
-import { User } from "@identity-and-access/domain/entities/user";
+import { User, UserId } from "@identity-and-access/domain/entities/user";
 import { IncorrectVerificationCodeException } from "@identity-and-access/domain/exceptions/incorrectVerificationCode.exception";
 import { fromUnknown } from "@common/utils/fromUnknown";
+import { VerificationCode4 } from "@identity-and-access/domain/value-objects/verificationCode4";
+import { sequenceS, sequenceT } from "fp-ts/lib/Apply";
 
 export class VerifyEmail implements ICommand {
     constructor(public readonly userId: string, public readonly verificationCode: string) {}
@@ -24,11 +26,17 @@ export class VerifyEmailHandler implements ICommandHandler {
 
     execute(command: VerifyEmail): Promise<void> {
         const task = pipe(
-            perform(command.userId, this.userRepository.getById, this.logger, 'get user by id'),
-            chain((user) => {
+            sequenceS(taskEither)({
+                userId: fromUnknown(command.userId, UserId, this.logger, 'user id'),
+                verificationCode: fromUnknown(command.verificationCode, VerificationCode4, this.logger, 'verification code')
+            }),
+            chain((validatedDatas) => 
+            sequenceT(taskEither)(perform(validatedDatas.userId, this.userRepository.getById, this.logger, 'get user by id'), right(validatedDatas))
+            ),
+            chain(([user, validatedDatas]) => {
                 if(user == null)
                     return left(new UserNotFoundException());
-                else if (command.verificationCode != user.contactInformations.verificationCode)
+                else if (validatedDatas.verificationCode != user.contactInformations.verificationCode)
                     return left(new IncorrectVerificationCodeException());
                 else 
                     return right(user)

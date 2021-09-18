@@ -9,6 +9,7 @@ import { User } from "@identity-and-access/domain/entities/user";
 import { ContactInformations } from "@identity-and-access/domain/entities/contactInformations";
 import { UserNotFoundException } from "@identity-and-access/domain/exceptions/userNotFound.exception";
 import { IncorrectVerificationCodeException } from "@identity-and-access/domain/exceptions/incorrectVerificationCode.exception";
+import { UnprocessableEntityException } from "@nestjs/common/exceptions/unprocessable-entity.exception";
 
 let userRepository: FakeUserRepository;
 
@@ -29,6 +30,23 @@ describe('[Unit] Verify email with verification code', () => {
 
     })
 
+    it('Should throw UnprocessableEntityException if user id is not correctly formatted', async () => {
+        //When we verify email user
+        const resultPromise = verifyEmailHandler.execute(new VerifyEmail('0', '1234'));
+
+        //Then it should have thrown an error
+        await expect(resultPromise).rejects.toBeInstanceOf(UnprocessableEntityException);
+    })
+
+    it('Should throw UnprocessableEntityException if verification code is not correctly formatted', async () => {
+        //When we verify email user
+        const resultPromise = verifyEmailHandler.execute(new VerifyEmail('00000000-0000-0000-0000-000000000000', '123'));
+
+        //Then it should have thrown an error
+        await expect(resultPromise).rejects.toBeInstanceOf(UnprocessableEntityException);
+    })
+
+    
     it('Should throw UserNotFoundException if user does not exists', async () => {
         //Given an existing user
         await executeTask(

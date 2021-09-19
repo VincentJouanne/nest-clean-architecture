@@ -55,6 +55,11 @@ afterEach(async () => {
 });
 
 describe('[e2e] PATCH /v1/users/{:userId}/verify', () => {
+    it('Should respond 401 for unauthenticated request', async () => {
+        const response = await request(app.getHttpServer()).patch('/v1/users/1/verify').send({ verification_code: '1234' });
+        expect(response.status).toBe(401);
+    });
+
     it('Should respond 422 for invalid userId format', async () => {
         const response = await request(app.getHttpServer()).patch('/v1/users/1/verify').send({ verification_code: '1234' }).set({'Authorization': `Bearer ${token}`});
         expect(response.status).toBe(422);

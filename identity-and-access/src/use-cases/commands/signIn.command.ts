@@ -46,7 +46,7 @@ export class SignInHandler implements ICommandHandler {
       //Assertions
       chain(([existingUser, validatedDatas]) => {
         if (existingUser == null) {
-          return left(new UserNotFoundException('This user does not exist.'));
+          return left(new UserNotFoundException());
         }
         user = existingUser;
         return right({ plainPassword: validatedDatas.plainPassword, hashedPassword: existingUser.password });
@@ -62,7 +62,7 @@ export class SignInHandler implements ICommandHandler {
       chain((isCorrectPassword) => {
         if (isCorrectPassword) {
           return right(null);
-        } else return left(new IncorrectPasswordException('Password is incorrect'));
+        } else return left(new IncorrectPasswordException());
       }),
       chain(() => perform(user, this.authenticationService.createJWT, this.logger, 'create jwt for user')),
     );

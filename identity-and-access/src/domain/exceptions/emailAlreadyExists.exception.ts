@@ -1,3 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 
-export class EmailAlreadyExistsException extends ConflictException {}
+export class EmailAlreadyExistsException extends ConflictException {
+    constructor() {
+        super('email already exists')
+    }
+}

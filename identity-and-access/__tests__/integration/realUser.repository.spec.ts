@@ -2,6 +2,7 @@ import { Email } from '@common/mail/domain/value-objects/email';
 import { PrismaService } from '@common/prisma/adapters/prisma.service';
 import { executeTask } from '@common/utils/executeTask';
 import { RealUserRepository } from '@identity-and-access/adapters/secondaries/real/realUser.repository';
+import { ContactInformations } from '@identity-and-access/domain/entities/contactInformations';
 import { User } from '@identity-and-access/domain/entities/user';
 import { Test } from '@nestjs/testing';
 
@@ -23,10 +24,12 @@ afterAll(async () => {
 
 beforeEach(async () => {
   await prismaService.user.deleteMany();
+  await prismaService.contactInformations.deleteMany();
 });
 
 afterEach(async () => {
   await prismaService.user.deleteMany();
+  await prismaService.contactInformations.deleteMany();
 });
 
 describe('[Integration] User repository', () => {
@@ -36,17 +39,25 @@ describe('[Integration] User repository', () => {
 
     const user = User.check({
       id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-      email: email,
-      isVerified: true,
       password: 'Passw0rd!',
+      contactInformations: ContactInformations.check({
+        email: email,
+        verificationCode: '1234',
+        isVerified: true,
+      }),
     });
 
     await prismaService.user.create({
       data: {
         id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-        email: email,
-        is_verified: true,
         password: 'Passw0rd!',
+        contactInformations: {
+          create: {
+            email: email,
+            verificationCode: '1234',
+            isVerified: true,
+          },
+        },
       },
     });
 
@@ -72,9 +83,12 @@ describe('[Integration] User repository', () => {
     //Given an inexisting user in database
     const user = User.check({
       id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-      email: 'myemail@gmail.com',
-      isVerified: true,
       password: 'Passw0rd!',
+      contactInformations: ContactInformations.check({
+        email: 'myemail@gmail.com',
+        verificationCode: '1234',
+        isVerified: true,
+      }),
     });
 
     //When we save him
@@ -85,13 +99,20 @@ describe('[Integration] User repository', () => {
       where: {
         id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
       },
+      include: {
+        contactInformations: true,
+      },
     });
 
-    return expect(savedUser).toEqual({
+    return expect(savedUser).toStrictEqual({
       id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-      email: 'myemail@gmail.com',
-      is_verified: true,
       password: 'Passw0rd!',
+      contactInformationsId: 'myemail@gmail.com',
+      contactInformations: {
+        email: 'myemail@gmail.com',
+        isVerified: true,
+        verificationCode: '1234',
+      },
     });
   });
 });

@@ -3,12 +3,14 @@ import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.servi
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { FakeUserRepository } from '@identity-and-access/adapters/secondaries/fake/fakeUser.repository';
-import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
-import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
+import { RealHashingService } from '@identity-and-access/adapters/secondaries/real/realHashing.service';
+import { RealUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/realUUIDGenerator.service';
+import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/signUp.command';
-import { ConflictException, UnprocessableEntityException } from '@nestjs/common';
+import { UnprocessableEntityException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { RealRandomNumberGenerator } from '@identity-and-access/adapters/secondaries/real/realRandomNumberGenerator';
 
 //Adapters
 let userRepository: FakeUserRepository;
@@ -21,8 +23,9 @@ describe('[Unit] Sign up with credentials', () => {
       imports: [DomainEventPublisherModule],
       providers: [
         SignUpHandler,
-        DefaultUUIDGeneratorService,
-        DefaultHashingService,
+        RealUUIDGeneratorService,
+        RealRandomNumberGenerator,
+        RealHashingService,
         { provide: UserRepository, useClass: FakeUserRepository },
         { provide: PinoLoggerService, useClass: FakeLoggerService },
       ],
@@ -57,7 +60,7 @@ describe('[Unit] Sign up with credentials', () => {
 
     //Then the user should not be verified
     const users = await executeTask(userRepository.all());
-    expect(users[0].isVerified).toEqual(false);
+    expect(users[0].contactInformations.isVerified).toEqual(false);
   });
 
   //TODO: Check if the domain event is effectively emitted.
@@ -100,6 +103,6 @@ describe('[Unit] Sign up with credentials', () => {
     await signUpHandler.execute(new SignUp(email, password));
     const resultPromise = signUpHandler.execute(new SignUp(email, password));
 
-    await expect(resultPromise).rejects.toBeInstanceOf(ConflictException);
+    await expect(resultPromise).rejects.toBeInstanceOf(EmailAlreadyExistsException);
   });
 });

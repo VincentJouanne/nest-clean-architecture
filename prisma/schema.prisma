@@ -12,8 +12,15 @@ generator client {
 
 
 model User { 
-  id String @unique
-  email String
-  is_verified Boolean @default(false)
+  id String @id
   password String
+  contactInformations ContactInformations @relation(fields: [contactInformationsId], references: [email])
+  contactInformationsId String
+}
+
+model ContactInformations {
+  email String @unique
+  verificationCode String
+  isVerified Boolean @default(false)
+  user User?
 }

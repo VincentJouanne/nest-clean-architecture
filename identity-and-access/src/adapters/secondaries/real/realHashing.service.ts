@@ -8,7 +8,7 @@ import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 const saltOrRounds = 10;
 
 @Injectable()
-export class DefaultHashingService implements HashingService {
+export class RealHashingService implements HashingService {
   constructor(private logger: PinoLoggerService) {
     this.logger.setContext('HashingService');
   }

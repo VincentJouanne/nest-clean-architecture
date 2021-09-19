@@ -4,17 +4,18 @@ import { Email } from '@common/mail/domain/value-objects/email';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
-import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
-import { DefaultUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/defaultUUIDGenerator.service';
+import { RealHashingService } from '@identity-and-access/adapters/secondaries/real/realHashing.service';
+import { RealUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/realUUIDGenerator.service';
 import { User, UserId } from '@identity-and-access/domain/entities/user';
+import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
-import { ConflictException } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
 import { chain, left, map, right, taskEither } from 'fp-ts/lib/TaskEither';
 import { USER_CREATED } from '../listeners/userEvent.listener';
+import { RealRandomNumberGenerator } from '@identity-and-access/adapters/secondaries/real/realRandomNumberGenerator';
 
 export class SignUp implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}
@@ -23,8 +24,9 @@ export class SignUp implements ICommand {
 @CommandHandler(SignUp)
 export class SignUpHandler implements ICommandHandler {
   constructor(
-    private readonly uuidGeneratorService: DefaultUUIDGeneratorService,
-    private readonly hashingService: DefaultHashingService,
+    private readonly uuidGeneratorService: RealUUIDGeneratorService,
+    private readonly randomNumberGenerator: RealRandomNumberGenerator, 
+    private readonly hashingService: RealHashingService,
     private readonly userRepository: UserRepository,
     private readonly domainEventPublisher: DomainEventPublisher,
     private readonly logger: PinoLoggerService,
@@ -50,23 +52,27 @@ export class SignUpHandler implements ICommandHandler {
         if (existingUser == null) {
           return right(validatedDatas);
         }
-        return left(new ConflictException('Email already exists.'));
+        return left(new EmailAlreadyExistsException('Email already exists.'));
       }),
       //Use-case process
       chain((validatedDatas) =>
         sequenceT(taskEither)(
           perform(validatedDatas.plainPassword, this.hashingService.hashPlainPassword, this.logger, 'hash plain password'),
+          perform({}, this.randomNumberGenerator.generateRandomVerificationCode, this.logger, 'generate random verfication code'),
           right(validatedDatas),
         ),
       ),
       //Create Domain entity
-      chain(([hashedPassword, validatedDatas]) =>
+      chain(([hashedPassword, verificationCode, validatedDatas]) =>
         fromUnknown(
           {
             id: validatedDatas.id,
-            email: validatedDatas.email,
-            isVerified: false,
             password: hashedPassword,
+            contactInformations: {
+              email: validatedDatas.email,
+              verificationCode: verificationCode,
+              isVerified: false,
+            },
           },
           User,
           this.logger,
@@ -78,7 +84,7 @@ export class SignUpHandler implements ICommandHandler {
       //Emit domain event
       chain(([nothing, user]) =>
         perform(
-          { eventKey: USER_CREATED, payload: { email: user.email } },
+          { eventKey: USER_CREATED, payload: { email: user.contactInformations.email } },
           this.domainEventPublisher.publishEvent,
           this.logger,
           'emit user created event.',

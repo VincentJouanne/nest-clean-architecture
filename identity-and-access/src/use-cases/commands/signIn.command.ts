@@ -3,13 +3,14 @@ import { Email } from '@common/mail/domain/value-objects/email';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
-import { DefaultAuthenticationService } from '@identity-and-access/adapters/secondaries/real/defaultAuthentication.service';
-import { DefaultHashingService } from '@identity-and-access/adapters/secondaries/real/defaultHashing.service';
+import { RealAuthenticationService } from '@identity-and-access/adapters/secondaries/real/realAuthentication.service';
+import { RealHashingService } from '@identity-and-access/adapters/secondaries/real/realHashing.service';
 import { User } from '@identity-and-access/domain/entities/user';
+import { IncorrectPasswordException } from '@identity-and-access/domain/exceptions/incorrectPassword.exception';
+import { UserNotFoundException } from '@identity-and-access/domain/exceptions/userNotFound.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { JWT } from '@identity-and-access/domain/value-objects/jwt';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
@@ -22,9 +23,9 @@ export class SignIn implements ICommand {
 @CommandHandler(SignIn)
 export class SignInHandler implements ICommandHandler {
   constructor(
-    private readonly hashingService: DefaultHashingService,
+    private readonly hashingService: RealHashingService,
     private readonly userRepository: UserRepository,
-    private readonly authenticationService: DefaultAuthenticationService,
+    private readonly authenticationService: RealAuthenticationService,
     private readonly logger: PinoLoggerService,
   ) {
     this.logger.setContext('SignIn');
@@ -45,9 +46,7 @@ export class SignInHandler implements ICommandHandler {
       //Assertions
       chain(([existingUser, validatedDatas]) => {
         if (existingUser == null) {
-          return left(new NotFoundException('This user does not exist.'));
-        } else if (!existingUser.isVerified) {
-          return left(new ForbiddenException('This user has not verified its email address.'));
+          return left(new UserNotFoundException('This user does not exist.'));
         }
         user = existingUser;
         return right({ plainPassword: validatedDatas.plainPassword, hashedPassword: existingUser.password });
@@ -63,7 +62,7 @@ export class SignInHandler implements ICommandHandler {
       chain((isCorrectPassword) => {
         if (isCorrectPassword) {
           return right(null);
-        } else return left(new ForbiddenException('Password is incorrect'));
+        } else return left(new IncorrectPasswordException('Password is incorrect'));
       }),
       chain(() => perform(user, this.authenticationService.createJWT, this.logger, 'create jwt for user')),
     );

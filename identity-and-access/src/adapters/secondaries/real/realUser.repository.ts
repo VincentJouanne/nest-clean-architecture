@@ -1,18 +1,29 @@
 import { Email } from '@common/mail/domain/value-objects/email';
 import { PrismaService } from '@common/prisma/adapters/prisma.service';
-import { User } from '@identity-and-access/domain/entities/user';
+import { ContactInformations } from '@identity-and-access/domain/entities/contactInformations';
+import { User, UserId } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
+import { UUID } from '@identity-and-access/domain/value-objects/uuid';
 
 @Injectable()
 export class RealUserRepository implements UserRepository {
   constructor(private prisma: PrismaService) {}
 
-  getByEmail = (email: Email): TaskEither<Error, User | null> => {
+  getById = (userId: UserId) : TaskEither<Error, User | null> => { 
     return tryCatch(
       async () => {
-        const prismaUser = await this.prisma.user.findFirst({ where: { email: email } });
+        const prismaUser = await this.prisma.user.findUnique({
+          where: {
+            id: userId
+          },
+          //We retrieve the whole aggregate root (user + its contact informations)
+          include: {
+            contactInformations: true,
+          },
+        });
+
         if (prismaUser === null) {
           return null;
         }
@@ -20,9 +31,46 @@ export class RealUserRepository implements UserRepository {
         else
           return User.check({
             id: prismaUser.id,
-            email: prismaUser.email,
-            isVerified: prismaUser.is_verified,
             password: prismaUser.password,
+            contactInformations: ContactInformations.check({
+              email: prismaUser.contactInformations.email,
+              verificationCode: prismaUser.contactInformations.verificationCode,
+              isVerified: prismaUser.contactInformations.isVerified,
+            }),
+          });
+      },
+      (reason: unknown) => new InternalServerErrorException(),
+    );
+  }
+
+  getByEmail = (email: Email): TaskEither<Error, User | null> => {
+    return tryCatch(
+      async () => {
+        const prismaUser = await this.prisma.user.findFirst({
+          where: {
+            contactInformations: {
+              email: email,
+            },
+          },
+          //We retrieve the whole aggregate root (user + its contact informations)
+          include: {
+            contactInformations: true,
+          },
+        });
+
+        if (prismaUser === null) {
+          return null;
+        }
+        //TODO: Create a util to convert Persistence to Domain
+        else
+          return User.check({
+            id: prismaUser.id,
+            password: prismaUser.password,
+            contactInformations: ContactInformations.check({
+              email: prismaUser.contactInformations.email,
+              verificationCode: prismaUser.contactInformations.verificationCode,
+              isVerified: prismaUser.contactInformations.isVerified,
+            }),
           });
       },
       (reason: unknown) => new InternalServerErrorException(),
@@ -37,15 +85,25 @@ export class RealUserRepository implements UserRepository {
             id: user.id,
           },
           update: {
-            email: user.email,
-            is_verified: user.isVerified,
+            contactInformations: {
+              update: {
+                email: user.contactInformations.email,
+                verificationCode: user.contactInformations.verificationCode,
+                isVerified: user.contactInformations.isVerified,
+              },
+            },
             password: user.password,
           },
           create: {
             id: user.id,
-            email: user.email,
-            is_verified: user.isVerified,
             password: user.password,
+            contactInformations: {
+              create: {
+                email: user.contactInformations.email,
+                verificationCode: user.contactInformations.verificationCode,
+                isVerified: user.contactInformations.isVerified,
+              },
+            },
           },
         });
         return;

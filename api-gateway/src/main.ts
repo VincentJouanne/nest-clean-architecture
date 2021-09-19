@@ -62,6 +62,10 @@ Routes is following REST standard (Richardson level 3)
 </p>
 </details>`,
     )
+    .addSecurity('bearer', {
+      type: 'http',
+      scheme: 'bearer',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);

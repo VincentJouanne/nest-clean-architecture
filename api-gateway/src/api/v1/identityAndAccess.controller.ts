@@ -2,7 +2,7 @@ import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.servi
 import { convertToHttpErrorToPreventLeak } from '@common/utils/convertToHttpErrorToPreventLeak';
 import { executeTask } from '@common/utils/executeTask';
 import { IdentityAndAccessController } from '@identity-and-access/adapters/primaries/identityAndAccess.controller';
-import { Body, Controller, HttpCode, InternalServerErrorException, Post, Param, Patch } from '@nestjs/common';
+import { Body, Controller, HttpCode, InternalServerErrorException, Post, Param, Patch, UseGuards } from '@nestjs/common';
 import {
   ApiConflictResponse,
   ApiForbiddenResponse,
@@ -12,13 +12,14 @@ import {
   ApiUnprocessableEntityResponse,
   ApiParam,
   ApiUnauthorizedResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { pipe } from 'fp-ts/lib/function';
 import { map } from 'fp-ts/lib/TaskEither';
 import { SignInRequestDto, SignInResponseDto } from '../dtos/signIn.dto';
 import { SignUpDto } from '../dtos/signUp.dto';
-import { VerifyEmail } from '@identity-and-access/use-cases/commands/verifyEmail';
 import { VerifyEmailRequestDto } from '../dtos/verifyEmail.dto';
+import { AuthenticationGuard } from '@identity-and-access/adapters/primaries/guards/authentication.guard';
 
 @Controller('v1')
 @ApiTags('Identity and access')
@@ -71,6 +72,8 @@ export class IdentityAndAccessApiControllerV1 {
   }
 
   @Patch('users/:userId/verify')
+  @ApiBearerAuth()
+  @UseGuards(AuthenticationGuard)
   @HttpCode(200)
   @ApiOperation({
     summary: 'Verify user email with a verification code sent by email.',

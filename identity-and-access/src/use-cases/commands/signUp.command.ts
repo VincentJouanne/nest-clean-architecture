@@ -52,7 +52,7 @@ export class SignUpHandler implements ICommandHandler {
         if (existingUser == null) {
           return right(validatedDatas);
         }
-        return left(new EmailAlreadyExistsException('Email already exists.'));
+        return left(new EmailAlreadyExistsException());
       }),
       //Use-case process
       chain((validatedDatas) =>

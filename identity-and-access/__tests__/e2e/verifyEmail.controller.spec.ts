@@ -55,13 +55,18 @@ afterEach(async () => {
 });
 
 describe('[e2e] PATCH /v1/users/{:userId}/verify', () => {
+    it('Should respond 401 for unauthenticated request', async () => {
+        const response = await request(app.getHttpServer()).patch('/v1/users/1/verify').send({ verification_code: '1234' });
+        expect(response.status).toBe(401);
+    });
+
     it('Should respond 422 for invalid userId format', async () => {
-        const response = await request(app.getHttpServer()).patch('/v1/users/1/verify').send({ verification_code: '1234' }).set('Authorization', 'Bearer ' + token);
+        const response = await request(app.getHttpServer()).patch('/v1/users/1/verify').send({ verification_code: '1234' }).set({'Authorization': `Bearer ${token}`});
         expect(response.status).toBe(422);
     });
 
     it('Should respond 422 for invalid verification code format', async () => {
-        const response = await request(app.getHttpServer()).patch('/v1/users/c017f4a9-c458-4ea7-829c-021c6a608534/verify').send({ verification_code: '1' }).set('Authorization', 'Bearer ' + token);
+        const response = await request(app.getHttpServer()).patch('/v1/users/c017f4a9-c458-4ea7-829c-021c6a608534/verify').send({ verification_code: '1' }).set({'Authorization': `Bearer ${token}`});
         expect(response.status).toBe(422);
     });
 

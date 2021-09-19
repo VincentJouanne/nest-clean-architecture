@@ -13,6 +13,8 @@ import {
   ApiParam,
   ApiUnauthorizedResponse,
   ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
 } from '@nestjs/swagger';
 import { pipe } from 'fp-ts/lib/function';
 import { map } from 'fp-ts/lib/TaskEither';
@@ -32,6 +34,7 @@ export class IdentityAndAccessApiControllerV1 {
     summary: 'Sign up a user by creating an account.',
     description: `Given a valid email and a password, it creates an account for an anonymous user.`,
   })
+  @ApiCreatedResponse({description: 'User successfully created.'})
   @ApiUnprocessableEntityResponse({ description: 'Email or password invalid.' })
   @ApiConflictResponse({ description: 'Email already exists.' })
   async signUp(@Body() signUpDto: SignUpDto): Promise<void> {
@@ -52,6 +55,7 @@ export class IdentityAndAccessApiControllerV1 {
     summary: 'Sign in a user by validating its credentials and return him a JWT.',
     description: `Given a valid email and a password of an existing user, it returns a JWT.`,
   })
+  @ApiOkResponse({description: 'User successfully signed in.'})
   @ApiUnprocessableEntityResponse({ description: 'Email or password invalid.' })
   @ApiForbiddenResponse({ description: 'Wrong password provided.' })
   @ApiNotFoundResponse({ description: 'No user associated to the given email.' })
@@ -79,8 +83,10 @@ export class IdentityAndAccessApiControllerV1 {
     summary: 'Verify user email with a verification code sent by email.',
     description: `Once a user signed up, he receives a verification code which he should provide to verify its email.`,
   })
+  @ApiOkResponse({description: 'User successfully verified email.'})
   @ApiUnprocessableEntityResponse({ description: 'UserId or verification code are in an invalid fromat.' })
   @ApiNotFoundResponse({ description: 'The user do no exist.'})
+  @ApiUnauthorizedResponse({ description: 'The token provided is invalid.' })
   @ApiUnauthorizedResponse({ description: 'The verification code do not match the one sent to user.' })
   @ApiParam({ name: 'userId', type: 'string', description: 'The id of the user', example: '00000000-0000-0000-0000-000000000000' })
   async verifyEmail(@Param('userId') userId: string, @Body() verifyEmailRequestDto: VerifyEmailRequestDto): Promise<void> {

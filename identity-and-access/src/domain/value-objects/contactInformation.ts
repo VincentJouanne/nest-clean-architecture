@@ -1,11 +1,11 @@
 import { Email } from '@common/mail/domain/value-objects/email';
 import { Boolean, Record, Static } from 'runtypes';
-import { VerificationCode4 } from '../value-objects/verificationCode4';
+import { VerificationCode4 } from './verificationCode4';
 
-export const ContactInformations = Record({
+export const ContactInformation = Record({
   email: Email,
   verificationCode: VerificationCode4,
   isVerified: Boolean,
 });
 
-export type ContactInformations = Static<typeof ContactInformations>;
+export type ContactInformation = Static<typeof ContactInformation>;

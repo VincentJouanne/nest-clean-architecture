@@ -68,7 +68,7 @@ export class SignUpHandler implements ICommandHandler {
           {
             id: validatedDatas.id,
             password: hashedPassword,
-            contactInformations: {
+            contactInformation: {
               email: validatedDatas.email,
               verificationCode: verificationCode,
               isVerified: false,
@@ -84,7 +84,7 @@ export class SignUpHandler implements ICommandHandler {
       //Emit domain event
       chain(([nothing, user]) =>
         perform(
-          { eventKey: USER_CREATED, payload: { email: user.contactInformations.email } },
+          { eventKey: USER_CREATED, payload: { email: user.contactInformation.email } },
           this.domainEventPublisher.publishEvent,
           this.logger,
           'emit user created event.',

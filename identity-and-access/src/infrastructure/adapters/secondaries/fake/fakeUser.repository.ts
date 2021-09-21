@@ -24,7 +24,7 @@ export class FakeUserRepository implements UserRepository {
   getByEmail = (email: Email): TaskEither<Error, User | null> => {
     return tryCatch(
       async () => {
-        const existingUser = this.users.find((u) => u.contactInformations.email == email);
+        const existingUser = this.users.find((u) => u.contactInformation.email == email);
         if (existingUser == undefined) return null;
         else return existingUser;
       },

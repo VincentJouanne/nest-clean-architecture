@@ -6,7 +6,7 @@ import { PinoLoggerService } from "@common/logger/adapters/real/pinoLogger.servi
 import { FakeLoggerService } from "@common/logger/adapters/fake/FakeLogger.service";
 import { executeTask } from "@common/utils/executeTask";
 import { User } from "@identity-and-access/domain/entities/user";
-import { ContactInformations } from "@identity-and-access/domain/entities/contactInformations";
+import { ContactInformation } from "@identity-and-access/domain/value-objects/contactInformation";
 import { UserNotFoundException } from "@identity-and-access/domain/exceptions/userNotFound.exception";
 import { IncorrectVerificationCodeException } from "@identity-and-access/domain/exceptions/incorrectVerificationCode.exception";
 import { UnprocessableEntityException } from "@nestjs/common/exceptions/unprocessable-entity.exception";
@@ -54,7 +54,7 @@ describe('[Unit] Verify email with verification code', () => {
                 User.check({
                     id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
                     password: 'paSSw0rd!',
-                    contactInformations: ContactInformations.check({
+                    contactInformation: ContactInformation.check({
                         email: 'myemail@gmail.com',
                         verificationCode: '1234',
                         isVerified: false,
@@ -77,7 +77,7 @@ describe('[Unit] Verify email with verification code', () => {
                 User.check({
                     id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
                     password: 'paSSw0rd!',
-                    contactInformations: ContactInformations.check({
+                    contactInformation: ContactInformation.check({
                         email: 'myemail@gmail.com',
                         verificationCode: '1234',
                         isVerified: false,
@@ -100,7 +100,7 @@ describe('[Unit] Verify email with verification code', () => {
                 User.check({
                     id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
                     password: 'paSSw0rd!',
-                    contactInformations: ContactInformations.check({
+                    contactInformation: ContactInformation.check({
                         email: 'myemail@gmail.com',
                         verificationCode: '1234',
                         isVerified: false,
@@ -116,6 +116,6 @@ describe('[Unit] Verify email with verification code', () => {
         expect(result).toBe(undefined)
 
         const users = await executeTask(userRepository.all());
-        expect(users[0].contactInformations.isVerified).toBe(true);
+        expect(users[0].contactInformation.isVerified).toBe(true);
     })
 })

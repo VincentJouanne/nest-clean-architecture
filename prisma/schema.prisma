@@ -14,11 +14,11 @@ generator client {
 model User { 
   id String @id
   password String
-  contactInformations ContactInformations @relation(fields: [contactInformationsId], references: [email])
-  contactInformationsId String
+  contactInformation ContactInformation @relation(fields: [contactInformationId], references: [email])
+  contactInformationId String
 }
 
-model ContactInformations {
+model ContactInformation {
   email String @unique
   verificationCode String
   isVerified Boolean @default(false)

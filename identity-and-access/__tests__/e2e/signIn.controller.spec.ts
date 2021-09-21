@@ -3,8 +3,8 @@ import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.servi
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { PrismaService } from '@common/prisma/adapters/prisma.service';
 import { executeTask } from '@common/utils/executeTask';
-import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
+import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
@@ -35,12 +35,12 @@ afterAll(async () => {
 
 beforeEach(async () => {
   await prismaService.user.deleteMany();
-  await prismaService.contactInformations.deleteMany();
+  await prismaService.contactInformation.deleteMany();
 });
 
 afterEach(async () => {
   await prismaService.user.deleteMany();
-  await prismaService.contactInformations.deleteMany();
+  await prismaService.contactInformation.deleteMany();
 });
 
 describe('[e2e] POST /v1/signin', () => {
@@ -64,7 +64,7 @@ describe('[e2e] POST /v1/signin', () => {
       data: {
         id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
         password: 'Passw0rd!',
-        contactInformations: {
+        contactInformation: {
           create: {
             email: 'myemail@gmail.com',
             verificationCode: '1234',
@@ -85,7 +85,7 @@ describe('[e2e] POST /v1/signin', () => {
       data: {
         id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
         password: hashedPassword,
-        contactInformations: {
+        contactInformation: {
           create: {
             email: 'myemail@gmail.com',
             verificationCode: '1234',

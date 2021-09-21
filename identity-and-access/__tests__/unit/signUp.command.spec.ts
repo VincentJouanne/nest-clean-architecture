@@ -7,7 +7,7 @@ import { RealHashingService } from '@identity-and-access/adapters/secondaries/re
 import { RealUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/realUUIDGenerator.service';
 import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
-import { SignUp, SignUpHandler } from '@identity-and-access/use-cases/commands/signUp.command';
+import { SignUp, SignUpHandler } from '@identity-and-access/application/use-cases/commands/signUp.command';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { RealRandomNumberGenerator } from '@identity-and-access/adapters/secondaries/real/realRandomNumberGenerator';

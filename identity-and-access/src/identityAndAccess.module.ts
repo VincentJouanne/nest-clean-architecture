@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { IdentityAndAccessController } from './adapters/primaries/identityAndAccess.controller';
-import { SignUpHandler } from './use-cases/commands/signUp.command';
-import { SignInHandler } from './use-cases/commands/signIn.command';
-import { VerifyEmailHandler } from './use-cases/commands/verifyEmail';
-import { UserEventListener } from './use-cases/listeners/userEvent.listener';
+import { SignUpHandler } from './application/use-cases/commands/signUp.command';
+import { SignInHandler } from './application/use-cases/commands/signIn.command';
+import { VerifyEmailHandler } from './application/use-cases/commands/verifyEmail';
+import { UserEventListener } from './application/listeners/userEvent.listener';
 import { MailModule } from '@common/mail/mail.module';
 import { LoggerModule } from '@common/logger/logger.module';
 import { DomainEventPublisherModule } from '@common/domain-event-publisher/domainEventPublisher.module';

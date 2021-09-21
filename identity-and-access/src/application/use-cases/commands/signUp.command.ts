@@ -14,7 +14,7 @@ import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
 import { chain, left, map, right, taskEither } from 'fp-ts/lib/TaskEither';
-import { USER_CREATED } from '../listeners/userEvent.listener';
+import { USER_CREATED } from '../../listeners/userEvent.listener';
 import { RealRandomNumberGenerator } from '@identity-and-access/adapters/secondaries/real/realRandomNumberGenerator';
 
 export class SignUp implements ICommand {

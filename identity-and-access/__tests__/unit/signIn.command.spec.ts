@@ -11,7 +11,7 @@ import { UserNotFoundException } from '@identity-and-access/domain/exceptions/us
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { jwtConstants } from '@identity-and-access/domain/value-objects/constants';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
-import { SignIn, SignInHandler } from '@identity-and-access/use-cases/commands/signIn.command';
+import { SignIn, SignInHandler } from '@identity-and-access/application/use-cases/commands/signIn.command';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';

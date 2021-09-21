@@ -1,13 +1,13 @@
-import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { InMemoryMailService } from '@common/mail/adapters/inMemoryMail.service';
-import { executeTask } from '@common/utils/executeTask';
 import { noop } from '@common/utils/noop';
-import { perform } from '@common/utils/perform';
 import { UserCreatedEvent } from '@identity-and-access/domain/events/userCreated.event';
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { pipe } from 'fp-ts/lib/function';
 import { map } from 'fp-ts/lib/TaskEither';
+import { perform } from '@common/utils/perform';
+import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
+import { executeTask } from '@common/utils/executeTask';
 
 export const USER_CREATED = 'user.created';
 @Injectable()

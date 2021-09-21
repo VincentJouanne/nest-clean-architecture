@@ -36,13 +36,13 @@ export class VerifyEmailHandler implements ICommandHandler {
             chain(([user, validatedDatas]) => {
                 if(user == null)
                     return left(new UserNotFoundException());
-                else if (validatedDatas.verificationCode != user.contactInformations.verificationCode)
+                else if (validatedDatas.verificationCode != user.contactInformation.verificationCode)
                     return left(new IncorrectVerificationCodeException());
                 else 
                     return right(user)
             }),
             chain((user) => 
-                fromUnknown({...user, contactInformations: { ...user.contactInformations, isVerified: true }}, User, this.logger, 'user' )
+                fromUnknown({...user, contactInformation: { ...user.contactInformation, isVerified: true }}, User, this.logger, 'user' )
             ),
             chain((user) => perform(user, this.userRepository.save, this.logger, 'save user ')),
             map(noop)

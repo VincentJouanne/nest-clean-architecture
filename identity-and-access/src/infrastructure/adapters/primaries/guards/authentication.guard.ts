@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { RealAuthenticationService } from "@identity-and-access/adapters/secondaries/real/realAuthentication.service";
+import { RealAuthenticationService } from "@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service";
 import { PinoLoggerService } from "@common/logger/adapters/real/pinoLogger.service";
 import { right, chain } from "fp-ts/lib/TaskEither";
 import { pipe } from "fp-ts/lib/function";

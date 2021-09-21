@@ -4,8 +4,8 @@ import { Email } from '@common/mail/domain/value-objects/email';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
-import { RealHashingService } from '@identity-and-access/adapters/secondaries/real/realHashing.service';
-import { RealUUIDGeneratorService } from '@identity-and-access/adapters/secondaries/real/realUUIDGenerator.service';
+import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
+import { RealUUIDGeneratorService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
 import { User, UserId } from '@identity-and-access/domain/entities/user';
 import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
@@ -14,8 +14,8 @@ import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
 import { chain, left, map, right, taskEither } from 'fp-ts/lib/TaskEither';
-import { USER_CREATED } from '../listeners/userEvent.listener';
-import { RealRandomNumberGenerator } from '@identity-and-access/adapters/secondaries/real/realRandomNumberGenerator';
+import { USER_CREATED } from '../../listeners/userEvent.listener';
+import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 
 export class SignUp implements ICommand {
   constructor(public readonly email: string, public readonly password: string) {}
@@ -68,7 +68,7 @@ export class SignUpHandler implements ICommandHandler {
           {
             id: validatedDatas.id,
             password: hashedPassword,
-            contactInformations: {
+            contactInformation: {
               email: validatedDatas.email,
               verificationCode: verificationCode,
               isVerified: false,
@@ -84,7 +84,7 @@ export class SignUpHandler implements ICommandHandler {
       //Emit domain event
       chain(([nothing, user]) =>
         perform(
-          { eventKey: USER_CREATED, payload: { email: user.contactInformations.email } },
+          { eventKey: USER_CREATED, payload: { email: user.contactInformation.email } },
           this.domainEventPublisher.publishEvent,
           this.logger,
           'emit user created event.',

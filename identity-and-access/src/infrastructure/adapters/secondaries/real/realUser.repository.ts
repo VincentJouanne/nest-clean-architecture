@@ -1,11 +1,10 @@
 import { Email } from '@common/mail/domain/value-objects/email';
 import { PrismaService } from '@common/prisma/adapters/prisma.service';
-import { ContactInformations } from '@identity-and-access/domain/entities/contactInformations';
 import { User, UserId } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
+import { ContactInformation } from '@identity-and-access/domain/value-objects/contactInformation';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
-import { UUID } from '@identity-and-access/domain/value-objects/uuid';
 
 @Injectable()
 export class RealUserRepository implements UserRepository {
@@ -20,7 +19,7 @@ export class RealUserRepository implements UserRepository {
           },
           //We retrieve the whole aggregate root (user + its contact informations)
           include: {
-            contactInformations: true,
+            contactInformation: true,
           },
         });
 
@@ -32,10 +31,10 @@ export class RealUserRepository implements UserRepository {
           return User.check({
             id: prismaUser.id,
             password: prismaUser.password,
-            contactInformations: ContactInformations.check({
-              email: prismaUser.contactInformations.email,
-              verificationCode: prismaUser.contactInformations.verificationCode,
-              isVerified: prismaUser.contactInformations.isVerified,
+            contactInformation: ContactInformation.check({
+              email: prismaUser.contactInformation.email,
+              verificationCode: prismaUser.contactInformation.verificationCode,
+              isVerified: prismaUser.contactInformation.isVerified,
             }),
           });
       },
@@ -48,13 +47,13 @@ export class RealUserRepository implements UserRepository {
       async () => {
         const prismaUser = await this.prisma.user.findFirst({
           where: {
-            contactInformations: {
+            contactInformation: {
               email: email,
             },
           },
           //We retrieve the whole aggregate root (user + its contact informations)
           include: {
-            contactInformations: true,
+            contactInformation: true,
           },
         });
 
@@ -66,10 +65,10 @@ export class RealUserRepository implements UserRepository {
           return User.check({
             id: prismaUser.id,
             password: prismaUser.password,
-            contactInformations: ContactInformations.check({
-              email: prismaUser.contactInformations.email,
-              verificationCode: prismaUser.contactInformations.verificationCode,
-              isVerified: prismaUser.contactInformations.isVerified,
+            contactInformation: ContactInformation.check({
+              email: prismaUser.contactInformation.email,
+              verificationCode: prismaUser.contactInformation.verificationCode,
+              isVerified: prismaUser.contactInformation.isVerified,
             }),
           });
       },
@@ -85,11 +84,11 @@ export class RealUserRepository implements UserRepository {
             id: user.id,
           },
           update: {
-            contactInformations: {
+            contactInformation: {
               update: {
-                email: user.contactInformations.email,
-                verificationCode: user.contactInformations.verificationCode,
-                isVerified: user.contactInformations.isVerified,
+                email: user.contactInformation.email,
+                verificationCode: user.contactInformation.verificationCode,
+                isVerified: user.contactInformation.isVerified,
               },
             },
             password: user.password,
@@ -97,11 +96,11 @@ export class RealUserRepository implements UserRepository {
           create: {
             id: user.id,
             password: user.password,
-            contactInformations: {
+            contactInformation: {
               create: {
-                email: user.contactInformations.email,
-                verificationCode: user.contactInformations.verificationCode,
-                isVerified: user.contactInformations.isVerified,
+                email: user.contactInformation.email,
+                verificationCode: user.contactInformation.verificationCode,
+                isVerified: user.contactInformation.isVerified,
               },
             },
           },

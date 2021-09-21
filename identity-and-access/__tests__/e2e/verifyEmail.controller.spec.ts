@@ -1,14 +1,12 @@
-import { Test } from "@nestjs/testing/test";
 import { AppModule } from "@app/api-gateway/app.module";
-import { PinoLoggerService } from "@common/logger/adapters/real/pinoLogger.service";
-import { FakeLoggerService } from "@common/logger/adapters/fake/FakeLogger.service";
 import { PrismaService } from "@common/prisma/adapters/prisma.service";
-import { INestApplication } from "@nestjs/common";
-import { TestingModule } from "@nestjs/testing";
-import * as request from 'supertest';
-import { RealAuthenticationService } from "@identity-and-access/adapters/secondaries/real/realAuthentication.service";
 import { executeTask } from "@common/utils/executeTask";
 import { User } from "@identity-and-access/domain/entities/user";
+import { RealAuthenticationService } from "@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service";
+import { INestApplication } from "@nestjs/common";
+import { TestingModule } from "@nestjs/testing";
+import { Test } from "@nestjs/testing/test";
+import * as request from 'supertest';
 
 let app: INestApplication;
 let testingModule: TestingModule;
@@ -19,13 +17,11 @@ let token: string;
 beforeAll(async () => {
     testingModule = await Test.createTestingModule({
         imports: [AppModule],
-    })
-        .overrideProvider(PinoLoggerService)
-        .useClass(FakeLoggerService)
-        .compile();
+    }).compile();
 
     prismaService = testingModule.get<PrismaService>(PrismaService);
     authenticationService = testingModule.get<RealAuthenticationService>(RealAuthenticationService);
+
     app = testingModule.createNestApplication();
     await app.init();
 });
@@ -37,11 +33,11 @@ afterAll(async () => {
 
 beforeEach(async () => {
     await prismaService.user.deleteMany();
-    await prismaService.contactInformations.deleteMany();
+    await prismaService.contactInformation.deleteMany();
     token = await executeTask(authenticationService.createJWT(User.check({
         id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
         password: 'Passw0rd!',
-        contactInformations: {
+        contactInformation: {
             email: 'myemail@gmail.com',
             verificationCode: '1234',
             isVerified: false,
@@ -51,7 +47,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
     await prismaService.user.deleteMany();
-    await prismaService.contactInformations.deleteMany();
+    await prismaService.contactInformation.deleteMany();
 });
 
 describe('[e2e] PATCH /v1/users/{:userId}/verify', () => {
@@ -75,7 +71,7 @@ describe('[e2e] PATCH /v1/users/{:userId}/verify', () => {
             data: {
                 id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
                 password: 'Passw0rd!',
-                contactInformations: {
+                contactInformation: {
                     create: {
                         email: 'myemail@gmail.com',
                         verificationCode: '1234',
@@ -94,7 +90,7 @@ describe('[e2e] PATCH /v1/users/{:userId}/verify', () => {
             data: {
                 id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
                 password: 'Passw0rd!',
-                contactInformations: {
+                contactInformation: {
                     create: {
                         email: 'myemail@gmail.com',
                         verificationCode: '1234',
@@ -114,7 +110,7 @@ describe('[e2e] PATCH /v1/users/{:userId}/verify', () => {
             data: {
                 id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
                 password: 'Passw0rd!',
-                contactInformations: {
+                contactInformation: {
                     create: {
                         email: 'myemail@gmail.com',
                         verificationCode: '1234',
@@ -127,11 +123,11 @@ describe('[e2e] PATCH /v1/users/{:userId}/verify', () => {
         const response = await request(app.getHttpServer()).patch('/v1/users/c017f4a9-c458-4ea7-829c-021c6a608534/verify').send({ verification_code: '1234' }).set({'Authorization': `Bearer ${token}`});
         const user = await prismaService.user.findUnique({
             where: { id: 'c017f4a9-c458-4ea7-829c-021c6a608534' }, include: {
-                contactInformations: true
+                contactInformation: true
             }
         })
         expect(response.status).toBe(200);
-        expect(user?.contactInformations.isVerified).toBe(true);
+        expect(user?.contactInformation.isVerified).toBe(true);
 
     })
 })

@@ -1,7 +1,7 @@
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { convertToHttpErrorToPreventLeak } from '@common/utils/convertToHttpErrorToPreventLeak';
 import { executeTask } from '@common/utils/executeTask';
-import { IdentityAndAccessController } from '@identity-and-access/adapters/primaries/identityAndAccess.controller';
+import { IdentityAndAccessController } from '@identity-and-access/infrastructure/adapters/primaries/identityAndAccess.controller';
 import { Body, Controller, HttpCode, InternalServerErrorException, Post, Param, Patch, UseGuards } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -21,7 +21,7 @@ import { map } from 'fp-ts/lib/TaskEither';
 import { SignInRequestDto, SignInResponseDto } from '../dtos/signIn.dto';
 import { SignUpDto } from '../dtos/signUp.dto';
 import { VerifyEmailRequestDto } from '../dtos/verifyEmail.dto';
-import { AuthenticationGuard } from '@identity-and-access/adapters/primaries/guards/authentication.guard';
+import { AuthenticationGuard } from '@identity-and-access/infrastructure/adapters/primaries/guards/authentication.guard';
 
 @Controller('v1')
 @ApiTags('Identity and access')

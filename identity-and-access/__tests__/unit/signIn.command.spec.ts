@@ -1,9 +1,9 @@
 import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.service';
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
-import { FakeUserRepository } from '@identity-and-access/adapters/secondaries/fake/fakeUser.repository';
-import { RealAuthenticationService } from '@identity-and-access/adapters/secondaries/real/realAuthentication.service';
-import { RealHashingService } from '@identity-and-access/adapters/secondaries/real/realHashing.service';
+import { FakeUserRepository } from '@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository';
+import { RealAuthenticationService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service';
+import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
 import { ContactInformations } from '@identity-and-access/domain/entities/contactInformations';
 import { User } from '@identity-and-access/domain/entities/user';
 import { IncorrectPasswordException } from '@identity-and-access/domain/exceptions/incorrectPassword.exception';
@@ -15,7 +15,7 @@ import { SignIn, SignInHandler } from '@identity-and-access/application/use-case
 import { UnprocessableEntityException } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
-import { RealRandomNumberGenerator } from '@identity-and-access/adapters/secondaries/real/realRandomNumberGenerator';
+import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 
 //Adapters
 let userRepository: FakeUserRepository;

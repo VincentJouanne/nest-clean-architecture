@@ -1,7 +1,7 @@
 import { Email } from '@common/mail/domain/value-objects/email';
 import { PrismaService } from '@common/prisma/adapters/prisma.service';
 import { executeTask } from '@common/utils/executeTask';
-import { RealUserRepository } from '@identity-and-access/adapters/secondaries/real/realUser.repository';
+import { RealUserRepository } from '@identity-and-access/infrastructure/adapters/secondaries/real/realUser.repository';
 import { ContactInformations } from '@identity-and-access/domain/entities/contactInformations';
 import { User } from '@identity-and-access/domain/entities/user';
 import { Test } from '@nestjs/testing';

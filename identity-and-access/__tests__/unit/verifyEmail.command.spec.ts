@@ -1,7 +1,7 @@
 import { VerifyEmailHandler, VerifyEmail } from "@identity-and-access/application/use-cases/commands/verifyEmail";
 import { Test } from "@nestjs/testing/test";
 import { UserRepository } from "@identity-and-access/domain/repositories/user.repository";
-import { FakeUserRepository } from "@identity-and-access/adapters/secondaries/fake/fakeUser.repository";
+import { FakeUserRepository } from "@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository";
 import { PinoLoggerService } from "@common/logger/adapters/real/pinoLogger.service";
 import { FakeLoggerService } from "@common/logger/adapters/fake/FakeLogger.service";
 import { executeTask } from "@common/utils/executeTask";

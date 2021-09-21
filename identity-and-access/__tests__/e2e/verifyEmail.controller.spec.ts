@@ -6,7 +6,7 @@ import { PrismaService } from "@common/prisma/adapters/prisma.service";
 import { INestApplication } from "@nestjs/common";
 import { TestingModule } from "@nestjs/testing";
 import * as request from 'supertest';
-import { RealAuthenticationService } from "@identity-and-access/adapters/secondaries/real/realAuthentication.service";
+import { RealAuthenticationService } from "@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service";
 import { executeTask } from "@common/utils/executeTask";
 import { User } from "@identity-and-access/domain/entities/user";
 

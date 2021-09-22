@@ -84,10 +84,10 @@ export class SignUpHandler implements ICommandHandler {
       //Emit domain event
       chain(([nothing, user]) =>
         perform(
-          { eventKey: USER_REGISTERED, payload: { email: user.contactInformation.email } },
+          { eventKey: USER_REGISTERED, payload: { email: user.contactInformation.email, verificationCode: user.contactInformation.verificationCode } },
           this.domainEventPublisher.publishEvent,
           this.logger,
-          'emit user created event.',
+          'emit user registered event.',
         ),
       ),
       map(noop),

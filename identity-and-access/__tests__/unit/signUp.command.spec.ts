@@ -2,15 +2,15 @@ import { DomainEventPublisherModule } from '@common/domain-event-publisher/domai
 import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.service';
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
-import { FakeUserRepository } from '@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository';
-import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
-import { RealUUIDGeneratorService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
+import { SignUp, SignUpHandler } from '@identity-and-access/application/commands/signUp.command';
 import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
-import { SignUp, SignUpHandler } from '@identity-and-access/application/use-cases/commands/signUp.command';
+import { FakeUserRepository } from '@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository';
+import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
+import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
+import { RealUUIDGeneratorService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 
 //Adapters
 let userRepository: FakeUserRepository;

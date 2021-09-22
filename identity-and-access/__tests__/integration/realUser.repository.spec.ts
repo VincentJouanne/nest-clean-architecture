@@ -1,10 +1,10 @@
-import { Email } from '@common/mail/domain/value-objects/email';
 import { PrismaService } from '@common/prisma/adapters/prisma.service';
 import { executeTask } from '@common/utils/executeTask';
 import { User } from '@identity-and-access/domain/entities/user';
 import { ContactInformation } from '@identity-and-access/domain/value-objects/contactInformation';
 import { RealUserRepository } from '@identity-and-access/infrastructure/adapters/secondaries/real/realUser.repository';
 import { Test } from '@nestjs/testing';
+import { Email } from '@notifications/domain/value-objects/email';
 
 let prismaService: PrismaService;
 let userRepository: RealUserRepository;

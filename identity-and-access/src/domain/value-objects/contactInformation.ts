@@ -1,4 +1,4 @@
-import { Email } from '@common/mail/domain/value-objects/email';
+import { Email } from '@notifications/domain/value-objects/email';
 import { Boolean, Record, Static } from 'runtypes';
 import { VerificationCode4 } from './verificationCode4';
 

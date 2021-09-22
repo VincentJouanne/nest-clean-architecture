@@ -1,10 +1,9 @@
-import { Email } from '@common/mail/domain/value-objects/email';
+import { executeTask } from '@common/utils/executeTask';
 import { User, UserId } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Email } from '@notifications/domain/value-objects/email';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
-import { UUID } from '@identity-and-access/domain/value-objects/uuid';
-import { executeTask } from '@common/utils/executeTask';
 
 @Injectable()
 export class FakeUserRepository implements UserRepository {

@@ -5,7 +5,7 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "collectCoverageFrom": ["**/application/use-cases/**/**.ts"],
+  "collectCoverageFrom": ["**/application/**/**.ts"],
   "coverageThreshold": {
     "**/commands/*.command.ts": {
       "branches": 100,

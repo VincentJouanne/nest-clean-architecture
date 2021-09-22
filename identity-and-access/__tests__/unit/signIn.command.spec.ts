@@ -1,21 +1,21 @@
 import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.service';
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
-import { FakeUserRepository } from '@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository';
-import { RealAuthenticationService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service';
-import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
-import { ContactInformation } from '@identity-and-access/domain/value-objects/contactInformation';
+import { SignIn, SignInHandler } from '@identity-and-access/application/commands/signIn.command';
 import { User } from '@identity-and-access/domain/entities/user';
 import { IncorrectPasswordException } from '@identity-and-access/domain/exceptions/incorrectPassword.exception';
 import { UserNotFoundException } from '@identity-and-access/domain/exceptions/userNotFound.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { jwtConstants } from '@identity-and-access/domain/value-objects/constants';
+import { ContactInformation } from '@identity-and-access/domain/value-objects/contactInformation';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
-import { SignIn, SignInHandler } from '@identity-and-access/application/use-cases/commands/signIn.command';
+import { FakeUserRepository } from '@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository';
+import { RealAuthenticationService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service';
+import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
+import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
-import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 
 //Adapters
 let userRepository: FakeUserRepository;

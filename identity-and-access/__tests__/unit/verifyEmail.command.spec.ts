@@ -1,15 +1,15 @@
-import { VerifyEmailHandler, VerifyEmail } from "@identity-and-access/application/use-cases/commands/verifyEmail";
-import { Test } from "@nestjs/testing/test";
-import { UserRepository } from "@identity-and-access/domain/repositories/user.repository";
-import { FakeUserRepository } from "@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository";
-import { PinoLoggerService } from "@common/logger/adapters/real/pinoLogger.service";
 import { FakeLoggerService } from "@common/logger/adapters/fake/FakeLogger.service";
+import { PinoLoggerService } from "@common/logger/adapters/real/pinoLogger.service";
 import { executeTask } from "@common/utils/executeTask";
+import { VerifyEmail, VerifyEmailHandler } from "@identity-and-access/application/commands/verifyEmail.command";
 import { User } from "@identity-and-access/domain/entities/user";
-import { ContactInformation } from "@identity-and-access/domain/value-objects/contactInformation";
-import { UserNotFoundException } from "@identity-and-access/domain/exceptions/userNotFound.exception";
 import { IncorrectVerificationCodeException } from "@identity-and-access/domain/exceptions/incorrectVerificationCode.exception";
+import { UserNotFoundException } from "@identity-and-access/domain/exceptions/userNotFound.exception";
+import { UserRepository } from "@identity-and-access/domain/repositories/user.repository";
+import { ContactInformation } from "@identity-and-access/domain/value-objects/contactInformation";
+import { FakeUserRepository } from "@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository";
 import { UnprocessableEntityException } from "@nestjs/common/exceptions/unprocessable-entity.exception";
+import { Test } from "@nestjs/testing/test";
 
 let userRepository: FakeUserRepository;
 

@@ -1,11 +1,11 @@
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
+import { SignIn } from '@identity-and-access/application/commands/signIn.command';
+import { SignUp } from '@identity-and-access/application/commands/signUp.command';
+import { VerifyEmail } from '@identity-and-access/application/commands/verifyEmail.command';
 import { JWT } from '@identity-and-access/domain/value-objects/jwt';
-import { SignIn } from '@identity-and-access/application/use-cases/commands/signIn.command';
-import { SignUp } from '@identity-and-access/application/use-cases/commands/signUp.command';
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
-import { VerifyEmail } from '@identity-and-access/application/use-cases/commands/verifyEmail';
 
 @Injectable()
 export class IdentityAndAccessController {

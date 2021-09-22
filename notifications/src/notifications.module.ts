@@ -10,4 +10,4 @@ import { InMemoryMailService } from './infrastructure/adapters/secondaries/fake/
   providers: [InMemoryMailService, IdentityAndAccessEventsSubscriber, SendEmailHandler],
   exports: [InMemoryMailService, IdentityAndAccessEventsSubscriber],
 })
-export class MailModule {}
+export class NotificationsModule {}

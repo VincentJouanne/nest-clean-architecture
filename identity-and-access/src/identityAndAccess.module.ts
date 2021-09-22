@@ -1,9 +1,9 @@
 import { DomainEventPublisherModule } from '@common/domain-event-publisher/domainEventPublisher.module';
 import { LoggerModule } from '@common/logger/logger.module';
-import { MailModule } from '@common/mail/mail.module';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { JwtModule } from '@nestjs/jwt';
+import { NotificationsModule } from '@notifications/notifications.module';
 import { SignInHandler } from './application/use-cases/commands/signIn.command';
 import { SignUpHandler } from './application/use-cases/commands/signUp.command';
 import { VerifyEmailHandler } from './application/use-cases/commands/verifyEmail';
@@ -24,7 +24,7 @@ const repositories = [{
 }]
 
 @Module({
-  imports: [CqrsModule, DomainEventPublisherModule, LoggerModule, MailModule, JwtModule.register({
+  imports: [CqrsModule, DomainEventPublisherModule, LoggerModule, NotificationsModule, JwtModule.register({
     secret: jwtConstants.secret,
     signOptions: { expiresIn: '60s' },
   })],

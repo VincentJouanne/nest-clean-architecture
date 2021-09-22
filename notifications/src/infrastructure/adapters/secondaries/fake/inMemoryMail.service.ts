@@ -1,5 +1,5 @@
-import { Email } from '@common/mail/domain/value-objects/email';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Email } from '@notifications/domain/value-objects/email';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 import { MailService } from '../../../../domain/services/mail.service';
 

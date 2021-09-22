@@ -1,5 +1,5 @@
-import { Email } from '@common/mail/domain/value-objects/email';
 import { User, UserId } from '@identity-and-access/domain/entities/user';
+import { Email } from '@notifications/domain/value-objects/email';
 import { TaskEither } from 'fp-ts/lib/TaskEither';
 
 export abstract class UserRepository {

@@ -1,9 +1,9 @@
-import { Email } from '@common/mail/domain/value-objects/email';
 import { PrismaService } from '@common/prisma/adapters/prisma.service';
 import { User, UserId } from '@identity-and-access/domain/entities/user';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { ContactInformation } from '@identity-and-access/domain/value-objects/contactInformation';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Email } from '@notifications/domain/value-objects/email';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()

@@ -1,6 +1,5 @@
 import { DomainEventPublisher } from '@common/domain-event-publisher/adapters/domainEventPublisher';
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
-import { Email } from '@common/mail/domain/value-objects/email';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
@@ -13,6 +12,7 @@ import { RealHashingService } from '@identity-and-access/infrastructure/adapters
 import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 import { RealUUIDGeneratorService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
+import { Email } from '@notifications/domain/value-objects/email';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
 import { pipe } from 'fp-ts/lib/function';
 import { chain, left, map, right, taskEither } from 'fp-ts/lib/TaskEither';

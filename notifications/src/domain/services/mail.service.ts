@@ -1,6 +1,6 @@
 import { TaskEither } from 'fp-ts/lib/TaskEither';
-import { Email } from '../value-objects/email';
+import { VerificationCodeEmailPayload } from '../value-objects/verificationCodeEmailPayload';
 
 export interface MailService {
-  sendEmail: (email: Email) => TaskEither<Error, void>;
+  sendEmail: (payload: VerificationCodeEmailPayload) => TaskEither<Error, void>;
 }

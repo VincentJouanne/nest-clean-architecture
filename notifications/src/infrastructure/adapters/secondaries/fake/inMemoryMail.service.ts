@@ -1,14 +1,14 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Email } from '@notifications/domain/value-objects/email';
+import { VerificationCodeEmailPayload } from '@notifications/domain/value-objects/verificationCodeEmailPayload';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 import { MailService } from '../../../../domain/services/mail.service';
 
 @Injectable()
 export class InMemoryMailService implements MailService {
-  sendEmail = (email: Email): TaskEither<Error, void> => {
+  sendEmail = (payload: VerificationCodeEmailPayload): TaskEither<Error, void> => {
     return tryCatch(
       async () => {
-        console.log('Sending email to: ', email);
+        console.log(`Sending email to: ${payload.to} with verification code: ${payload.verificationCode}`);
         return;
       },
       (reason: unknown) => new InternalServerErrorException(),

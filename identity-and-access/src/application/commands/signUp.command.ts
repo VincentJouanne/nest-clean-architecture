@@ -4,7 +4,7 @@ import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
 import { User, UserId } from '@identity-and-access/domain/entities/user';
-import { USER_CREATED } from '@identity-and-access/domain/events/userCreated.event';
+import { USER_REGISTERED } from '@identity-and-access/domain/events/userRegistered.event';
 import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
@@ -84,7 +84,7 @@ export class SignUpHandler implements ICommandHandler {
       //Emit domain event
       chain(([nothing, user]) =>
         perform(
-          { eventKey: USER_CREATED, payload: { email: user.contactInformation.email } },
+          { eventKey: USER_REGISTERED, payload: { email: user.contactInformation.email } },
           this.domainEventPublisher.publishEvent,
           this.logger,
           'emit user created event.',

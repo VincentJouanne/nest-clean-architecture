@@ -16,6 +16,7 @@ import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/a
 import { UnprocessableEntityException } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
+import { UserBuilder } from '../dataBuilders/userBuilder';
 
 //Adapters
 let userRepository: FakeUserRepository;
@@ -84,26 +85,13 @@ describe('[Unit] Sign in with credentials', () => {
 
   it('Should throw ForbiddenException if the user exists but has provided the wrong password', async () => {
     //Given valid credentials
-    const email = 'myemail@gmail.com';
-    const password = 'paSSw0rd!';
-    const wrongPassword = 'paSSw0rd?';
-    const hashedPassword = await executeTask(hashingService.hashPlainPassword(PlainPassword.check(wrongPassword)));
-    await executeTask(
-      userRepository.save(
-        User.check({
-          id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-          password: hashedPassword,
-          contactInformation: ContactInformation.check({
-            email: email,
-            verificationCode: '1234',
-            isVerified: true,
-          }),
-        }),
-      ),
-    );
+    
+    const user = (await UserBuilder().withEmail('myemail@gmail.com').withPassword('paSSw0rd!')).build();
+    await executeTask(userRepository.save(user));
+    const aDifferentPassword = 'paSSw0rd?';
 
     //When we sign in a user
-    const resultPromise = signInHandler.execute(new SignIn(email, password));
+    const resultPromise = signInHandler.execute(new SignIn('myemail@gmail.com', aDifferentPassword));
 
     //Then it should have thrown an error
     await expect(resultPromise).rejects.toBeInstanceOf(IncorrectPasswordException);

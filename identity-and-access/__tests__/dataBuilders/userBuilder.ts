@@ -38,6 +38,11 @@ export const UserBuilder = () => {
       return this
     },
 
+    withVerificationCode(code: string) {
+      overrides.contactInformation.verificationCode = code;
+      return this
+    },
+
     build(): User {
       return User.check({
         ...defaultProperties,

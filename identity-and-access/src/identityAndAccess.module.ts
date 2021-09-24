@@ -26,7 +26,7 @@ const repositories = [{
 @Module({
   imports: [CqrsModule, DomainEventPublisherModule, LoggerModule, NotificationsModule, JwtModule.register({
     secret: jwtConstants.secret,
-    signOptions: { expiresIn: '60s' },
+    signOptions: { expiresIn: '15m' },
   })],
   providers: [
     IdentityAndAccessController,

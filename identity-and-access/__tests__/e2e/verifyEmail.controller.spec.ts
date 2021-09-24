@@ -1,12 +1,12 @@
 import { AppModule } from "@app/api-gateway/app.module";
 import { PrismaService } from "@common/prisma/adapters/prisma.service";
 import { executeTask } from "@common/utils/executeTask";
-import { User } from "@identity-and-access/domain/entities/user";
 import { RealAuthenticationService } from "@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service";
 import { INestApplication } from "@nestjs/common";
 import { TestingModule } from "@nestjs/testing";
 import { Test } from "@nestjs/testing/test";
 import * as request from 'supertest';
+import { UserBuilder } from "../dataBuilders/userBuilder";
 
 let app: INestApplication;
 let testingModule: TestingModule;
@@ -34,15 +34,8 @@ afterAll(async () => {
 beforeEach(async () => {
     await prismaService.user.deleteMany();
     await prismaService.contactInformation.deleteMany();
-    token = await executeTask(authenticationService.createJWT(User.check({
-        id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-        password: 'Passw0rd!',
-        contactInformation: {
-            email: 'myemail@gmail.com',
-            verificationCode: '1234',
-            isVerified: false,
-        },
-    })))
+    const user = UserBuilder().withId('c017f4a9-c458-4ea7-829c-021c6a608534').build()
+    token = await executeTask(authenticationService.createJWT(user))
 });
 
 afterEach(async () => {

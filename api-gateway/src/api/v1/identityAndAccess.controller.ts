@@ -1,27 +1,14 @@
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
-import { convertToHttpErrorToPreventLeak } from '@common/utils/convertToHttpErrorToPreventLeak';
 import { executeTask } from '@common/utils/executeTask';
+import { AuthenticationGuard } from '@identity-and-access/infrastructure/adapters/primaries/guards/authentication.guard';
 import { IdentityAndAccessController } from '@identity-and-access/infrastructure/adapters/primaries/identityAndAccess.controller';
-import { Body, Controller, HttpCode, InternalServerErrorException, Post, Param, Patch, UseGuards } from '@nestjs/common';
-import {
-  ApiConflictResponse,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiOperation,
-  ApiTags,
-  ApiUnprocessableEntityResponse,
-  ApiParam,
-  ApiUnauthorizedResponse,
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiOkResponse,
-} from '@nestjs/swagger';
+import { Body, Controller, HttpCode, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { pipe } from 'fp-ts/lib/function';
 import { map } from 'fp-ts/lib/TaskEither';
 import { SignInRequestDto, SignInResponseDto } from '../dtos/signIn.dto';
 import { SignUpDto } from '../dtos/signUp.dto';
 import { VerifyEmailRequestDto } from '../dtos/verifyEmail.dto';
-import { AuthenticationGuard } from '@identity-and-access/infrastructure/adapters/primaries/guards/authentication.guard';
 
 @Controller('v1')
 @ApiTags('Identity and access')
@@ -38,15 +25,7 @@ export class IdentityAndAccessApiControllerV1 {
   @ApiUnprocessableEntityResponse({ description: 'Email or password invalid.' })
   @ApiConflictResponse({ description: 'Email already exists.' })
   async signUp(@Body() signUpDto: SignUpDto): Promise<void> {
-    const errorMap = {
-      default: new InternalServerErrorException('Something wrong happened'),
-    };
-
-    const task = pipe(
-      this.identityAndAccessController.signUp(signUpDto.email, signUpDto.password),
-      convertToHttpErrorToPreventLeak(errorMap, this.logger),
-    );
-    return await executeTask(task);
+    return await executeTask(this.identityAndAccessController.signUp(signUpDto.email, signUpDto.password));
   }
 
   @Post('signin')
@@ -60,18 +39,13 @@ export class IdentityAndAccessApiControllerV1 {
   @ApiForbiddenResponse({ description: 'Wrong password provided.' })
   @ApiNotFoundResponse({ description: 'No user associated to the given email.' })
   async signIn(@Body() signInRequestDto: SignInRequestDto): Promise<SignInResponseDto> {
-    const errorMap = {
-      default: new InternalServerErrorException('Something wrong happened'),
-    };
-
     const task = pipe(
       this.identityAndAccessController.signIn(signInRequestDto.email, signInRequestDto.password),
-      convertToHttpErrorToPreventLeak(errorMap, this.logger),
-      map((jwt) => ({
-        access_token: jwt,
+      map(([accessToken, refreshToken]) => ({
+        access_token: accessToken,
+        refresh_token: refreshToken
       })),
     );
-
     return await executeTask(task);
   }
 
@@ -90,13 +64,6 @@ export class IdentityAndAccessApiControllerV1 {
   @ApiUnauthorizedResponse({ description: 'The verification code do not match the one sent to user.' })
   @ApiParam({ name: 'userId', type: 'string', description: 'The id of the user', example: '00000000-0000-0000-0000-000000000000' })
   async verifyEmail(@Param('userId') userId: string, @Body() verifyEmailRequestDto: VerifyEmailRequestDto): Promise<void> {
-    const errorMap = {
-      default: new InternalServerErrorException('Something wrong happened'),
-    };
-
-    const task = pipe(this.identityAndAccessController.verifyEmail(userId, verifyEmailRequestDto.verification_code),
-      convertToHttpErrorToPreventLeak(errorMap, this.logger))
-
-    return await executeTask(task)
+    return await executeTask(this.identityAndAccessController.verifyEmail(userId, verifyEmailRequestDto.verification_code))
   }
 }

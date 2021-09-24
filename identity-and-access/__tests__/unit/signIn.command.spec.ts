@@ -5,7 +5,6 @@ import { SignIn, SignInHandler } from '@identity-and-access/application/commands
 import { IncorrectPasswordException } from '@identity-and-access/domain/exceptions/incorrectPassword.exception';
 import { UserNotFoundException } from '@identity-and-access/domain/exceptions/userNotFound.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
-import { jwtConstants } from '@identity-and-access/domain/value-objects/constants';
 import { FakeUserRepository } from '@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository';
 import { RealAuthenticationService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service';
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
@@ -25,12 +24,9 @@ describe('[Unit] Sign in with credentials', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [
-        JwtModule.register({
-          secret: jwtConstants.secret,
-          signOptions: { expiresIn: '60s' },
-        }),
-      ],
+      imports: [JwtModule.register({
+        signOptions: { expiresIn: '15m' },
+      })],
       providers: [
         SignInHandler,
         RealRandomNumberGenerator,

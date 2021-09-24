@@ -12,7 +12,8 @@ let app: INestApplication;
 let testingModule: TestingModule;
 let prismaService: PrismaService;
 let authenticationService: RealAuthenticationService;
-let token: string;
+let accessToken: string;
+let refreshToken: string;
 
 beforeAll(async () => {
     testingModule = await Test.createTestingModule({
@@ -35,7 +36,9 @@ beforeEach(async () => {
     await prismaService.user.deleteMany();
     await prismaService.contactInformation.deleteMany();
     const user = UserBuilder().withId('c017f4a9-c458-4ea7-829c-021c6a608534').build()
-    token = await executeTask(authenticationService.createJWT(user))
+    const tokens = await executeTask(authenticationService.createAuthenticationTokens(user))
+    accessToken = tokens[0]
+    refreshToken = tokens[1]
 });
 
 afterEach(async () => {
@@ -50,12 +53,12 @@ describe('[e2e] PATCH /v1/users/{:userId}/verify', () => {
     });
 
     it('Should respond 422 for invalid userId format', async () => {
-        const response = await request(app.getHttpServer()).patch('/v1/users/1/verify').send({ verification_code: '1234' }).set({'Authorization': `Bearer ${token}`});
+        const response = await request(app.getHttpServer()).patch('/v1/users/1/verify').send({ verification_code: '1234' }).set({'Authorization': `Bearer ${accessToken}`});
         expect(response.status).toBe(422);
     });
 
     it('Should respond 422 for invalid verification code format', async () => {
-        const response = await request(app.getHttpServer()).patch('/v1/users/c017f4a9-c458-4ea7-829c-021c6a608534/verify').send({ verification_code: '1' }).set({'Authorization': `Bearer ${token}`});
+        const response = await request(app.getHttpServer()).patch('/v1/users/c017f4a9-c458-4ea7-829c-021c6a608534/verify').send({ verification_code: '1' }).set({'Authorization': `Bearer ${accessToken}`});
         expect(response.status).toBe(422);
     });
 
@@ -74,7 +77,7 @@ describe('[e2e] PATCH /v1/users/{:userId}/verify', () => {
             },
         });
 
-        const response = await request(app.getHttpServer()).patch('/v1/users/a017f4a9-c458-4ea7-829c-021c6a608534/verify').send({ verification_code: '1234' }).set({'Authorization': `Bearer ${token}`});
+        const response = await request(app.getHttpServer()).patch('/v1/users/a017f4a9-c458-4ea7-829c-021c6a608534/verify').send({ verification_code: '1234' }).set({'Authorization': `Bearer ${accessToken}`});
         expect(response.status).toBe(404);
     })
 
@@ -93,7 +96,7 @@ describe('[e2e] PATCH /v1/users/{:userId}/verify', () => {
             },
         });
 
-        const response = await request(app.getHttpServer()).patch('/v1/users/c017f4a9-c458-4ea7-829c-021c6a608534/verify').send({ verification_code: '1111' }).set({'Authorization': `Bearer ${token}`});
+        const response = await request(app.getHttpServer()).patch('/v1/users/c017f4a9-c458-4ea7-829c-021c6a608534/verify').send({ verification_code: '1111' }).set({'Authorization': `Bearer ${accessToken}`});
         expect(response.status).toBe(401);
     })
 
@@ -113,7 +116,7 @@ describe('[e2e] PATCH /v1/users/{:userId}/verify', () => {
             },
         });
 
-        const response = await request(app.getHttpServer()).patch('/v1/users/c017f4a9-c458-4ea7-829c-021c6a608534/verify').send({ verification_code: '1234' }).set({'Authorization': `Bearer ${token}`});
+        const response = await request(app.getHttpServer()).patch('/v1/users/c017f4a9-c458-4ea7-829c-021c6a608534/verify').send({ verification_code: '1234' }).set({'Authorization': `Bearer ${accessToken}`});
         const user = await prismaService.user.findUnique({
             where: { id: 'c017f4a9-c458-4ea7-829c-021c6a608534' }, include: {
                 contactInformation: true

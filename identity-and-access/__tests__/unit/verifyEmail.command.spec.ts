@@ -8,7 +8,7 @@ import { UserRepository } from "@identity-and-access/domain/repositories/user.re
 import { FakeUserRepository } from "@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository";
 import { UnprocessableEntityException } from "@nestjs/common/exceptions/unprocessable-entity.exception";
 import { Test } from "@nestjs/testing/test";
-import { UserBuilder } from "../dataBuilders/userBuilder";
+import { UserBuilder } from "../data-builders/userBuilder";
 
 let userRepository: FakeUserRepository;
 

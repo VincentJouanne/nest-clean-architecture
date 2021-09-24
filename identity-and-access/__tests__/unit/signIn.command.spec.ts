@@ -13,8 +13,8 @@ import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/a
 import { UnprocessableEntityException } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
-import { PasswordBuilder } from '../dataBuilders/passwordBuilder';
-import { UserBuilder } from '../dataBuilders/userBuilder';
+import { PasswordBuilder } from '../data-builders/passwordBuilder';
+import { UserBuilder } from '../data-builders/userBuilder';
 
 //Adapters
 let userRepository: FakeUserRepository;

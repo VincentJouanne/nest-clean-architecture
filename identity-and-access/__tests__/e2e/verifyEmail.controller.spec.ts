@@ -6,7 +6,7 @@ import { INestApplication } from "@nestjs/common";
 import { TestingModule } from "@nestjs/testing";
 import { Test } from "@nestjs/testing/test";
 import * as request from 'supertest';
-import { UserBuilder } from "../dataBuilders/userBuilder";
+import { UserBuilder } from "../data-builders/userBuilder";
 
 let app: INestApplication;
 let testingModule: TestingModule;

@@ -19,7 +19,7 @@ export class RealAuthenticationService implements AuthenticationService {
     return tryCatch(
       async () => {
         const payload = { id: user.id };
-        return [AccessToken.check(this.jwtService.sign(payload, {secret: jwtConstants.access_token_secret})), RefreshToken.check(this.jwtService.sign(payload, {secret: jwtConstants.refresh_token_secret}))];
+        return [AccessToken.check(this.jwtService.sign(payload, {secret: jwtConstants.access_token_secret, expiresIn: jwtConstants.access_token_expiry})), RefreshToken.check(this.jwtService.sign(payload, {secret: jwtConstants.refresh_token_secret, expiresIn: jwtConstants.refresh_token_expiry}))];
       },
       (reason: unknown) => new InternalServerErrorException(),
     );

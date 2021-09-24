@@ -24,11 +24,9 @@ describe('[Unit] Sign in with credentials', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [
-        JwtModule.register({
-          signOptions: { expiresIn: '60s' },
-        }),
-      ],
+      imports: [JwtModule.register({
+        signOptions: { expiresIn: '15m' },
+      })],
       providers: [
         SignInHandler,
         RealRandomNumberGenerator,

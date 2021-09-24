@@ -2,7 +2,8 @@ import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.servi
 import { SignIn } from '@identity-and-access/application/commands/signIn.command';
 import { SignUp } from '@identity-and-access/application/commands/signUp.command';
 import { VerifyEmail } from '@identity-and-access/application/commands/verifyEmail.command';
-import { JWT } from '@identity-and-access/domain/value-objects/jwt';
+import { AccessToken } from '@identity-and-access/domain/value-objects/accessToken';
+import { RefreshToken } from '@identity-and-access/domain/value-objects/refreshToken';
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
@@ -23,7 +24,7 @@ export class IdentityAndAccessController {
     return signUpTask;
   };
 
-  signIn = (email: string, password: string): TaskEither<Error, JWT> => {
+  signIn = (email: string, password: string): TaskEither<Error, [AccessToken, RefreshToken]> => {
     const signInTask = tryCatch(
       async () => {
         const command = new SignIn(email, password);

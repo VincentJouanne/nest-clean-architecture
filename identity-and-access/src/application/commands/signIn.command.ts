@@ -6,8 +6,9 @@ import { User } from '@identity-and-access/domain/entities/user';
 import { IncorrectPasswordException } from '@identity-and-access/domain/exceptions/incorrectPassword.exception';
 import { UserNotFoundException } from '@identity-and-access/domain/exceptions/userNotFound.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
-import { JWT } from '@identity-and-access/domain/value-objects/jwt';
+import { AccessToken } from '@identity-and-access/domain/value-objects/accessToken';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
+import { RefreshToken } from '@identity-and-access/domain/value-objects/refreshToken';
 import { RealAuthenticationService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service';
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
@@ -31,7 +32,7 @@ export class SignInHandler implements ICommandHandler {
     this.logger.setContext('SignIn');
   }
 
-  execute(command: SignIn): Promise<JWT> {
+  execute(command: SignIn): Promise<[AccessToken, RefreshToken]> {
     const { email, password } = command;
     let user: User;
 
@@ -64,7 +65,7 @@ export class SignInHandler implements ICommandHandler {
           return right(null);
         } else return left(new IncorrectPasswordException());
       }),
-      chain(() => perform(user, this.authenticationService.createJWT, this.logger, 'create jwt for user')),
+      chain(() => perform(user, this.authenticationService.createAuthenticationTokens, this.logger, 'create access and refresh tokens for user')),
     );
 
     return executeTask(task);

@@ -1,8 +1,9 @@
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { User } from '@identity-and-access/domain/entities/user';
 import { AuthenticationService } from '@identity-and-access/domain/services/authentication.service';
+import { AccessToken } from '@identity-and-access/domain/value-objects/accessToken';
 import { jwtConstants } from '@identity-and-access/domain/value-objects/constants';
-import { JWT } from '@identity-and-access/domain/value-objects/jwt';
+import { RefreshToken } from '@identity-and-access/domain/value-objects/refreshToken';
 import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
@@ -14,11 +15,11 @@ export class RealAuthenticationService implements AuthenticationService {
   constructor(private logger: PinoLoggerService, private jwtService: JwtService) {
     this.logger.setContext('AuthenticationService');
   }
-  createJWT = (user: User): TaskEither<Error, JWT> => {
+  createAuthenticationTokens = (user: User): TaskEither<Error, [AccessToken, RefreshToken]> => {
     return tryCatch(
       async () => {
         const payload = { id: user.id };
-        return JWT.check(this.jwtService.sign(payload));
+        return [AccessToken.check(this.jwtService.sign(payload, {secret: jwtConstants.access_token_secret})), RefreshToken.check(this.jwtService.sign(payload, {secret: jwtConstants.refresh_token_secret}))];
       },
       (reason: unknown) => new InternalServerErrorException(),
     );
@@ -61,7 +62,7 @@ export class RealAuthenticationService implements AuthenticationService {
   verify(bearerToken: string): TaskEither<Error, void> {
     return pipe(
       tryCatch(
-        async () => await this.jwtService.verify(bearerToken, {secret: jwtConstants.secret}),
+        async () => await this.jwtService.verify(bearerToken, {secret: jwtConstants.access_token_secret}),
         (error) => new Error(`Verification failed: ${error}`),
       ),
       map((decodedToken) => {

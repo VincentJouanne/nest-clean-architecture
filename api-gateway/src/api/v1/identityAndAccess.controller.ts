@@ -41,8 +41,9 @@ export class IdentityAndAccessApiControllerV1 {
   async signIn(@Body() signInRequestDto: SignInRequestDto): Promise<SignInResponseDto> {
     const task = pipe(
       this.identityAndAccessController.signIn(signInRequestDto.email, signInRequestDto.password),
-      map((jwt) => ({
-        access_token: jwt,
+      map(([accessToken, refreshToken]) => ({
+        access_token: accessToken,
+        refresh_token: refreshToken
       })),
     );
     return await executeTask(task);

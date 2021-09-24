@@ -1,7 +1,8 @@
 import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { User } from '../entities/user';
-import { JWT } from '../value-objects/jwt';
+import { AccessToken } from '../value-objects/accessToken';
+import { RefreshToken } from '../value-objects/refreshToken';
 
 export abstract class AuthenticationService {
-  createJWT!: (user: User) => TaskEither<Error, JWT>;
+  createAuthenticationTokens!: (user: User) => TaskEither<Error, [AccessToken, RefreshToken]>;
 }

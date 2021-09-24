@@ -8,7 +8,6 @@ import { SignInHandler } from './application/commands/signIn.command';
 import { SignUpHandler } from './application/commands/signUp.command';
 import { VerifyEmailHandler } from './application/commands/verifyEmail.command';
 import { UserRepository } from './domain/repositories/user.repository';
-import { jwtConstants } from './domain/value-objects/constants';
 import { IdentityAndAccessController } from './infrastructure/adapters/primaries/identityAndAccess.controller';
 import { RealAuthenticationService } from './infrastructure/adapters/secondaries/real/realAuthentication.service';
 import { RealHashingService } from './infrastructure/adapters/secondaries/real/realHashing.service';
@@ -25,7 +24,6 @@ const repositories = [{
 
 @Module({
   imports: [CqrsModule, DomainEventPublisherModule, LoggerModule, NotificationsModule, JwtModule.register({
-    secret: jwtConstants.secret,
     signOptions: { expiresIn: '15m' },
   })],
   providers: [

@@ -2,14 +2,13 @@ import { FakeLoggerService } from "@common/logger/adapters/fake/FakeLogger.servi
 import { PinoLoggerService } from "@common/logger/adapters/real/pinoLogger.service";
 import { executeTask } from "@common/utils/executeTask";
 import { VerifyEmail, VerifyEmailHandler } from "@identity-and-access/application/commands/verifyEmail.command";
-import { User } from "@identity-and-access/domain/entities/user";
 import { IncorrectVerificationCodeException } from "@identity-and-access/domain/exceptions/incorrectVerificationCode.exception";
 import { UserNotFoundException } from "@identity-and-access/domain/exceptions/userNotFound.exception";
 import { UserRepository } from "@identity-and-access/domain/repositories/user.repository";
-import { ContactInformation } from "@identity-and-access/domain/value-objects/contactInformation";
 import { FakeUserRepository } from "@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository";
 import { UnprocessableEntityException } from "@nestjs/common/exceptions/unprocessable-entity.exception";
 import { Test } from "@nestjs/testing/test";
+import { UserBuilder } from "../data-builders/userBuilder";
 
 let userRepository: FakeUserRepository;
 
@@ -49,19 +48,8 @@ describe('[Unit] Verify email with verification code', () => {
     
     it('Should throw UserNotFoundException if user does not exists', async () => {
         //Given an existing user
-        await executeTask(
-            userRepository.save(
-                User.check({
-                    id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-                    password: 'paSSw0rd!',
-                    contactInformation: ContactInformation.check({
-                        email: 'myemail@gmail.com',
-                        verificationCode: '1234',
-                        isVerified: false,
-                    }),
-                }),
-            ),
-        );
+        const user = UserBuilder().build()
+        await executeTask(userRepository.save(user));
 
         //When we verify email user
         const resultPromise = verifyEmailHandler.execute(new VerifyEmail('00000000-0000-0000-0000-000000000000', '1234'));
@@ -72,19 +60,8 @@ describe('[Unit] Verify email with verification code', () => {
 
     it('Should throw IncorrectVerificationCodeException if verification code does not match', async () => {
         //Given an existing user
-        await executeTask(
-            userRepository.save(
-                User.check({
-                    id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-                    password: 'paSSw0rd!',
-                    contactInformation: ContactInformation.check({
-                        email: 'myemail@gmail.com',
-                        verificationCode: '1234',
-                        isVerified: false,
-                    }),
-                }),
-            ),
-        );
+        const user = UserBuilder().withId('c017f4a9-c458-4ea7-829c-021c6a608534').withVerificationCode('1234').build()
+        await executeTask(userRepository.save(user));
 
         //When we verify email user
         const resultPromise = verifyEmailHandler.execute(new VerifyEmail('c017f4a9-c458-4ea7-829c-021c6a608534', '0123'));
@@ -95,19 +72,8 @@ describe('[Unit] Verify email with verification code', () => {
 
     it('Should succeed if verification code match', async () => {
         //Given an existing user
-        await executeTask(
-            userRepository.save(
-                User.check({
-                    id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-                    password: 'paSSw0rd!',
-                    contactInformation: ContactInformation.check({
-                        email: 'myemail@gmail.com',
-                        verificationCode: '1234',
-                        isVerified: false,
-                    }),
-                }),
-            ),
-        );
+        const user = UserBuilder().withId('c017f4a9-c458-4ea7-829c-021c6a608534').withVerificationCode('1234').build()
+        await executeTask(userRepository.save(user));
 
         //When we verify email user
         const result = await verifyEmailHandler.execute(new VerifyEmail('c017f4a9-c458-4ea7-829c-021c6a608534', '1234'));

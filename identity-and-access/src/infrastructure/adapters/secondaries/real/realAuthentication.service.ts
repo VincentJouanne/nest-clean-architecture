@@ -1,13 +1,13 @@
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { User } from '@identity-and-access/domain/entities/user';
 import { AuthenticationService } from '@identity-and-access/domain/services/authentication.service';
+import { jwtConstants } from '@identity-and-access/domain/value-objects/constants';
 import { JWT } from '@identity-and-access/domain/value-objects/jwt';
 import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { TaskEither, tryCatch, left, right, mapLeft, map } from 'fp-ts/lib/TaskEither';
-import { pipe } from 'fp-ts/lib/function';
 import { Request } from 'express';
-import { jwtConstants } from '@identity-and-access/domain/value-objects/constants';
+import { pipe } from 'fp-ts/lib/function';
+import { left, map, mapLeft, right, TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()
 export class RealAuthenticationService implements AuthenticationService {
@@ -17,7 +17,7 @@ export class RealAuthenticationService implements AuthenticationService {
   createJWT = (user: User): TaskEither<Error, JWT> => {
     return tryCatch(
       async () => {
-        const payload = { id: user.id, email: user.contactInformation.email, isVerified: user.contactInformation.isVerified };
+        const payload = { id: user.id };
         return JWT.check(this.jwtService.sign(payload));
       },
       (reason: unknown) => new InternalServerErrorException(),

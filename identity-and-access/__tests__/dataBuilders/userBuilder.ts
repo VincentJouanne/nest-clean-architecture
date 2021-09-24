@@ -1,15 +1,11 @@
-import { executeTask } from "@common/utils/executeTask";
 import { User } from "@identity-and-access/domain/entities/user";
-import { PlainPassword } from "@identity-and-access/domain/value-objects/password";
-import { RealHashingService } from "@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service";
+import { HashedPassword } from "@identity-and-access/domain/value-objects/password";
 
-export const UserBuilder = (hashingService?: RealHashingService) => {
-
-  let passwordHashingService = hashingService
+export const UserBuilder = () => {
 
   const defaultProperties = {
     id: 'b8a11695-3c71-45b4-9dd8-14900412f4e1',
-    password: 'Passw0rd!',
+    password: '',
     contactInformation: {
       email: 'myemail@gmail.com',
       verificationCode: '1234',
@@ -17,7 +13,13 @@ export const UserBuilder = (hashingService?: RealHashingService) => {
     }
   };
   const overrides = {
-    ...defaultProperties
+    id: 'b8a11695-3c71-45b4-9dd8-14900412f4e1',
+    password: '',
+    contactInformation: {
+      email: 'myemail@gmail.com',
+      verificationCode: '1234',
+      isVerified: false
+    }
   };
 
   return {
@@ -31,9 +33,8 @@ export const UserBuilder = (hashingService?: RealHashingService) => {
       return this
     },
 
-    async withPassword(password: string) {
-      if (passwordHashingService != undefined)
-        overrides.password = await executeTask(passwordHashingService.hashPlainPassword(PlainPassword.check(password)));
+    withHashedPassword(hashedPassword: HashedPassword) {
+      overrides.password = hashedPassword;
       return this
     },
 

@@ -2,13 +2,10 @@ import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.servi
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { executeTask } from '@common/utils/executeTask';
 import { SignIn, SignInHandler } from '@identity-and-access/application/commands/signIn.command';
-import { User } from '@identity-and-access/domain/entities/user';
 import { IncorrectPasswordException } from '@identity-and-access/domain/exceptions/incorrectPassword.exception';
 import { UserNotFoundException } from '@identity-and-access/domain/exceptions/userNotFound.exception';
 import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { jwtConstants } from '@identity-and-access/domain/value-objects/constants';
-import { ContactInformation } from '@identity-and-access/domain/value-objects/contactInformation';
-import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { FakeUserRepository } from '@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository';
 import { RealAuthenticationService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service';
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
@@ -16,6 +13,7 @@ import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/a
 import { UnprocessableEntityException } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
+import { PasswordBuilder } from '../dataBuilders/passwordBuilder';
 import { UserBuilder } from '../dataBuilders/userBuilder';
 
 //Adapters
@@ -85,8 +83,9 @@ describe('[Unit] Sign in with credentials', () => {
 
   it('Should throw ForbiddenException if the user exists but has provided the wrong password', async () => {
     //Given valid credentials
-    
-    const user = (await UserBuilder().withEmail('myemail@gmail.com').withPassword('paSSw0rd!')).build();
+    const expectedPassword = 'paSSw0rd!';
+    const hashedPassword = await PasswordBuilder(hashingService, expectedPassword).build()
+    const user = UserBuilder().withEmail('myemail@gmail.com').withHashedPassword(hashedPassword).build();
     await executeTask(userRepository.save(user));
     const aDifferentPassword = 'paSSw0rd?';
 
@@ -99,26 +98,14 @@ describe('[Unit] Sign in with credentials', () => {
 
   it('Should issue a JWT if the user exists and has provided the correct credentials', async () => {
     //Given valid credentials
-    const email = 'myemail@gmail.com';
-    const password = 'paSSw0rd!';
-    const hashedPassword = await executeTask(hashingService.hashPlainPassword(PlainPassword.check(password)));
-
-    await executeTask(
-      userRepository.save(
-        User.check({
-          id: 'c017f4a9-c458-4ea7-829c-021c6a608534',
-          password: hashedPassword,
-          contactInformation: ContactInformation.check({
-            email: email,
-            verificationCode: '1234',
-            isVerified: true,
-          }),
-        }),
-      ),
-    );
+    const validEmail = 'myemail@gmail.com'
+    const validPassword = 'paSSw0rd!'
+    const hashedPassword = await PasswordBuilder(hashingService, validPassword).build()
+    const user = UserBuilder().withEmail(validEmail).withHashedPassword(hashedPassword).build();
+    await executeTask(userRepository.save(user));
 
     //When we sign in a user
-    const resultPromise = signInHandler.execute(new SignIn(email, password));
+    const resultPromise = signInHandler.execute(new SignIn(validEmail, validPassword));
 
     //Then it should have thrown an error
     await expect(resultPromise).resolves.toBeTruthy();

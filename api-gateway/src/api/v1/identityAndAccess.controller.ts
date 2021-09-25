@@ -6,6 +6,7 @@ import { Body, Controller, HttpCode, Param, Patch, Post, UseGuards } from '@nest
 import { ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { pipe } from 'fp-ts/lib/function';
 import { map } from 'fp-ts/lib/TaskEither';
+import { RefreshTokensRequestDto, RefreshTokensResponseDto } from '../dtos/refreshTokens.dto';
 import { SignInRequestDto, SignInResponseDto } from '../dtos/signIn.dto';
 import { SignUpDto } from '../dtos/signUp.dto';
 import { VerifyEmailRequestDto } from '../dtos/verifyEmail.dto';
@@ -41,6 +42,23 @@ export class IdentityAndAccessApiControllerV1 {
   async signIn(@Body() signInRequestDto: SignInRequestDto): Promise<SignInResponseDto> {
     const task = pipe(
       this.identityAndAccessController.signIn(signInRequestDto.email, signInRequestDto.password),
+      map(([accessToken, refreshToken]) => ({
+        access_token: accessToken,
+        refresh_token: refreshToken
+      })),
+    );
+    return await executeTask(task);
+  }
+
+  @Post('refresh')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Refresh authentication tokens.',
+    description: `Given a valid refresh token, it returns a pair of access/refresh token.`,
+  })
+  async refresh(@Body() refreshTokensDto: RefreshTokensRequestDto) : Promise<RefreshTokensResponseDto> {
+    const task = pipe(
+      this.identityAndAccessController.refreshTokens(refreshTokensDto.refresh_token),
       map(([accessToken, refreshToken]) => ({
         access_token: accessToken,
         refresh_token: refreshToken

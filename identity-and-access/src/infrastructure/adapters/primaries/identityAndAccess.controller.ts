@@ -1,4 +1,5 @@
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
+import { RefreshTokens } from '@identity-and-access/application/commands/refreshTokens.command';
 import { SignIn } from '@identity-and-access/application/commands/signIn.command';
 import { SignUp } from '@identity-and-access/application/commands/signUp.command';
 import { VerifyEmail } from '@identity-and-access/application/commands/verifyEmail.command';
@@ -35,6 +36,18 @@ export class IdentityAndAccessController {
 
     return signInTask;
   };
+
+  refreshTokens = (refreshToken: string): TaskEither<Error, [AccessToken, RefreshToken]> => { 
+    const refreshTokensTask = tryCatch(
+      async () => {
+        const command = new RefreshTokens(refreshToken);
+        return await this.commandBus.execute<RefreshTokens>(command);
+      },
+      (reason: unknown) => reason as Error,
+    )
+
+    return refreshTokensTask
+  }
 
   verifyEmail = (userId: string, verificationCode: string): TaskEither<Error, void> => {
     const verifyEmailTask = tryCatch(

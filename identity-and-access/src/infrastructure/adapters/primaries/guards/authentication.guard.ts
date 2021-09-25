@@ -1,10 +1,10 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { RealAuthenticationService } from "@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service";
 import { PinoLoggerService } from "@common/logger/adapters/real/pinoLogger.service";
-import { right, chain } from "fp-ts/lib/TaskEither";
-import { pipe } from "fp-ts/lib/function";
 import { executeAndHandle } from "@common/utils/executeTask";
+import { RealAuthenticationService } from "@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service";
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Request } from 'express';
+import { pipe } from "fp-ts/lib/function";
+import { chain, right } from "fp-ts/lib/TaskEither";
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -18,8 +18,8 @@ export class AuthenticationGuard implements CanActivate {
         const task = pipe(
             right(request),
             chain(this.authenticationService.extractAuthorizationHeaderFromRequest),
-            chain(this.authenticationService.extractTokenFromAuthorizationHeader),
-            chain(this.authenticationService.verifyIntegrityAndAuthenticityOfToken),
+            chain(this.authenticationService.extractBearerTokenFromAuthorizationHeader),
+            chain(this.authenticationService.verifyIntegrityAndAuthenticityOfAccessToken),
         );
 
         return executeAndHandle(task, 

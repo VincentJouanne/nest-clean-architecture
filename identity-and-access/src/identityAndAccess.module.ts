@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { JwtModule } from '@nestjs/jwt';
 import { NotificationsModule } from '@notifications/notifications.module';
+import { RefreshTokensHandler } from './application/commands/refreshTokens.command';
 import { SignInHandler } from './application/commands/signIn.command';
 import { SignUpHandler } from './application/commands/signUp.command';
 import { VerifyEmailHandler } from './application/commands/verifyEmail.command';
@@ -15,7 +16,7 @@ import { RealRandomNumberGenerator } from './infrastructure/adapters/secondaries
 import { RealUserRepository } from './infrastructure/adapters/secondaries/real/realUser.repository';
 import { RealUUIDGeneratorService } from './infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
 
-const commandHandlers = [SignUpHandler, SignInHandler, VerifyEmailHandler];
+const commandHandlers = [SignUpHandler, SignInHandler, RefreshTokensHandler,VerifyEmailHandler];
 const services = [RealUUIDGeneratorService, RealAuthenticationService, RealHashingService, RealRandomNumberGenerator]
 const repositories = [{
   provide: UserRepository,

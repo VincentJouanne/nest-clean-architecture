@@ -65,7 +65,7 @@ export class SignInHandler implements ICommandHandler {
           return right(null);
         } else return left(new IncorrectPasswordException());
       }),
-      chain(() => perform(user, this.authenticationService.createAuthenticationTokens, this.logger, 'create access and refresh tokens for user')),
+      chain(() => perform(user.id, this.authenticationService.createAuthenticationTokens, this.logger, 'create access and refresh tokens for user')),
     );
 
     return executeTask(task);

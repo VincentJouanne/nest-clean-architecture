@@ -36,7 +36,7 @@ beforeEach(async () => {
     await prismaService.user.deleteMany();
     await prismaService.contactInformation.deleteMany();
     const user = UserBuilder().withId('c017f4a9-c458-4ea7-829c-021c6a608534').build()
-    const tokens = await executeTask(authenticationService.createAuthenticationTokens(user))
+    const tokens = await executeTask(authenticationService.createAuthenticationTokens(user.id))
     accessToken = tokens[0]
     refreshToken = tokens[1]
 });

@@ -18,14 +18,14 @@ import { pipe } from 'fp-ts/lib/function';
 import { chain, left, map, right, taskEither } from 'fp-ts/lib/TaskEither';
 
 export class SignUp implements ICommand {
-  constructor(public readonly email: string, public readonly password: string) {}
+  constructor(public readonly email: string, public readonly password: string) { }
 }
 
 @CommandHandler(SignUp)
 export class SignUpHandler implements ICommandHandler {
   constructor(
     private readonly uuidGeneratorService: RealUUIDGeneratorService,
-    private readonly randomNumberGenerator: RealRandomNumberGenerator, 
+    private readonly randomNumberGenerator: RealRandomNumberGenerator,
     private readonly hashingService: RealHashingService,
     private readonly userRepository: UserRepository,
     private readonly domainEventPublisher: DomainEventPublisher,
@@ -82,7 +82,7 @@ export class SignUpHandler implements ICommandHandler {
       //Store entity
       chain((user) => sequenceT(taskEither)(perform(user, this.userRepository.save, this.logger, 'save user in storage system.'), right(user))),
       //Emit domain event
-      chain(([nothing, user]) =>
+      chain(([_, user]) =>
         perform(
           { eventKey: USER_REGISTERED, payload: { email: user.contactInformation.email, verificationCode: user.contactInformation.verificationCode } },
           this.domainEventPublisher.publishEvent,
@@ -96,4 +96,4 @@ export class SignUpHandler implements ICommandHandler {
   }
 }
 
-const noop = () => {};
+const noop = () => { };

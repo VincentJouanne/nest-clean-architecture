@@ -1,5 +1,6 @@
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { UserId } from '@identity-and-access/domain/entities/user';
+import { InvalidTokenException } from '@identity-and-access/domain/exceptions/invalidToken.exception';
 import { AuthenticationService } from '@identity-and-access/domain/services/authentication.service';
 import { AccessToken } from '@identity-and-access/domain/value-objects/accessToken';
 import { jwtConstants } from '@identity-and-access/domain/value-objects/constants';
@@ -64,8 +65,8 @@ export class RealAuthenticationService implements AuthenticationService {
       refreshToken,
       (refreshToken) => this.verifyRefreshToken(refreshToken),
       mapLeft(() => {
-        this.logger.warn('Authentication service did not verify token: returning 401');
-        return new UnauthorizedException('Invalid token');
+        this.logger.warn('Token verification failed.');
+        return new InvalidTokenException();
       }),
       map((decodedRefreshToken) => {
         return decodedRefreshToken;

@@ -4,11 +4,11 @@ import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.servi
 import { executeTask } from '@common/utils/executeTask';
 import { SignUp, SignUpHandler } from '@identity-and-access/application/commands/signUp.command';
 import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
-import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { FakeUserRepository } from '@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository';
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
 import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 import { RealUUIDGeneratorService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
+import { UserRepository } from '@identity-and-access/infrastructure/ports/user.repository';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 

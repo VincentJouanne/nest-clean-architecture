@@ -5,12 +5,12 @@ import { perform } from '@common/utils/perform';
 import { User } from '@identity-and-access/domain/entities/user';
 import { IncorrectPasswordException } from '@identity-and-access/domain/exceptions/incorrectPassword.exception';
 import { UserNotFoundException } from '@identity-and-access/domain/exceptions/userNotFound.exception';
-import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { AccessToken } from '@identity-and-access/domain/value-objects/accessToken';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { RefreshToken } from '@identity-and-access/domain/value-objects/refreshToken';
 import { RealAuthenticationService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service';
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
+import { UserRepository } from '@identity-and-access/infrastructure/ports/user.repository';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Email } from '@notifications/domain/value-objects/email';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
@@ -18,7 +18,7 @@ import { pipe } from 'fp-ts/lib/function';
 import { chain, left, right, taskEither } from 'fp-ts/lib/TaskEither';
 
 export class SignIn implements ICommand {
-  constructor(public readonly email: string, public readonly password: string) {}
+  constructor(public readonly email: string, public readonly password: string) { }
 }
 
 @CommandHandler(SignIn)

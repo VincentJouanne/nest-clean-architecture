@@ -6,11 +6,11 @@ import { perform } from '@common/utils/perform';
 import { User, UserId } from '@identity-and-access/domain/entities/user';
 import { USER_REGISTERED } from '@identity-and-access/domain/events/userRegistered.event';
 import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
-import { UserRepository } from '@identity-and-access/domain/repositories/user.repository';
 import { PlainPassword } from '@identity-and-access/domain/value-objects/password';
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
 import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 import { RealUUIDGeneratorService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
+import { UserRepository } from '@identity-and-access/infrastructure/ports/user.repository';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Email } from '@notifications/domain/value-objects/email';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
@@ -18,14 +18,14 @@ import { pipe } from 'fp-ts/lib/function';
 import { chain, left, map, right, taskEither } from 'fp-ts/lib/TaskEither';
 
 export class SignUp implements ICommand {
-  constructor(public readonly email: string, public readonly password: string) {}
+  constructor(public readonly email: string, public readonly password: string) { }
 }
 
 @CommandHandler(SignUp)
 export class SignUpHandler implements ICommandHandler {
   constructor(
     private readonly uuidGeneratorService: RealUUIDGeneratorService,
-    private readonly randomNumberGenerator: RealRandomNumberGenerator, 
+    private readonly randomNumberGenerator: RealRandomNumberGenerator,
     private readonly hashingService: RealHashingService,
     private readonly userRepository: UserRepository,
     private readonly domainEventPublisher: DomainEventPublisher,
@@ -82,7 +82,7 @@ export class SignUpHandler implements ICommandHandler {
       //Store entity
       chain((user) => sequenceT(taskEither)(perform(user, this.userRepository.save, this.logger, 'save user in storage system.'), right(user))),
       //Emit domain event
-      chain(([nothing, user]) =>
+      chain(([_, user]) =>
         perform(
           { eventKey: USER_REGISTERED, payload: { email: user.contactInformation.email, verificationCode: user.contactInformation.verificationCode } },
           this.domainEventPublisher.publishEvent,
@@ -96,4 +96,4 @@ export class SignUpHandler implements ICommandHandler {
   }
 }
 
-const noop = () => {};
+const noop = () => { };

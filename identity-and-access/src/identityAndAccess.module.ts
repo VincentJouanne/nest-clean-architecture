@@ -8,7 +8,6 @@ import { RefreshTokensHandler } from './application/commands/refreshTokens.comma
 import { SignInHandler } from './application/commands/signIn.command';
 import { SignUpHandler } from './application/commands/signUp.command';
 import { VerifyEmailHandler } from './application/commands/verifyEmail.command';
-import { UserRepository } from './domain/repositories/user.repository';
 import { AuthenticationController } from './infrastructure/adapters/primaries/controllers/authentication.controller';
 import { UsersController } from './infrastructure/adapters/primaries/controllers/users.controller';
 import { RealAuthenticationService } from './infrastructure/adapters/secondaries/real/realAuthentication.service';
@@ -16,6 +15,7 @@ import { RealHashingService } from './infrastructure/adapters/secondaries/real/r
 import { RealRandomNumberGenerator } from './infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 import { RealUserRepository } from './infrastructure/adapters/secondaries/real/realUser.repository';
 import { RealUUIDGeneratorService } from './infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
+import { UserRepository } from './infrastructure/ports/user.repository';
 
 const controllers = [AuthenticationController, UsersController]
 const commandHandlers = [SignUpHandler, SignInHandler, RefreshTokensHandler, VerifyEmailHandler];

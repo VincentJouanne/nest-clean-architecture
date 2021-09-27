@@ -4,8 +4,8 @@ import { executeTask } from "@common/utils/executeTask";
 import { VerifyEmail, VerifyEmailHandler } from "@identity-and-access/application/commands/verifyEmail.command";
 import { IncorrectVerificationCodeException } from "@identity-and-access/domain/exceptions/incorrectVerificationCode.exception";
 import { UserNotFoundException } from "@identity-and-access/domain/exceptions/userNotFound.exception";
-import { UserRepository } from "@identity-and-access/domain/repositories/user.repository";
 import { FakeUserRepository } from "@identity-and-access/infrastructure/adapters/secondaries/fake/fakeUser.repository";
+import { UserRepository } from "@identity-and-access/infrastructure/ports/user.repository";
 import { UnprocessableEntityException } from "@nestjs/common/exceptions/unprocessable-entity.exception";
 import { Test } from "@nestjs/testing/test";
 import { UserBuilder } from "../data-builders/userBuilder";
@@ -45,7 +45,7 @@ describe('[Unit] Verify email with verification code', () => {
         await expect(resultPromise).rejects.toBeInstanceOf(UnprocessableEntityException);
     })
 
-    
+
     it('Should throw UserNotFoundException if user does not exists', async () => {
         //Given an existing user
         const user = UserBuilder().build()

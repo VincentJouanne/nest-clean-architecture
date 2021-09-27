@@ -1,10 +1,10 @@
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { UserId } from '@identity-and-access/domain/entities/user';
 import { InvalidTokenException } from '@identity-and-access/domain/exceptions/invalidToken.exception';
-import { AuthenticationService } from '@identity-and-access/domain/services/authentication.service';
 import { AccessToken } from '@identity-and-access/domain/value-objects/accessToken';
 import { jwtConstants } from '@identity-and-access/domain/value-objects/constants';
 import { RefreshToken } from '@identity-and-access/domain/value-objects/refreshToken';
+import { AuthenticationService } from '@identity-and-access/infrastructure/ports/authentication.service';
 import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
@@ -20,7 +20,7 @@ export class RealAuthenticationService implements AuthenticationService {
     return tryCatch(
       async () => {
         const payload = { id: userId };
-        return [AccessToken.check(this.jwtService.sign(payload, {secret: jwtConstants.access_token_secret, expiresIn: jwtConstants.access_token_expiry})), RefreshToken.check(this.jwtService.sign(payload, {secret: jwtConstants.refresh_token_secret, expiresIn: jwtConstants.refresh_token_expiry}))];
+        return [AccessToken.check(this.jwtService.sign(payload, { secret: jwtConstants.access_token_secret, expiresIn: jwtConstants.access_token_expiry })), RefreshToken.check(this.jwtService.sign(payload, { secret: jwtConstants.refresh_token_secret, expiresIn: jwtConstants.refresh_token_expiry }))];
       },
       (reason: unknown) => new InternalServerErrorException(),
     );
@@ -45,7 +45,7 @@ export class RealAuthenticationService implements AuthenticationService {
     }
     return right(bearerMatch.groups.token);
   };
-  
+
   verifyIntegrityAndAuthenticityOfAccessToken = (accessToken: string) => {
     return pipe(
       accessToken,
@@ -77,7 +77,7 @@ export class RealAuthenticationService implements AuthenticationService {
   verifyAccessToken(accessToken: string): TaskEither<Error, void> {
     return pipe(
       tryCatch(
-        async () => await this.jwtService.verify(accessToken, {secret: jwtConstants.access_token_secret}),
+        async () => await this.jwtService.verify(accessToken, { secret: jwtConstants.access_token_secret }),
         (error) => new Error(`Verification failed: ${error}`),
       ),
       map((decodedToken) => {
@@ -90,7 +90,7 @@ export class RealAuthenticationService implements AuthenticationService {
   verifyRefreshToken(refreshToken: string): TaskEither<Error, string> {
     return pipe(
       tryCatch(
-        async () => await this.jwtService.verify(refreshToken, {secret: jwtConstants.refresh_token_secret}),
+        async () => await this.jwtService.verify(refreshToken, { secret: jwtConstants.refresh_token_secret }),
         (error) => new Error(`Verification failed: ${error}`),
       ),
       map((decodedRefreshToken) => {

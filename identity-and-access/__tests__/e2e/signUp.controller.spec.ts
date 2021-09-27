@@ -37,25 +37,25 @@ afterEach(async () => {
   await prismaService.contactInformation.deleteMany();
 });
 
-describe('[e2e] POST /v1/signup', () => {
+describe('[e2e] POST /v1/auth/signup', () => {
   it('Should respond 201 created for a valid email and password', async () => {
-    const response = await request(app.getHttpServer()).post('/v1/signup').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
+    const response = await request(app.getHttpServer()).post('/v1/auth/signup').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
     expect(response.status).toBe(201);
   });
 
   it('Should respond 422 for invalid email', async () => {
-    const response = await request(app.getHttpServer()).post('/v1/signup').send({ email: 'myemail', password: 'Passw0rd!' });
+    const response = await request(app.getHttpServer()).post('/v1/auth/signup').send({ email: 'myemail', password: 'Passw0rd!' });
     expect(response.status).toBe(422);
   });
 
   it('Should respond 422 for invalid password', async () => {
-    const response = await request(app.getHttpServer()).post('/v1/signup').send({ email: 'myemail', password: 'toosimple' });
+    const response = await request(app.getHttpServer()).post('/v1/auth/signup').send({ email: 'myemail', password: 'toosimple' });
     expect(response.status).toBe(422);
   });
 
   it('Should respond 409 for two users with same email', async () => {
-    await request(app.getHttpServer()).post('/v1/signup').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
-    const response = await request(app.getHttpServer()).post('/v1/signup').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
+    await request(app.getHttpServer()).post('/v1/auth/signup').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
+    const response = await request(app.getHttpServer()).post('/v1/auth/signup').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
     expect(response.status).toBe(409);
   });
 });

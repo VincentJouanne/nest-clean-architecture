@@ -41,8 +41,8 @@ afterEach(async () => {
 
 describe('[Feature] Authentication', () => {
     it('AAU, I should be able to authenticate myself', async () => {
-        await request(app.getHttpServer()).post('/v1/signup').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
-        const signInResponse = await request(app.getHttpServer()).post('/v1/signin').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
+        await request(app.getHttpServer()).post('/v1/auth/signup').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
+        const signInResponse = await request(app.getHttpServer()).post('/v1/auth/signin').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
         expect(signInResponse.status).toBe(200);
     })
 })

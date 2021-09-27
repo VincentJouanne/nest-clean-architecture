@@ -33,14 +33,14 @@ beforeEach(async () => {
     refreshToken = tokens[1]
 });
 
-describe('[e2e] POST /v1/refresh', () => {
+describe('[e2e] POST /v1/auth/refresh', () => {
     it('Should respond 401 for invalid token request', async () => {
-        const response = await request(app.getHttpServer()).post('/v1/refresh').send({ refresh_token: 'abc' });
+        const response = await request(app.getHttpServer()).post('/v1/auth/refresh').send({ refresh_token: 'abc' });
         expect(response.status).toBe(401);
     });
 
     it('Should respond 200 for valid token request', async () => {
-        const response = await request(app.getHttpServer()).post('/v1/refresh').send({ refresh_token: refreshToken });
+        const response = await request(app.getHttpServer()).post('/v1/auth/refresh').send({ refresh_token: refreshToken });
         expect(response.status).toBe(200);
     });
 })

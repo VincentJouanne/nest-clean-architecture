@@ -9,14 +9,16 @@ import { SignInHandler } from './application/commands/signIn.command';
 import { SignUpHandler } from './application/commands/signUp.command';
 import { VerifyEmailHandler } from './application/commands/verifyEmail.command';
 import { UserRepository } from './domain/repositories/user.repository';
-import { IdentityAndAccessController } from './infrastructure/adapters/primaries/identityAndAccess.controller';
+import { AuthenticationController } from './infrastructure/adapters/primaries/controllers/authentication.controller';
+import { UsersController } from './infrastructure/adapters/primaries/controllers/users.controller';
 import { RealAuthenticationService } from './infrastructure/adapters/secondaries/real/realAuthentication.service';
 import { RealHashingService } from './infrastructure/adapters/secondaries/real/realHashing.service';
 import { RealRandomNumberGenerator } from './infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 import { RealUserRepository } from './infrastructure/adapters/secondaries/real/realUser.repository';
 import { RealUUIDGeneratorService } from './infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
 
-const commandHandlers = [SignUpHandler, SignInHandler, RefreshTokensHandler,VerifyEmailHandler];
+const controllers = [AuthenticationController, UsersController]
+const commandHandlers = [SignUpHandler, SignInHandler, RefreshTokensHandler, VerifyEmailHandler];
 const services = [RealUUIDGeneratorService, RealAuthenticationService, RealHashingService, RealRandomNumberGenerator]
 const repositories = [{
   provide: UserRepository,
@@ -28,11 +30,11 @@ const repositories = [{
     signOptions: { expiresIn: '15m' },
   })],
   providers: [
-    IdentityAndAccessController,
+    ...controllers,
     ...commandHandlers,
     ...services,
     ...repositories
   ],
-  exports: [IdentityAndAccessController, RealAuthenticationService],
+  exports: [...controllers, RealAuthenticationService],
 })
 export class IdentityAndAccessModule { }

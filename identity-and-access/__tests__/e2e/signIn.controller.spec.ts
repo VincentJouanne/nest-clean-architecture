@@ -45,17 +45,17 @@ afterEach(async () => {
 
 describe('[e2e] POST /v1/signin', () => {
   it('Should respond 422 for invalid email', async () => {
-    const response = await request(app.getHttpServer()).post('/v1/signin').send({ email: 'myemail', password: 'Passw0rd!' });
+    const response = await request(app.getHttpServer()).post('/v1/auth/signin').send({ email: 'myemail', password: 'Passw0rd!' });
     expect(response.status).toBe(422);
   });
 
   it('Should respond 422 for invalid password', async () => {
-    const response = await request(app.getHttpServer()).post('/v1/signin').send({ email: 'myemail', password: 'toosimple' });
+    const response = await request(app.getHttpServer()).post('/v1/auth/signin').send({ email: 'myemail', password: 'toosimple' });
     expect(response.status).toBe(422);
   });
 
   it('Should respond 404 for inexisting user', async () => {
-    const response = await request(app.getHttpServer()).post('/v1/signin').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
+    const response = await request(app.getHttpServer()).post('/v1/auth/signin').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
     expect(response.status).toBe(404);
   });
 
@@ -74,7 +74,7 @@ describe('[e2e] POST /v1/signin', () => {
       },
     });
 
-    const response = await request(app.getHttpServer()).post('/v1/signin').send({ email: 'myemail@gmail.com', password: 'Passw0rd?' });
+    const response = await request(app.getHttpServer()).post('/v1/auth/signin').send({ email: 'myemail@gmail.com', password: 'Passw0rd?' });
     expect(response.status).toBe(403);
   });
 
@@ -95,7 +95,7 @@ describe('[e2e] POST /v1/signin', () => {
       },
     });
 
-    const response = await request(app.getHttpServer()).post('/v1/signin').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
+    const response = await request(app.getHttpServer()).post('/v1/auth/signin').send({ email: 'myemail@gmail.com', password: 'Passw0rd!' });
 
     expect(response.status).toBe(200);
     expect(response.body.access_token).toBeDefined();

@@ -1,7 +1,8 @@
 <div align="center">
 
-[![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/juliandavidmr/awesome-nestjs) 
+[![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/juliandavidmr/awesome-nestjs)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
 </div>
 
 # Motivation
@@ -10,8 +11,7 @@
 
 This repository aims to provide to people an opinionated starter/example project to help them to architecture their next project.
 
-The [Nest.js](https://nestjs.com/) framework has been chosen for its convenience as it provides out-of-the-box great solutions for modularity, dependency injection, publish-subscribe pattern, error handling, security etc. 
-
+The [Nest.js](https://nestjs.com/) framework has been chosen for its convenience as it provides out-of-the-box great solutions for modularity, dependency injection, publish-subscribe pattern, error handling, security etc.
 
 This project uses OOP to handle modularity (modules instances) and on the other hand it uses the convenience of FP to write use-cases as smooth data flows while embracing eventual errors.
 
@@ -23,7 +23,7 @@ Functionnal Programming may look intimidating, if you are new to it, you should 
 
 Clients interacts with the system through the [api-gateway](./api-gateway): the endpoints. The concerned module, executes the corresponding use-case which orchestrate the domain and perform I/O using its injected adapters.
 
-The **contexts modules** are tightly **concerned by the overall goal of the application**, while the **common modules** are **business-agnostic** and only serves as support to decouple logic and responsabilities in the entire system.
+The **domain modules** are tightly **concerned by the overall goal of the application**, while the **common modules** are **business-agnostic** and only serves as support to decouple logic and responsabilities in the entire system.
 
 # Getting started (1 min)
 

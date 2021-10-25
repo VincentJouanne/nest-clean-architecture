@@ -1,5 +1,5 @@
 import { DomainEventPublisher } from '@common/domain-event-publisher/adapters/domainEventPublisher';
-import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
+import { LOGGER } from '@common/logger/logger.module';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
@@ -10,7 +10,8 @@ import { PlainPassword } from '@identity-and-access/domain/value-objects/passwor
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
 import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 import { RealUUIDGeneratorService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
-import { UserRepository } from '@identity-and-access/infrastructure/ports/user.repository';
+import { IUserRepository, USER_REPOSITORY } from '@identity-and-access/infrastructure/ports/user.repository';
+import { ConsoleLogger, Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Email } from '@notifications/domain/value-objects/email';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
@@ -18,7 +19,7 @@ import { pipe } from 'fp-ts/lib/function';
 import { chain, left, map, right, taskEither } from 'fp-ts/lib/TaskEither';
 
 export class SignUp implements ICommand {
-  constructor(public readonly email: string, public readonly password: string) { }
+  constructor(public readonly email: string, public readonly password: string) {}
 }
 
 @CommandHandler(SignUp)
@@ -27,9 +28,11 @@ export class SignUpHandler implements ICommandHandler {
     private readonly uuidGeneratorService: RealUUIDGeneratorService,
     private readonly randomNumberGenerator: RealRandomNumberGenerator,
     private readonly hashingService: RealHashingService,
-    private readonly userRepository: UserRepository,
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
     private readonly domainEventPublisher: DomainEventPublisher,
-    private readonly logger: PinoLoggerService,
+    @Inject(LOGGER)
+    private readonly logger: ConsoleLogger,
   ) {
     this.logger.setContext('SignUp');
   }
@@ -84,7 +87,10 @@ export class SignUpHandler implements ICommandHandler {
       //Emit domain event
       chain(([_, user]) =>
         perform(
-          { eventKey: USER_REGISTERED, payload: { email: user.contactInformation.email, verificationCode: user.contactInformation.verificationCode } },
+          {
+            eventKey: USER_REGISTERED,
+            payload: { email: user.contactInformation.email, verificationCode: user.contactInformation.verificationCode },
+          },
           this.domainEventPublisher.publishEvent,
           this.logger,
           'emit user registered event.',
@@ -96,4 +102,4 @@ export class SignUpHandler implements ICommandHandler {
   }
 }
 
-const noop = () => { };
+const noop = () => {};

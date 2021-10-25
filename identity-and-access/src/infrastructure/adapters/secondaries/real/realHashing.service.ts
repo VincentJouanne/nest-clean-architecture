@@ -1,15 +1,18 @@
-import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
+import { LOGGER } from '@common/logger/logger.module';
 import { HashedPassword, PlainPassword } from '@identity-and-access/domain/value-objects/password';
-import { HashingService } from '@identity-and-access/infrastructure/ports/hashing.service';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { IHashingService } from '@identity-and-access/infrastructure/ports/hashing.service';
+import { ConsoleLogger, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 const saltOrRounds = 10;
 
 @Injectable()
-export class RealHashingService implements HashingService {
-  constructor(private logger: PinoLoggerService) {
+export class RealHashingService implements IHashingService {
+  constructor(
+    @Inject(LOGGER)
+    private readonly logger: ConsoleLogger,
+  ) {
     this.logger.setContext('HashingService');
   }
 

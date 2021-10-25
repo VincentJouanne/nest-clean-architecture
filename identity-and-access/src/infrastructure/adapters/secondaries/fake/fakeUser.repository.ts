@@ -1,12 +1,12 @@
 import { executeTask } from '@common/utils/executeTask';
 import { User, UserId } from '@identity-and-access/domain/entities/user';
-import { UserRepository } from '@identity-and-access/infrastructure/ports/user.repository';
+import { IUserRepository } from '@identity-and-access/infrastructure/ports/user.repository';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Email } from '@notifications/domain/value-objects/email';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()
-export class FakeUserRepository implements UserRepository {
+export class FakeUserRepository implements IUserRepository {
   private users: User[] = [];
 
   getById = (userId: UserId): TaskEither<Error, User | null> => {
@@ -34,10 +34,10 @@ export class FakeUserRepository implements UserRepository {
   save = (user: User): TaskEither<Error, void> => {
     return tryCatch(
       async () => {
-        const existingUser = await executeTask(this.getById(user.id))
+        const existingUser = await executeTask(this.getById(user.id));
         if (existingUser != null) {
-          const index = this.users.findIndex(userInStorage => userInStorage.id == user.id)
-          this.users.splice(index, 1)
+          const index = this.users.findIndex((userInStorage) => userInStorage.id == user.id);
+          this.users.splice(index, 1);
         }
         this.users.push(user);
       },

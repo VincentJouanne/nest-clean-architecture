@@ -1,26 +1,35 @@
-import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
+import { LOGGER } from '@common/logger/logger.module';
 import { UserId } from '@identity-and-access/domain/entities/user';
 import { InvalidTokenException } from '@identity-and-access/domain/exceptions/invalidToken.exception';
 import { AccessToken } from '@identity-and-access/domain/value-objects/accessToken';
 import { jwtConstants } from '@identity-and-access/domain/value-objects/constants';
 import { RefreshToken } from '@identity-and-access/domain/value-objects/refreshToken';
-import { AuthenticationService } from '@identity-and-access/infrastructure/ports/authentication.service';
-import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { IAuthenticationService } from '@identity-and-access/infrastructure/ports/authentication.service';
+import { ConsoleLogger, Inject, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { pipe } from 'fp-ts/lib/function';
 import { left, map, mapLeft, right, TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()
-export class RealAuthenticationService implements AuthenticationService {
-  constructor(private logger: PinoLoggerService, private jwtService: JwtService) {
+export class RealAuthenticationService implements IAuthenticationService {
+  constructor(
+    @Inject(LOGGER)
+    private readonly logger: ConsoleLogger,
+    private jwtService: JwtService,
+  ) {
     this.logger.setContext('AuthenticationService');
   }
   createAuthenticationTokens = (userId: UserId): TaskEither<Error, [AccessToken, RefreshToken]> => {
     return tryCatch(
       async () => {
         const payload = { id: userId };
-        return [AccessToken.check(this.jwtService.sign(payload, { secret: jwtConstants.access_token_secret, expiresIn: jwtConstants.access_token_expiry })), RefreshToken.check(this.jwtService.sign(payload, { secret: jwtConstants.refresh_token_secret, expiresIn: jwtConstants.refresh_token_expiry }))];
+        return [
+          AccessToken.check(this.jwtService.sign(payload, { secret: jwtConstants.access_token_secret, expiresIn: jwtConstants.access_token_expiry })),
+          RefreshToken.check(
+            this.jwtService.sign(payload, { secret: jwtConstants.refresh_token_secret, expiresIn: jwtConstants.refresh_token_expiry }),
+          ),
+        ];
       },
       (reason: unknown) => new InternalServerErrorException(),
     );

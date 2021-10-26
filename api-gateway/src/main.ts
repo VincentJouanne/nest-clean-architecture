@@ -16,7 +16,7 @@ async function bootstrap() {
   app.useLogger(logger);
 
   const options = new DocumentBuilder()
-    .setTitle('Nest Clean Architecture FP Demo')
+    .setTitle('Ardian server POC')
     .setVersion('1.0')
     .setDescription(
       `### REST

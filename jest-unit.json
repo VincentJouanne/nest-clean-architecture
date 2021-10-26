@@ -16,7 +16,7 @@
   },
   "coverageDirectory": "./coverage",
   "testEnvironment": "node",
-  "roots": ["<rootDir>/api-gateway", "<rootDir>/common", "<rootDir>/identity-and-access"],
+  "roots": ["<rootDir>/api-gateway", "<rootDir>/common", "<rootDir>/call-identification"],
   "moduleNameMapper": {
     "^@api-gateway$": "<rootDir>/api-gateway/src",
     "^@app/api-gateway/(.*)$": "<rootDir>/api-gateway/src/$1",
@@ -28,9 +28,7 @@
     "^@common/prisma/(.*)$": "<rootDir>/common/prisma/src/$1",
     "^@common/utils$": "<rootDir>/common/utils/",
     "^@common/utils/(.*)$": "<rootDir>/common/utils/$1",
-    "^@identity-and-access$": "<rootDir>/identity-and-access/src",
-    "^@identity-and-access/(.*)$": "<rootDir>/identity-and-access/src/$1",
-    "^@notifications$": "<rootDir>/notifications/src",
-    "^@notifications/(.*)$": "<rootDir>/notifications/src/$1"
+    "^@call-identification$": "<rootDir>/call-identification/src",
+    "^@call-identification/(.*)$": "<rootDir>/call-identification/src/$1"
   }
 }

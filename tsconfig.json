@@ -26,10 +26,8 @@
       "@common/prisma/*": ["common/prisma/src/*"],
       "@common/utils": ["common/utils"],
       "@common/utils/*": ["common/utils/*"],
-      "@identity-and-access": ["identity-and-access/src"],
-      "@identity-and-access/*": ["identity-and-access/src/*"],
-      "@notifications": ["notifications/src"],
-      "@notifications/*": ["notifications/src/*"],
+      "@call-identification": ["call-identification/src"],
+      "@call-identification/*": ["call-identification/src/*"]
     }
   }
 }

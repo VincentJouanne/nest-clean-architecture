@@ -6,7 +6,7 @@
   "scripts": {
     "build": "nest build api-gateway",
     "start": "nest start api-gateway",
-    "test:unit": "jest --config ./jest-unit.json --coverage",
+    "test:unit": "jest --config ./jest-unit.json",
     "test:inte": "yarn prisma:migrate && jest --config ./jest-integration.json --runInBand",
     "test:e2e": "yarn prisma:migrate && jest --config ./jest-e2e.json --runInBand --forceExit",
     "docker:up": "docker-compose up -d",

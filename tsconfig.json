@@ -9,6 +9,7 @@
     "resolveJsonModule": true,
     "target": "es2017",
     "sourceMap": true,
+    "skipLibCheck": true,
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
@@ -16,8 +17,8 @@
     "checkJs": true,
     "strict": true,
     "paths": {
-      "@app/api-gateway": ["api-gateway/src"],
-      "@app/api-gateway/*": ["api-gateway/src/*"],
+      "@api-gateway": ["api-gateway/src"],
+      "@api-gateway/*": ["api-gateway/src/*"],
       "@common/logger": ["common/logger/src"],
       "@common/logger/*": ["common/logger/src/*"],
       "@common/domain-event-publisher": ["common/domain-event-publisher/src"],

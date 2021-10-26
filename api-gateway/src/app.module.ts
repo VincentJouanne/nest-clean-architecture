@@ -1,11 +1,12 @@
 // Nest imports
+
 import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
 import { LoggerModule } from '@common/logger/logger.module';
 import { PrismaModule } from '@common/prisma/prisma.module';
 import { DynamicModule, ForwardReference, Module, OnModuleInit, Type } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { CallIdentificationModule } from 'call-identification/src/callIdentification.module';
-import { CallsController } from 'call-identification/src/infrastructure/adapters/primaries/controllers/calls.controller';
+import { CallIdentificationModule } from '../../call-identification/src/callIdentification.module';
+import { CallsController } from '../../call-identification/src/infrastructure/adapters/primaries/controllers/calls.controller';
 
 type NestModuleImport = Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference<any>;
 

@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { VerificationCodeEmailPayload } from '@notifications/domain/value-objects/verificationCodeEmailPayload';
+import { MailService } from '@notifications/infrastructure/ports/mail.service';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
-import { MailService } from '../../../../domain/services/mail.service';
 
 @Injectable()
 export class InMemoryMailService implements MailService {

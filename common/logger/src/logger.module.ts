@@ -11,6 +11,8 @@ declare module 'http' {
   }
 }
 
+export const LOGGER = 'LOGGER';
+const loggerProvider = { useClass: process.env.NODE_ENV === 'test' ? FakeLoggerService : PinoLoggerService, provide: LOGGER };
 @Global()
 @Module({
   imports: [
@@ -25,7 +27,7 @@ declare module 'http' {
       },
     }),
   ],
-  providers: [FakeLoggerService, PinoLoggerService],
-  exports: [FakeLoggerService, PinoLoggerService],
+  providers: [loggerProvider],
+  exports: [loggerProvider],
 })
 export class LoggerModule {}

@@ -1,6 +1,6 @@
 import { DomainEventPublisherModule } from '@common/domain-event-publisher/domainEventPublisher.module';
 import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.service';
-import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
+import { LOGGER } from '@common/logger/logger.module';
 import { executeTask } from '@common/utils/executeTask';
 import { SignUp, SignUpHandler } from '@identity-and-access/application/commands/signUp.command';
 import { EmailAlreadyExistsException } from '@identity-and-access/domain/exceptions/emailAlreadyExists.exception';
@@ -8,7 +8,7 @@ import { FakeUserRepository } from '@identity-and-access/infrastructure/adapters
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
 import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 import { RealUUIDGeneratorService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
-import { UserRepository } from '@identity-and-access/infrastructure/ports/user.repository';
+import { UserRepository, USER_REPOSITORY } from '@identity-and-access/infrastructure/ports/user.repository';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
@@ -26,12 +26,12 @@ describe('[Unit] Sign up with credentials', () => {
         RealUUIDGeneratorService,
         RealRandomNumberGenerator,
         RealHashingService,
-        { provide: UserRepository, useClass: FakeUserRepository },
-        { provide: PinoLoggerService, useClass: FakeLoggerService },
+        { provide: USER_REPOSITORY, useClass: FakeUserRepository },
+        { provide: LOGGER, useClass: FakeLoggerService },
       ],
     }).compile();
 
-    userRepository = moduleRef.get<UserRepository>(UserRepository) as FakeUserRepository;
+    userRepository = moduleRef.get<UserRepository>(USER_REPOSITORY) as FakeUserRepository;
     signUpHandler = moduleRef.get<SignUpHandler>(SignUpHandler);
   });
 

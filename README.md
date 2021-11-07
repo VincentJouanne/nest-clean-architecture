@@ -3,6 +3,14 @@
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/juliandavidmr/awesome-nestjs)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
+<div>
+
+![Order](./docs/assets/order.png)
+
+[On-site food ordering](./docs/kata.md)
+
+</div>
+
 </div>
 
 # Motivation

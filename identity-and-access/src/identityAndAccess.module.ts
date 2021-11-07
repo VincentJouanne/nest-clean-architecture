@@ -15,26 +15,29 @@ import { RealHashingService } from './infrastructure/adapters/secondaries/real/r
 import { RealRandomNumberGenerator } from './infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 import { RealUserRepository } from './infrastructure/adapters/secondaries/real/realUser.repository';
 import { RealUUIDGeneratorService } from './infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
-import { UserRepository } from './infrastructure/ports/user.repository';
+import { USER_REPOSITORY } from './infrastructure/ports/user.repository';
 
-const controllers = [AuthenticationController, UsersController]
+const controllers = [AuthenticationController, UsersController];
 const commandHandlers = [SignUpHandler, SignInHandler, RefreshTokensHandler, VerifyEmailHandler];
-const services = [RealUUIDGeneratorService, RealAuthenticationService, RealHashingService, RealRandomNumberGenerator]
-const repositories = [{
-  provide: UserRepository,
-  useClass: RealUserRepository,
-}]
+const services = [RealUUIDGeneratorService, RealAuthenticationService, RealHashingService, RealRandomNumberGenerator];
+const repositories = [
+  {
+    useClass: RealUserRepository,
+    provide: USER_REPOSITORY,
+  },
+];
 
 @Module({
-  imports: [CqrsModule, DomainEventPublisherModule, LoggerModule, NotificationsModule, JwtModule.register({
-    signOptions: { expiresIn: '15m' },
-  })],
-  providers: [
-    ...controllers,
-    ...commandHandlers,
-    ...services,
-    ...repositories
+  imports: [
+    CqrsModule,
+    DomainEventPublisherModule,
+    LoggerModule,
+    NotificationsModule,
+    JwtModule.register({
+      signOptions: { expiresIn: '15m' },
+    }),
   ],
+  providers: [...controllers, ...commandHandlers, ...services, ...repositories],
   exports: [...controllers, RealAuthenticationService],
 })
-export class IdentityAndAccessModule { }
+export class IdentityAndAccessModule {}

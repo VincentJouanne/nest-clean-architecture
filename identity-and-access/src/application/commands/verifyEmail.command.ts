@@ -7,7 +7,7 @@ import { UserId, verifyUserEmail } from '@identity-and-access/domain/entities/us
 import { IncorrectVerificationCodeException } from '@identity-and-access/domain/exceptions/incorrectVerificationCode.exception';
 import { UserNotFoundException } from '@identity-and-access/domain/exceptions/userNotFound.exception';
 import { VerificationCode4 } from '@identity-and-access/domain/value-objects/verificationCode4';
-import { IUserRepository, USER_REPOSITORY } from '@identity-and-access/infrastructure/ports/user.repository';
+import { UserRepository, USER_REPOSITORY } from '@identity-and-access/infrastructure/ports/user.repository';
 import { ConsoleLogger, Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
@@ -22,7 +22,7 @@ export class VerifyEmail implements ICommand {
 export class VerifyEmailHandler implements ICommandHandler {
   constructor(
     @Inject(USER_REPOSITORY)
-    private readonly userRepository: IUserRepository,
+    private readonly userRepository: UserRepository,
     @Inject(LOGGER)
     private readonly logger: ConsoleLogger,
   ) {

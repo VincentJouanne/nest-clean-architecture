@@ -8,7 +8,7 @@ import { FakeUserRepository } from '@identity-and-access/infrastructure/adapters
 import { RealAuthenticationService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service';
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
 import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
-import { IUserRepository, USER_REPOSITORY } from '@identity-and-access/infrastructure/ports/user.repository';
+import { UserRepository, USER_REPOSITORY } from '@identity-and-access/infrastructure/ports/user.repository';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
@@ -39,7 +39,7 @@ describe('[Unit] Sign in with credentials', () => {
       ],
     }).compile();
 
-    userRepository = moduleRef.get<IUserRepository>(USER_REPOSITORY) as FakeUserRepository;
+    userRepository = moduleRef.get<UserRepository>(USER_REPOSITORY) as FakeUserRepository;
     hashingService = moduleRef.get<RealHashingService>(RealHashingService);
     signInHandler = moduleRef.get<SignInHandler>(SignInHandler);
   });

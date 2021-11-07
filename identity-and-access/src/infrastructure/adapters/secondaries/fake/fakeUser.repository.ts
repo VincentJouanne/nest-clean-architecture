@@ -1,12 +1,12 @@
 import { executeTask } from '@common/utils/executeTask';
 import { User, UserId } from '@identity-and-access/domain/entities/user';
-import { IUserRepository } from '@identity-and-access/infrastructure/ports/user.repository';
+import { UserRepository } from '@identity-and-access/infrastructure/ports/user.repository';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Email } from '@notifications/domain/value-objects/email';
 import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()
-export class FakeUserRepository implements IUserRepository {
+export class FakeUserRepository implements UserRepository {
   private users: User[] = [];
 
   getById = (userId: UserId): TaskEither<Error, User | null> => {

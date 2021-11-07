@@ -10,7 +10,7 @@ import { PlainPassword } from '@identity-and-access/domain/value-objects/passwor
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
 import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
 import { RealUUIDGeneratorService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realUUIDGenerator.service';
-import { IUserRepository, USER_REPOSITORY } from '@identity-and-access/infrastructure/ports/user.repository';
+import { UserRepository, USER_REPOSITORY } from '@identity-and-access/infrastructure/ports/user.repository';
 import { ConsoleLogger, Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Email } from '@notifications/domain/value-objects/email';
@@ -29,7 +29,7 @@ export class SignUpHandler implements ICommandHandler {
     private readonly randomNumberGenerator: RealRandomNumberGenerator,
     private readonly hashingService: RealHashingService,
     @Inject(USER_REPOSITORY)
-    private readonly userRepository: IUserRepository,
+    private readonly userRepository: UserRepository,
     private readonly domainEventPublisher: DomainEventPublisher,
     @Inject(LOGGER)
     private readonly logger: ConsoleLogger,

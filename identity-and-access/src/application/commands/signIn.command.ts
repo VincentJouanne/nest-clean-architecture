@@ -10,7 +10,7 @@ import { PlainPassword } from '@identity-and-access/domain/value-objects/passwor
 import { RefreshToken } from '@identity-and-access/domain/value-objects/refreshToken';
 import { RealAuthenticationService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service';
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
-import { IUserRepository, USER_REPOSITORY } from '@identity-and-access/infrastructure/ports/user.repository';
+import { UserRepository, USER_REPOSITORY } from '@identity-and-access/infrastructure/ports/user.repository';
 import { ConsoleLogger, Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Email } from '@notifications/domain/value-objects/email';
@@ -27,7 +27,7 @@ export class SignInHandler implements ICommandHandler {
   constructor(
     private readonly hashingService: RealHashingService,
     @Inject(USER_REPOSITORY)
-    private readonly userRepository: IUserRepository,
+    private readonly userRepository: UserRepository,
     private readonly authenticationService: RealAuthenticationService,
     @Inject(LOGGER)
     private readonly logger: ConsoleLogger,

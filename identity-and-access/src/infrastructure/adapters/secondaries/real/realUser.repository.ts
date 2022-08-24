@@ -8,14 +8,14 @@ import { TaskEither, tryCatch } from 'fp-ts/lib/TaskEither';
 
 @Injectable()
 export class RealUserRepository implements UserRepository {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   getById = (userId: UserId): TaskEither<Error, User | null> => {
     return tryCatch(
       async () => {
         const prismaUser = await this.prisma.user.findUnique({
           where: {
-            id: userId
+            id: userId,
           },
           //We retrieve the whole aggregate root (user + its contact informations)
           include: {
@@ -40,7 +40,7 @@ export class RealUserRepository implements UserRepository {
       },
       (reason: unknown) => new InternalServerErrorException(),
     );
-  }
+  };
 
   getByEmail = (email: Email): TaskEither<Error, User | null> => {
     return tryCatch(

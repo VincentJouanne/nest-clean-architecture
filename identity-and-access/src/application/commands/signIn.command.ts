@@ -1,4 +1,4 @@
-import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
+import { LOGGER } from '@common/logger/logger.module';
 import { executeTask } from '@common/utils/executeTask';
 import { fromUnknown } from '@common/utils/fromUnknown';
 import { perform } from '@common/utils/perform';
@@ -10,7 +10,8 @@ import { PlainPassword } from '@identity-and-access/domain/value-objects/passwor
 import { RefreshToken } from '@identity-and-access/domain/value-objects/refreshToken';
 import { RealAuthenticationService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service';
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
-import { UserRepository } from '@identity-and-access/infrastructure/ports/user.repository';
+import { UserRepository, USER_REPOSITORY } from '@identity-and-access/infrastructure/ports/user.repository';
+import { ConsoleLogger, Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Email } from '@notifications/domain/value-objects/email';
 import { sequenceS, sequenceT } from 'fp-ts/lib/Apply';
@@ -18,16 +19,18 @@ import { pipe } from 'fp-ts/lib/function';
 import { chain, left, right, taskEither } from 'fp-ts/lib/TaskEither';
 
 export class SignIn implements ICommand {
-  constructor(public readonly email: string, public readonly password: string) { }
+  constructor(public readonly email: string, public readonly password: string) {}
 }
 
 @CommandHandler(SignIn)
 export class SignInHandler implements ICommandHandler {
   constructor(
     private readonly hashingService: RealHashingService,
+    @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepository,
     private readonly authenticationService: RealAuthenticationService,
-    private readonly logger: PinoLoggerService,
+    @Inject(LOGGER)
+    private readonly logger: ConsoleLogger,
   ) {
     this.logger.setContext('SignIn');
   }

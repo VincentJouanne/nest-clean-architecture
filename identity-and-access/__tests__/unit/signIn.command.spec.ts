@@ -1,5 +1,5 @@
 import { FakeLoggerService } from '@common/logger/adapters/fake/FakeLogger.service';
-import { PinoLoggerService } from '@common/logger/adapters/real/pinoLogger.service';
+import { LOGGER } from '@common/logger/logger.module';
 import { executeTask } from '@common/utils/executeTask';
 import { SignIn, SignInHandler } from '@identity-and-access/application/commands/signIn.command';
 import { IncorrectPasswordException } from '@identity-and-access/domain/exceptions/incorrectPassword.exception';
@@ -8,7 +8,7 @@ import { FakeUserRepository } from '@identity-and-access/infrastructure/adapters
 import { RealAuthenticationService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realAuthentication.service';
 import { RealHashingService } from '@identity-and-access/infrastructure/adapters/secondaries/real/realHashing.service';
 import { RealRandomNumberGenerator } from '@identity-and-access/infrastructure/adapters/secondaries/real/realRandomNumberGenerator';
-import { UserRepository } from '@identity-and-access/infrastructure/ports/user.repository';
+import { UserRepository, USER_REPOSITORY } from '@identity-and-access/infrastructure/ports/user.repository';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
@@ -24,20 +24,22 @@ describe('[Unit] Sign in with credentials', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [JwtModule.register({
-        signOptions: { expiresIn: '15m' },
-      })],
+      imports: [
+        JwtModule.register({
+          signOptions: { expiresIn: '15m' },
+        }),
+      ],
       providers: [
         SignInHandler,
         RealRandomNumberGenerator,
         RealHashingService,
         RealAuthenticationService,
-        { provide: UserRepository, useClass: FakeUserRepository },
-        { provide: PinoLoggerService, useClass: FakeLoggerService },
+        { provide: USER_REPOSITORY, useClass: FakeUserRepository },
+        { provide: LOGGER, useClass: FakeLoggerService },
       ],
     }).compile();
 
-    userRepository = moduleRef.get<UserRepository>(UserRepository) as FakeUserRepository;
+    userRepository = moduleRef.get<UserRepository>(USER_REPOSITORY) as FakeUserRepository;
     hashingService = moduleRef.get<RealHashingService>(RealHashingService);
     signInHandler = moduleRef.get<SignInHandler>(SignInHandler);
   });
@@ -80,7 +82,7 @@ describe('[Unit] Sign in with credentials', () => {
   it('Should throw ForbiddenException if the user exists but has provided the wrong password', async () => {
     //Given valid credentials
     const expectedPassword = 'paSSw0rd!';
-    const hashedPassword = await PasswordBuilder(hashingService, expectedPassword).build()
+    const hashedPassword = await PasswordBuilder(hashingService, expectedPassword).build();
     const user = UserBuilder().withEmail('myemail@gmail.com').withHashedPassword(hashedPassword).build();
     await executeTask(userRepository.save(user));
     const aDifferentPassword = 'paSSw0rd?';
@@ -94,9 +96,9 @@ describe('[Unit] Sign in with credentials', () => {
 
   it('Should issue a JWT if the user exists and has provided the correct credentials', async () => {
     //Given valid credentials
-    const validEmail = 'myemail@gmail.com'
-    const validPassword = 'paSSw0rd!'
-    const hashedPassword = await PasswordBuilder(hashingService, validPassword).build()
+    const validEmail = 'myemail@gmail.com';
+    const validPassword = 'paSSw0rd!';
+    const hashedPassword = await PasswordBuilder(hashingService, validPassword).build();
     const user = UserBuilder().withEmail(validEmail).withHashedPassword(hashedPassword).build();
     await executeTask(userRepository.save(user));
 

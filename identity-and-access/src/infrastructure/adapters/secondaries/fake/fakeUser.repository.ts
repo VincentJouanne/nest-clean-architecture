@@ -34,10 +34,10 @@ export class FakeUserRepository implements UserRepository {
   save = (user: User): TaskEither<Error, void> => {
     return tryCatch(
       async () => {
-        const existingUser = await executeTask(this.getById(user.id))
+        const existingUser = await executeTask(this.getById(user.id));
         if (existingUser != null) {
-          const index = this.users.findIndex(userInStorage => userInStorage.id == user.id)
-          this.users.splice(index, 1)
+          const index = this.users.findIndex((userInStorage) => userInStorage.id == user.id);
+          this.users.splice(index, 1);
         }
         this.users.push(user);
       },
